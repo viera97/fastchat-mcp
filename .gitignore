@@ -1,2 +1,6 @@
+# Environment
 .env
 config.json
+
+# Cache
+*.cpython-313.pyc

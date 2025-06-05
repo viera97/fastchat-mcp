@@ -7,9 +7,9 @@ import json
 class GPT:
     """
     ## GPT
-    GPT es usado para realizar servicios a la api de gpt openAI.
-    #### inputs:
-    - `model`: modelo de gpt que se utilizara
+    ### Args:
+    - `model`: modelo de gpt que a usar
+    - `max_history_len`: largo maximo del historial que se para como input al modelo
     """
 
     def __init__(
@@ -17,20 +17,13 @@ class GPT:
         model=ConfigGPT.DEFAULT_MODEL_NAME,
         max_history_len: int = 10,
     ):
-        # Cliente secuencial de GPT
-        self.client = OpenAI(
-            api_key=ConfigGPT.OPENAI_API_KEY,
-        )
-
-        # Cliente asincrono de GPT
-        self.asyncclient = AsyncOpenAI(
-            api_key=ConfigGPT.OPENAI_API_KEY,
-        )
-
-        self.max_len_history: int = 10
+        self.client = OpenAI(api_key=ConfigGPT.OPENAI_API_KEY)
+        """Cliente secuencial de GPT"""
+        self.asyncclient = AsyncOpenAI(api_key=ConfigGPT.OPENAI_API_KEY)
+        """Cliente asincrono de GPT"""
+        self.max_len_history: int = max_history_len
         """Maxima cantidad de mensajes previos que se le pasan como input"""
-
-        self.chat_history: list[list[dict[str, str]]] = {}
+        self.chat_history: list[list[dict[str, str]]] = []
         """Historial del chat asosiado a esta instancia de GPT, en forma lista de listas, por ejemplo 
         ```
         chat_history: str = [
@@ -45,7 +38,6 @@ class GPT:
         ]
         ```
         """
-
         self.model: str = model
         self.current_price: float = 0
 
@@ -74,12 +66,12 @@ class GPT:
             {"role": "system", "content": system_message}
         ] + [
             message
-            for message in [
-                messages for messages in self.chat_history[-self.max_len_history :]
-            ]
+            for messages in self.chat_history[-self.max_len_history :]
+            for message in messages
         ]
+
         return messages
-    
+
     def get_response_from_completion(self, completion) -> str:
         response = completion.choices[0].message.content
         self.chat_history[-1].append({"role": "assistant", "content": response})
