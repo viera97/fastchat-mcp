@@ -1,10 +1,11 @@
 from .prompts.system_prompts import chat_asistant
 from ....config.llm_config import ConfigGPT
+from ..llm import LLM
 from openai import OpenAI, AsyncOpenAI
 import json
 
 
-class GPT:
+class GPT(LLM):
     """
     ## GPT
     ### Args:
@@ -48,7 +49,7 @@ class GPT:
         )
         return self.get_response_from_completion(completion)
 
-    def secuential_user_query(self, query: str) -> str:
+    def user_query(self, query: str) -> str:
         completion = self.client.chat.completions.create(
             model=self.model,
             messages=self.get_messages_user_query(query),

@@ -1,0 +1,2 @@
+class ClientManagerMCP:
+    pass

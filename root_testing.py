@@ -6,4 +6,4 @@ gpt: GPT = GPT()
 clear_console()
 while True:
     query = input("> ")
-    print(gpt.secuential_user_query(query))
+    print(gpt.user_query(query))
