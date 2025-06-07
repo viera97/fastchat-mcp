@@ -11,6 +11,7 @@ class ClientManagerMCP:
         self.tools: dict | None = None
         self.resources: dict | None = None
         self.prompts: dict | None = None
+        self.services: dict | None = None
         self.refresh_data()
 
     def call_tool(self, name: str, args: dict) -> str | None:
@@ -64,3 +65,11 @@ class ClientManagerMCP:
                     "http": server["http"],
                     "data": prompt,
                 }
+
+        self.services = self.tools + self.resources
+
+    def service_type(self, service_key: str) -> str:
+        if self.tools.keys().__contains__(service_key):
+            return "tool"
+        if self.resources.keys().__contains__(service_key):
+            return "resource"
