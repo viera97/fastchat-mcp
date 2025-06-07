@@ -3,7 +3,7 @@ from src.tools.clear_console import clear_console
 from src.mcp_manager.client import ClientManagerMCP
 
 client: ClientManagerMCP = ClientManagerMCP()
-print(client.call_tool("example_server_add", {"a": 12, "b": 21}))
+print(client.call_tool("example_server_add", {"a": 142, "b": 21}))
 
 
 # gpt: GPT = GPT()

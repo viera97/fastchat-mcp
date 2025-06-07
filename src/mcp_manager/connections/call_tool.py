@@ -21,4 +21,4 @@ async def async_call_tool(http: str, toolname: str, args: dict):
 
             # Call a tool
             tool_result = await session.call_tool(toolname, args)
-            return tool_result
+            return tool_result.content

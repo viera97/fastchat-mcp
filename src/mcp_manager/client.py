@@ -1,5 +1,6 @@
 from .servers import Servers
-from .connections.session_data import get_session
+from .connections.session_data import get_session_data
+from .connections.call_tool import call_tool
 from mcp import ClientSession
 
 
@@ -12,10 +13,7 @@ class ClientManagerMCP:
 
     def call_tool(self, name: str, args: dict) -> str | None:
         tool = self.tools[name]
-
-        call_tool(tool["http"], tool["data"].name, args)
-
-        pass
+        return call_tool(tool["http"], tool["data"].name, args)[0].text
 
     def get_resource(self, uri: str) -> dict:
         pass
@@ -31,21 +29,22 @@ class ClientManagerMCP:
         self.tools = {}
         mcp_servers: dict[str, dict] = Servers().mcp_servers
 
-        for server in mcp_servers.values():
-            session: dict = get_session(server["http"])
+        for server_key in mcp_servers.keys():
+            server = mcp_servers[server_key]
+            session: dict = get_session_data(server["http"])
             for tool in session["tools"]:
-                self.tools[f"{server['name']}_{tool.name}"] = {
+                self.tools[f"{server_key}_{tool.name}"] = {
                     "http": server["http"],
                     "data": tool,
                 }
             for resource in session["resources"]:
-                self.resources[f"{server['name']}_{resource.name}"] = {
+                self.resources[f"{server_key}_{resource.name}"] = {
                     "http": server["http"],
                     "data": resource,
                 }
 
             for prompt in session["prompts"]:
-                self.prompts[f"{server['name']}_{prompt.name}"] = {
+                self.prompts[f"{server_key}_{prompt.name}"] = {
                     "http": server["http"],
                     "data": prompt,
                 }
