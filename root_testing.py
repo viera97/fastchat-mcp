@@ -4,7 +4,7 @@ from src.mcp_manager.client import ClientManagerMCP
 
 client: ClientManagerMCP = ClientManagerMCP()
 print(client.call_tool("example_server_add", {"a": 142, "b": 21}))
-
+print(client.read_resource("example_server_user_profile", {"user_id": 14516}))
 
 # gpt: GPT = GPT()
 

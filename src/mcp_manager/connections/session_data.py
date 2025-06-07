@@ -2,8 +2,10 @@ from mcp.client.streamable_http import streamablehttp_client
 from mcp import ClientSession
 import asyncio
 
+
 def get_session_data(http: str) -> dict:
     return asyncio.run(async_get_session(http))
+
 
 async def async_get_session(http: str):
     # Connect to a streamable HTTP server
@@ -17,12 +19,12 @@ async def async_get_session(http: str):
             # Initialize the connection
             await session.initialize()
             tools = await session.list_tools()
-            resources = await session.list_resources()
+            resources = await session.list_resource_templates()
             prompts = await session.list_prompts()
 
             data: dict = {
                 "tools": tools.tools,
-                "resources": resources.resources,
+                "resources": resources.resourceTemplates,
                 "prompts": prompts.prompts,
             }
 

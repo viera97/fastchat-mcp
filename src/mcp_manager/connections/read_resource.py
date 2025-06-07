@@ -3,11 +3,11 @@ from mcp import ClientSession
 import asyncio
 
 
-def call_tool(http: str) -> any:
-    return asyncio.run(async_get_session(http))
+def read_resource(http: str, uri: str) -> any:
+    return asyncio.run(async_read_resource(http, uri))
 
 
-async def async_get_session(http: str):
+async def async_read_resource(http: str, uri: str):
     # Connect to a streamable HTTP server
     async with streamablehttp_client(http) as (
         read_stream,
@@ -20,5 +20,5 @@ async def async_get_session(http: str):
             await session.initialize()
 
             # Read a resource
-            resource_result = await session.read_resource("data://user-profile/14516")
-            return resource_result
+            resource_result = await session.read_resource(uri)
+            return resource_result.contents
