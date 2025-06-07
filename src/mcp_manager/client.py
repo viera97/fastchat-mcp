@@ -66,7 +66,7 @@ class ClientManagerMCP:
                     "data": prompt,
                 }
 
-        self.services = self.tools + self.resources
+        self.services = self.tools | self.resources
 
     def service_type(self, service_key: str) -> str:
         if self.tools.keys().__contains__(service_key):

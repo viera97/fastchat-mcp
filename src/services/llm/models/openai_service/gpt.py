@@ -2,7 +2,6 @@ from ...prompts.system_prompts import chat_asistant, select_services, create_arg
 from ...prompts.user_prompts import query_and_data, query_and_services
 from .....config.llm_config import ConfigGPT
 from ...llm import LLM
-from .....mcp_manager.client import ClientManagerMCP
 from openai import OpenAI, AsyncOpenAI
 import json
 
@@ -20,6 +19,7 @@ class GPT(LLM):
         model=ConfigGPT.DEFAULT_MODEL_NAME,
         max_history_len: int = 10,
     ):
+        super().__init__()
         self.client = OpenAI(api_key=ConfigGPT.OPENAI_API_KEY)
         """Cliente secuencial de GPT"""
         self.asyncclient = AsyncOpenAI(api_key=ConfigGPT.OPENAI_API_KEY)
@@ -43,14 +43,15 @@ class GPT(LLM):
         """
         self.model: str = model
         self.current_price: float = 0
-        self.client_manager: ClientManagerMCP = ClientManagerMCP()
 
-    def append_chat_history(self, query: str):
+    def append_chat_history(self):
         """Agrega una historia vacia para crear el espacio"""
         self.chat_history.append([])
         self.chat_history[-1].append({})
 
-    def call_completion(self, system_message: str, query: str):
+    def call_completion(
+        self, system_message: str, query: str, json_format: bool = False
+    ):
         """ """
         self.chat_history[-1][0] = {"role": "user", "content": query}
 
@@ -61,10 +62,18 @@ class GPT(LLM):
             for messages in self.chat_history[-self.max_len_history :]
             for message in messages
         ]
-        completion = self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-        )
+        if json_format:
+            completion = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                response_format={"type": "json_object"},
+            )
+        else:
+
+            completion = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+            )
         self.get_price(completion.usage)
         return completion.choices[0].message.content
 
@@ -106,6 +115,7 @@ class GPT(LLM):
             query=query_and_services(
                 query=query, services=self.client_manager.services
             ),
+            json_format=True,
         )
 
     def generate_args(self, query: str, services: str | dict) -> str:
@@ -116,6 +126,7 @@ class GPT(LLM):
         return self.call_completion(
             system_message=system_message,
             query=query_and_services(query=query, services=services),
+            json_format=True,
         )
 
     def final_response(self, query: str, services_args: str | dict) -> str:
@@ -123,7 +134,9 @@ class GPT(LLM):
         data = ""
 
         response = self.call_completion(
-            system_message=system_message, query=query_and_data(query=query, data=data)
+            system_message=system_message,
+            query=query_and_data(query=query, data=data),
+            json_format=False,
         )
 
         # Se agrega la respuesta a la historia

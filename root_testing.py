@@ -12,4 +12,4 @@ gpt: LLM = GPT()
 clear_console()
 while True:
     query = input("> ")
-    print(gpt.user_query(query))
+    print(gpt.get_query(query))
