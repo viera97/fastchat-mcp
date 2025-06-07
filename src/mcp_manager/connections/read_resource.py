@@ -8,15 +8,12 @@ def read_resource(http: str, uri: str) -> any:
 
 
 async def async_read_resource(http: str, uri: str):
-    # Connect to a streamable HTTP server
     async with streamablehttp_client(http) as (
         read_stream,
         write_stream,
         _,
     ):
-        # Create a session using the client streams
         async with ClientSession(read_stream, write_stream) as session:
-            # Initialize the connection
             await session.initialize()
 
             # Read a resource

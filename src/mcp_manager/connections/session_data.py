@@ -18,6 +18,8 @@ async def async_get_session(http: str):
         async with ClientSession(read_stream, write_stream) as session:
             # Initialize the connection
             await session.initialize()
+            
+            # Generate data 
             tools = await session.list_tools()
             resources = await session.list_resource_templates()
             prompts = await session.list_prompts()
@@ -27,5 +29,6 @@ async def async_get_session(http: str):
                 "resources": resources.resourceTemplates,
                 "prompts": prompts.prompts,
             }
+            
 
         return data
