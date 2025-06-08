@@ -1,5 +1,5 @@
 from ...prompts.system_prompts import chat_asistant, select_services, create_args
-from ...prompts.user_prompts import query_and_data, query_and_services
+from ...prompts.user_prompts import query_and_data, query_and_services, service2args
 from .....config.llm_config import ConfigGPT
 from ...llm import LLM
 from openai import OpenAI, AsyncOpenAI
@@ -118,14 +118,14 @@ class GPT(LLM):
             json_format=True,
         )
 
-    def generate_args(self, query: str, services: str | dict) -> str:
+    def generate_args(self, query: str, service: dict) -> str:
         """
         Funcion encargada de crear argumentos para los servicios expuestos que se usaran
         """
         system_message: str = create_args
         return self.call_completion(
             system_message=system_message,
-            query=query_and_services(query=query, services=services),
+            query=service2args(query=query, service=service),
             json_format=True,
         )
 

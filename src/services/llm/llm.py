@@ -6,14 +6,14 @@ class LLM:
     def __init__(self):
         self.client_manager: ClientManagerMCP = ClientManagerMCP()
 
-    def get_query(self, query: str) -> str:
+    def process_query(self, query: str) -> str:
         self.append_chat_history()
         # Cargar los servicios utiles
-        services = json.loads(self.select_services(query))["services"]
-        if len(services) == 0:
+        service = json.loads(self.select_services(query))["service"]
+        if len(service) == 0:
             return self.simple_query(query)
 
-        args = self.generate_args(query=query, services=services)
+        args = self.generate_args(query=query, service=service)
         return self.final_response(query, args)
 
     def append_chat_history(self):
@@ -25,7 +25,7 @@ class LLM:
     def select_services(self, query: str) -> str:
         Exception("Not Implemented Exception")
 
-    def generate_args(self, query: str, services: str | dict) -> str:
+    def generate_args(self, query: str, service: dict) -> str:
         Exception("Not Implemented Exception")
 
     def final_response(self, query: str, services_args: str | dict) -> str:
