@@ -4,7 +4,7 @@ from ...mcp_manager.client import ClientManagerMCP
 
 class LLM:
     def __init__(self):
-        self.client_manager: ClientManagerMCP = ClientManagerMCP()
+        self.client_manager_mcp: ClientManagerMCP = ClientManagerMCP()
 
     def process_query(self, query: str) -> str:
         self.append_chat_history()
@@ -25,7 +25,7 @@ class LLM:
     def select_services(self, query: str) -> str:
         Exception("Not Implemented Exception")
 
-    def generate_args(self, query: str, service: dict) -> str:
+    def generate_args(self, query: str, service: str) -> str:
         Exception("Not Implemented Exception")
 
     def final_response(self, query: str, services_args: str | dict) -> str:

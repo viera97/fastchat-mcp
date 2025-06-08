@@ -1,4 +1,4 @@
-from ...prompts.system_prompts import chat_asistant, select_services, create_args
+from ...prompts.system_prompts import chat_asistant, select_service, create_args
 from ...prompts.user_prompts import query_and_data, query_and_services, service2args
 from .....config.llm_config import ConfigGPT
 from ...llm import LLM
@@ -109,20 +109,31 @@ class GPT(LLM):
         Funcion encargada de seleccionar los servicios utiles para el contexto de la consulta, usando los servicios expuestos por cada uno
         de los servidores
         """
-        system_message: str = select_services
+        system_message: str = select_service
         return self.call_completion(
             system_message=system_message,
             query=query_and_services(
-                query=query, services=self.client_manager.services
+                query=query, services=self.client_manager_mcp.get_services()
             ),
             json_format=True,
         )
 
-    def generate_args(self, query: str, service: dict) -> str:
+    def generate_args(self, query: str, service: str) -> str:
         """
         Funcion encargada de crear argumentos para los servicios expuestos que se usaran
         """
         system_message: str = create_args
+
+        service = (
+            self.client_manager_mcp.resources[service]
+            if (self.client_manager_mcp.service_type(service) == "resource")
+            else (
+                self.client_manager_mcp.tools[service]
+                if (self.client_manager_mcp.service_type(service) == "tool")
+                else None
+            )
+        )
+
         return self.call_completion(
             system_message=system_message,
             query=service2args(query=query, service=service),

@@ -1,8 +1,6 @@
 import os
 import json
 
-# TODO: Create class for remplace Dictionarys. For example: `class ServerCredentialsMCP`
-
 
 class Servers:
     """
