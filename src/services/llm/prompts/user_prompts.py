@@ -7,4 +7,4 @@ def query_and_services(query: str, services: str | list):
 
 
 def query_and_data(query: str, data: str | dict):
-    return f"{query}.\n Usa los siguientes datos para responder mi query:\n{data}"
+    return f"{query}.\n Usa los siguientes datos para responder mi consulta:\n{data}"

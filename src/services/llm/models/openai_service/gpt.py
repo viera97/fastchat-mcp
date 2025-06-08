@@ -2,6 +2,7 @@ from ...prompts.system_prompts import chat_asistant, select_service, create_args
 from ...prompts.user_prompts import query_and_data, query_and_services, service2args
 from .....config.llm_config import ConfigGPT
 from ...llm import LLM
+from .....mcp_manager.services.service import Service
 from openai import OpenAI, AsyncOpenAI
 import json
 
@@ -118,21 +119,13 @@ class GPT(LLM):
             json_format=True,
         )
 
-    def generate_args(self, query: str, service: str) -> str:
+    def generate_args(self, query: str, service: Service) -> str:
         """
         Funcion encargada de crear argumentos para los servicios expuestos que se usaran
         """
         system_message: str = create_args
 
-        service = (
-            self.client_manager_mcp.resources[service]
-            if (self.client_manager_mcp.service_type(service) == "resource")
-            else (
-                self.client_manager_mcp.tools[service]
-                if (self.client_manager_mcp.service_type(service) == "tool")
-                else None
-            )
-        )
+        service = str(service)
 
         return self.call_completion(
             system_message=system_message,
@@ -140,9 +133,8 @@ class GPT(LLM):
             json_format=True,
         )
 
-    def final_response(self, query: str, services_args: str | dict) -> str:
+    def final_response(self, query: str, data: str | dict) -> str:
         system_message: str = chat_asistant
-        data = ""
 
         response = self.call_completion(
             system_message=system_message,

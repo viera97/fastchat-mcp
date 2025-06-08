@@ -20,12 +20,14 @@ class Service:
     def __str__(self):
         return str(
             {
-                "http": self.http,
                 "name": self.name,
                 "description": self.description,
                 "args": self.args,
             }
         )
+
+    def __call__(self, args: dict[str, any]):
+        Exception("Not Implemented")
 
 
 class Tool(Service):
@@ -33,6 +35,9 @@ class Tool(Service):
         super().__init__(http, data, server)
         args = data.inputSchema["properties"]
         self.args = [{"name": key, "type": args[key]["type"]} for key in args.keys()]
+
+    def __call__(self, args: dict[str, any]):
+        return self.call(args)
 
     def call(self, args: dict[str, any]):
         return asyncio.run(Tool.async_call(self.http, self.name, args))
@@ -57,6 +62,9 @@ class Resource(Service):
         self.args = get_args_from_uri(data.uriTemplate)
         self.args = [{"name": arg, "type": "string"} for arg in self.args]
 
+    def __call__(self, args: dict[str, any]):
+        return self.read(args)
+
     def read(self, args: dict[str, str]):
         uri = self.data.uriTemplate
         for key in args:
@@ -80,6 +88,9 @@ class Resource(Service):
 class Prompt(Service):
     def __init__(self, http, data, server):
         super().__init__(http, data, server)
+
+    def __call__(self, args: dict[str, any]):
+        return self.get(args)
 
     def get(self, args: dict[str, str]):
         pass
