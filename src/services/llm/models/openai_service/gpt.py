@@ -1,4 +1,9 @@
-from ...prompts.system_prompts import chat_asistant, select_service, create_args
+from ...prompts.system_prompts import (
+    chat_asistant,
+    select_service,
+    create_args,
+    preproccess_query,
+)
 from ...prompts.user_prompts import query_and_data, query_and_services, service2args
 from .....config.llm_config import ConfigGPT
 from ...llm import LLM
@@ -96,6 +101,23 @@ class GPT(LLM):
         # Aumenta el valod asociado al costo de uso de la API en esta instancia de GPT
         self.current_price += price
         return price
+
+    def preprocess_query(self, query: str) -> list[str]:
+        system_message: str = preproccess_query(
+            services=self.client_manager_mcp.get_services()
+        )
+        messages: list[dict[str, str]] = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": query},
+        ]
+        completion = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            response_format={"type": "json_object"},
+        )
+        self.get_price(completion.usage)
+        response = completion.choices[0].message.content
+        return json.loads(response)["querys"]
 
     def simple_query(self, query: str) -> str:
         system_message: str = chat_asistant

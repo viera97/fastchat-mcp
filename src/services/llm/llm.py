@@ -6,10 +6,18 @@ class LLM:
     def __init__(self):
         self.client_manager_mcp: ClientManagerMCP = ClientManagerMCP()
 
-    def preproccess_query(self, query: str):
-        pass
+    def __call__(self, query: str):
+        querys: list[str] = self.preprocess_query(query=query)
+        end_response: str = ""
+        for query in querys:
+            end_response += self.proccess_query(query) + "\n\n"
+        return end_response
 
-    def process_query(self, query: str) -> str:
+    def preprocess_query(self, query: str) -> list[str]:
+        """Devuelve una lista con todas las querys en las que se divide la query principal. Pued ser solo una query"""
+        Exception("Not Implemented")
+
+    def proccess_query(self, query: str) -> str:
         self.append_chat_history()
         # Cargar los servicios utiles
         service = json.loads(self.select_services(query))["service"]

@@ -1,5 +1,9 @@
 {
     "mcp_servers": {
-        "supabase-server": {}
+        "example_server": {
+            "http": "http://0.0.0.0:8000/server/mcp",
+            "name": "Example mcp server",
+            "description": "A simple example MCP server"
+        }
     }
 }

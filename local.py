@@ -8,4 +8,4 @@ gpt: LLM = GPT()
 clear_console()
 while True:
     query = input("> ")
-    print(gpt.process_query(query))
+    print(gpt(query))

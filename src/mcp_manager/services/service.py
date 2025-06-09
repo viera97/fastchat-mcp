@@ -69,7 +69,7 @@ class Resource(Service):
         uri = self.data.uriTemplate
         for key in args:
             uri = uri.replace("{" + key + "}", str(args[key]))
-        return asyncio.run(Resource.async_read_resource(self.http, self.uri))
+        return asyncio.run(Resource.async_read(self.http, uri))
 
     async def async_read(http: str, uri: str):
         async with streamablehttp_client(http) as (
