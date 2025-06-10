@@ -1,11 +1,10 @@
 from src.services.llm.models.openai_service.gpt import GPT
-from src.services.llm.llm import LLM
+from src.services.llm.client_llm import ClientLLM
 from src.tools.clear_console import clear_console
-from src.mcp_manager.client import ClientManagerMCP
 
-gpt: LLM = GPT()
+client: ClientLLM = ClientLLM()
 
 clear_console()
 while True:
     query = input("> ")
-    print(gpt(query))
+    print(client(query))

@@ -3,7 +3,7 @@ chat_asistant: str = (
 )
 
 select_service: str = (
-    'Eres un experto en comprension de datos y tienes acceso a varios servicios. Dado la consulta del usuario y los servicios que se te pasaran en la misma el formato JSON `{key1 : service_data1, key2 : service_data2, ...}`, tu tarea es extraer el servicio que sera utile para el contexto dado. Asegurate de devolver un JSON con el formato `{"service":"key del servicio seleccionado para el contexto"}` En caso que no haya servicio util para el contexto debes devolver el valor vacio `{"service":""}`.'
+    'Eres un experto en comprension de datos y tienes acceso a varios servicios. Dado la consulta del usuario y los servicios que te pasa con el formato JSON `{key1 : service_data1, key2 : service_data2, ...}`, tu tarea es definir si existe o no un servicio util para el contexto de la consulta, en caso de que exista extraer el servicio que sera util para el contexto dado; en caso de que no haya servicio util para el contexto debes devolver el valor vacio `{"service":""}`. Asegurate de devolver un JSON con el formato `{"service":"key del servicio seleccionado para el contexto"}`. Asegurate de seleccionar los servicios correctamente, un servicio vacio ("") es una seleccion valida.'
 )
 
 create_args: str = (
