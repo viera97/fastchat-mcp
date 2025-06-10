@@ -7,3 +7,7 @@ config.json
 
 #Conversations Tests
 conversations
+
+#Publish files
+dist/*
+mcp_client.egg-info/*
