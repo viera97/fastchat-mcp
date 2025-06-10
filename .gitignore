@@ -10,4 +10,4 @@ conversations
 
 #Publish files
 dist/*
-mcp_client.egg-info/*
+fastmcpclient.egg-info/*
