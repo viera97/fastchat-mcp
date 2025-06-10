@@ -2,8 +2,8 @@
 
 <div align = center>
 
-<!-- [![Version](https://img.shields.io/pypi/v/python-mcp-client?color=%2334D058&label=Version)](https://pypi.org/project/python-mcp-client) -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/pypi/v/fastmcpclient?color=%2334D058&label=Version)](https://pypi.org/project/fastmcpclient)
 [![Last commit](https://img.shields.io/github/last-commit/rb58853/python-mcp-client.svg?style=flat)](https://github.com/rb58853/python-mcp-client/commits)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/python-mcp-client)](https://github.com/rb58853/python-mcp-client/commits)
 [![Stars](https://img.shields.io/github/stars/rb58853/python-mcp-client?style=flat&logo=github)](https://github.com/rb58853/python-mcp-client/stargazers)
