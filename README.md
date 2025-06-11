@@ -47,6 +47,8 @@ The client currently supports the following language models:
 | --- | --- |
 | gpt4o-mini | Optimized implementation of the GPT-4 model that provides a balance between computational performance and resource efficiency. This model is specifically designed to operate in environments with memory constraints while maintaining superior predictive quality. |
 
+>🚨 **CRITICAL CONFIGURATION NOTE** Currently, this project only work with `gpt4o-mini` llm model.
+
 ## Implemented Transfer Protocols
 
 Protocols for communication with MCP servers:
@@ -56,6 +58,8 @@ Protocols for communication with MCP servers:
 | HTTPStream | Implemented | Asynchronous HTTP-based protocol that enables continuous data streaming. Characterized by low memory consumption and real-time processing capability for partial responses. |
 | SSE (Server-Sent Events) | Not Implemented | Unidirectional protocol that allows the server to send multiple updated events through a single HTTP connection. Designed specifically for applications requiring real-time updates from the server. |
 | stdio | Not Implemented | Standard input/output interface that facilitates direct communication between processes. Will provide a lightweight alternative for local environments and unit testing. |
+
+>🚨 **CRITICAL CONFIGURATION NOTE** Currently, this project only work with `HTTPStream` protocol.
 
 ## Future Development Planning
 
@@ -133,11 +137,12 @@ while True:
 * Simple connection without authorization (compatible only with servers that do not require authentication)
 
 ### v0.0.4
+
 * Package dependencies are incorporated during its initial installation process.
 
 ## Project Status
-
-### ⚠️ Important Notice: This project is currently in active development phase. As a result, errors or unexpected behaviors may occur during usage
+>
+>⚠️ **Important Notice:** This project is currently in active development phase. As a result, errors or unexpected behaviors may occur during usage
 
 ## License
 
