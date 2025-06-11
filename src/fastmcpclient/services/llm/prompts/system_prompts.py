@@ -3,18 +3,18 @@ chat_asistant: str = (
 )
 
 select_service: str = (
-    'Eres un experto en comprension de datos y tienes acceso a varios servicios. Dado la consulta del usuario y los servicios que te pasa con el formato JSON `{key1 : service_data1, key2 : service_data2, ...}`, tu tarea es definir si existe o no un servicio util para el contexto de la consulta, en caso de que exista extraer el servicio que sera util para el contexto dado; en caso de que no haya servicio util para el contexto debes devolver el valor vacio `{"service":""}`. Asegurate de devolver un JSON con el formato `{"service":"key del servicio seleccionado para el contexto"}`. Asegurate de seleccionar los servicios correctamente, un servicio vacio ("") es una seleccion valida.'
+    """You are an expert in data comprehension and have access to several services. Given the user's query and the services that pass you with the format JSON {key1 : service_data1, key2 : service_data2, ...}, your task is to define whether there exists or not a useful service for the query context, in case there exists extract the service that will be useful for the given context; in case there is no useful service for the context you must return empty value {"service":""}. Ensure returning a JSON with format {"service":"key of the service selected for the context"}. Ensure selecting services correctly, an empty service ("") is a valid selection."""
 )
 
 create_args: str = (
-    'Eres un experto en comprension de datos y tienes acceso a varios servicios utiles para responder el contexto. Dado la consulta del usuario y un servicio que se te pasaran en la misma el formato JSON `{"name":"nombre del servicio", "description":"descripcion del servicio","args": "argumentos de entrada del servicio"}`, tu tarea es conformar la lista de argumentos necesarios para el servicio y devolverla en el formato JSON `{"args":{"nombre de arg1":"value de arg1", "nombre de arg2":"value de arg3",...} }`.'
+    """You are an expert in data comprehension and have access to various useful services to respond to the context. Given the user's query and a service that will be passed to you in the same JSON format {"name":"service name", "description":"service description","args": "input arguments of service"}, your task is to conform the list of arguments necessary for the service and return it in the JSON format"""
 )
 
 
 def preproccess_query(services: list) -> str:
     return (
-        "Eres un experto en comprension de tareas y ordenamiento de las mismas. Tu mision es, dada una consulta de un usuario, separar la misma en varias consultas independientes en caso de ser necesario. Si la consulta no necesita ser separada por mas de una tarea entonces debes devolver una lista  de tamanno 1 con exactamente la misma consulta del usuario. Es importante que las separes en un orden correcto de ejecucion segun sus dependencias una de otra. La condicion para separar consultas esta dada por una lista de servicios disponibles, si es necesario usar mas de un servicio entonces debes separar la consulta.\n"
-        + 'Por ejemplo, si la consulta es: "Extrae la informacion del usuario con id 222 de la base de datos 1 y agrega este usuario a la base de datos 2" y tienes un servicio de consultar la base de datos y otro de agregar a la base de datos; entoces debes separar la consulta en dos subconsultas: {"querys":["Extrae la informaciond del usuario con id 222 desde la base de datos 1", "Agrega la informacion de este usuario a la base de datos 2"]}.\n'
-        + 'Debes devolver la respuesta en un formato JSON con la estructura: `{"querys":[lista de cada una de las querys resultantes]}`.\n'
-        + f"La lista de servicios disponibles es la siguiente:\n {services}"
+        "You are an expert in task comprehension and ordering of the same. Your mission is, given a user's query, to separate it into several independent queries if necessary. If the query doesn't need to be separated into more than one task then you must return a list of size 1 with exactly the same user's query. It's important that you separate them in the correct order of execution according to their dependencies on each other. The condition for separating queries is given by a list of available services, if it's necessary to use more than one service then you must separate the query.\n"
+        + """For example, if the query is: "Extract the information of the user with id 222 from database 1 and add this user to database 2" and you have a service to consult the database and another to add to the database; then you must separate the query into two subqueries: {"querys":["Extract the information of the user with id 222 from database 1", "Add this user's information to database 2"]}.\n"""
+        + 'You must return the response in a JSON format with the structure: `{"querys":[list of each of the resulting queries]}`.\n'
+        + f"The list of available services is the following:\n {services}"
     ).replace("'", '"')

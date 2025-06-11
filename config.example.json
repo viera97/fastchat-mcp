@@ -2,8 +2,8 @@
     "mcp_servers": {
         "example_server": {
             "http": "http://0.0.0.0:8000/server/mcp",
-            "name": "Example mcp server",
-            "description": "A simple example MCP server"
+            "name": "Example mcp server (optional)",
+            "description": "A simple example MCP server (optional)"
         }
     }
 }

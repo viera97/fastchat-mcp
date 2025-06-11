@@ -12,6 +12,7 @@
 [![Contributors](https://img.shields.io/github/contributors/rb58853/python-mcp-client)](https://github.com/rb58853/python-mcp-client/graphs/contributors)
 
 </div>
+
 Python client, based on [`fastmcp`](https://github.com/modelcontextprotocol/python-sdk), for connecting to MCP servers through multiple protocols, specifically designed to work with integrated language models.
 
 ## Table of Contents
@@ -116,19 +117,20 @@ while True:
 
 ```
 
-<!-- ## Contribución
+## Version History
 
-Las contribuciones son bienvenidas. Para agregar nuevos protocolos o modelos, sigue estas directrices:
+### v0.0.1
 
-1. Crea una rama feature desde main
-2. Implementa las nuevas características siguiendo el patrón existente
-3. Incluye documentación actualizada
-4. Realiza pruebas unitarias
-5. Envía una pull request con explicación detallada -->
+* Initial implementation of `ClientLLM` client
+* Complete integration of `httpstream` protocol ([fasmcp](https://github.com/modelcontextprotocol/python-sdk))
+* Connectivity with multiple servers
+* Simplified config.json file for connection management
+* Efficient processing of multiple simultaneous requests to tools and resources within a single query
+* Simple connection without authorization (compatible only with servers that do not require authentication)
 
-<!-- ## Contacto
+## Project Status
 
-Para reportar bugs o solicitar funcionalidades, abre un issue en el repositorio. -->
+### ⚠️ Important Notice: This project is currently in active development phase. As a result, errors or unexpected behaviors may occur during usage
 
 ## License
 
