@@ -10,7 +10,6 @@ create_args: str = (
     """You are an expert in data comprehension and have access to various useful services to respond to the context. Given the user's query and a service that will be passed to you in the same JSON format {"name":"service name", "description":"service description","args": "input arguments of service"}, your task is to conform the list of arguments necessary for the service and return it in the JSON format"""
 )
 
-
 def preproccess_query(services: list) -> str:
     return (
         "You are an expert in task comprehension and ordering of the same. Your mission is, given a user's query, to separate it into several independent queries if necessary. If the query doesn't need to be separated into more than one task then you must return a list of size 1 with exactly the same user's query. It's important that you separate them in the correct order of execution according to their dependencies on each other. The condition for separating queries is given by a list of available services, if it's necessary to use more than one service then you must separate the query.\n"

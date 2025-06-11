@@ -23,6 +23,8 @@ Python client, based on [`fastmcp`](https://github.com/modelcontextprotocol/pyth
 * [Implemented Transfer Protocols](#implemented-transfer-protocols)
 * [System Requirements](#system-requirements)
 * [Usage Example](#usage-example)
+* [Version History](#version-history)
+* [Project Status](#project-status)
 * [License](#license)
 
 ## Overview
@@ -94,6 +96,8 @@ Protocols for communication with MCP servers:
         }
     }
     ```
+
+    If you need an MCP server to test the code, you can use [simple-mcp-server](https://github.com/rb58853/simple-mcp-server).
 
 ### Software Requirements
 
