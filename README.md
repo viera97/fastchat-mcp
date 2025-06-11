@@ -33,7 +33,7 @@ This package provides a Python interface to connect to MCP servers in an easy, i
 To install the MCP client, you can use pip:
 
 ```bash
-pip install mcp-client-py
+pip install fastmcpclient
 ```
 
 ## Implemented Models
@@ -103,7 +103,17 @@ Protocols for communication with MCP servers:
 ## Usage Example
 
 ```python
-#example.local.py
+#main.py
+from fastmcpclient import ClientLLM
+
+#Create a client
+client: ClientLLM = ClientLLM()
+
+while True:
+    query:str = input("> ")
+    #call client with a string query
+    print(client(query))
+
 ```
 
 <!-- ## Contribución

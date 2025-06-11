@@ -11,3 +11,6 @@ conversations
 #Publish files
 dist/*
 fastmcpclient.egg-info/*
+
+#Text Editor
+.vscode/*
