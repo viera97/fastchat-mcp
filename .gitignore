@@ -10,7 +10,7 @@ conversations
 
 #Publish files
 dist/*
-src/fastmcpclient.egg-info/*
+src/mcp_llm_client.egg-info/*
 
 #Text Editor
 .vscode/*

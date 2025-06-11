@@ -1,6 +1,5 @@
-from fastmcpclient.services.llm.models.openai_service.gpt import GPT
-from fastmcpclient.services.llm.client_llm import ClientLLM
-from fastmcpclient.tools.clear_console import clear_console
+from mcpclient.services.llm.client_llm import ClientLLM
+from mcpclient.tools.clear_console import clear_console
 
 client: ClientLLM = ClientLLM()
 

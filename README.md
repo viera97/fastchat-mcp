@@ -3,7 +3,7 @@
 <div align = center>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/pypi/v/fastmcpclient?color=%2334D058&label=Version)](https://pypi.org/project/fastmcpclient)
+[![Version](https://img.shields.io/pypi/v/mcp-llm-client?color=%2334D058&label=Version)](https://pypi.org/project/mcp-llm-client)
 [![Last commit](https://img.shields.io/github/last-commit/rb58853/python-mcp-client.svg?style=flat)](https://github.com/rb58853/python-mcp-client/commits)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/python-mcp-client)](https://github.com/rb58853/python-mcp-client/commits)
 [![Stars](https://img.shields.io/github/stars/rb58853/python-mcp-client?style=flat&logo=github)](https://github.com/rb58853/python-mcp-client/stargazers)
@@ -36,7 +36,7 @@ This package provides a Python interface to connect to MCP servers in an easy, i
 To install the MCP client, you can use pip:
 
 ```bash
-pip install fastmcpclient
+pip install mcp-llm-client
 ```
 
 ## Implemented Models
@@ -99,17 +99,17 @@ Protocols for communication with MCP servers:
 
     If you need an MCP server to test the code, you can use [simple-mcp-server](https://github.com/rb58853/simple-mcp-server).
 
-### Software Requirements
+### Dependencies
 
-* Python 3.11+
-* openai package
-* fastmcp package
+* `Python = ">=3.11"`
+* `openai = "^1.68.2"`
+* `fastmcp = "^2.5.2"`
 
 ## Usage Example
 
 ```python
 #main.py
-from fastmcpclient import ClientLLM
+from mcpclient import ClientLLM
 
 #Create a client
 client: ClientLLM = ClientLLM()

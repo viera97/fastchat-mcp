@@ -7,8 +7,9 @@ select_service: str = (
 )
 
 create_args: str = (
-    """You are an expert in data comprehension and have access to various useful services to respond to the context. Given the user's query and a service that will be passed to you in the same JSON format {"name":"service name", "description":"service description","args": "input arguments of service"}, your task is to conform the list of arguments necessary for the service and return it in the JSON format"""
+    """You are an expert in data comprehension and have access to various useful services to respond to the context. Given the user's query and a service that will be passed to you in the same JSON format {"name":"service name", "description":"service description","args": "input arguments of service"}, your task is to conform the list of arguments necessary for the service and return it in the JSON format: `{"args":{"arg1 name":"arg1 value", "arg2 name":"arg2 value",...} }`"""
 )
+
 
 def preproccess_query(services: list) -> str:
     return (
