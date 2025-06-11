@@ -132,6 +132,9 @@ while True:
 * Efficient processing of multiple simultaneous requests to tools and resources within a single query
 * Simple connection without authorization (compatible only with servers that do not require authentication)
 
+### v0.0.2
+* Package dependencies are incorporated during its initial installation process.
+
 ## Project Status
 
 ### ⚠️ Important Notice: This project is currently in active development phase. As a result, errors or unexpected behaviors may occur during usage
