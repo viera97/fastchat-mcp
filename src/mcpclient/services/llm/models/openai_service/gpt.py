@@ -3,6 +3,7 @@ from ...prompts.system_prompts import (
     select_service,
     create_args,
     preproccess_query,
+    language_prompt,
 )
 from ...prompts.user_prompts import query_and_data, query_and_services, service2args
 from .....config.llm_config import ConfigGPT
@@ -102,7 +103,7 @@ class GPT(LLM):
         self.current_price += price
         return price
 
-    def preprocess_query(self, query: str) -> list[str]:
+    def preprocess_query(self, query: str) -> dict:
         system_message: str = preproccess_query(
             services=self.client_manager_mcp.get_services()
         )
@@ -117,10 +118,10 @@ class GPT(LLM):
         )
         self.get_price(completion.usage)
         response = completion.choices[0].message.content
-        return json.loads(response)["querys"]
+        return json.loads(response)
 
     def simple_query(self, query: str) -> str:
-        system_message: str = chat_asistant
+        system_message: str = chat_asistant + language_prompt(self.current_language)
         response = self.call_completion(system_message=system_message, query=query)
 
         # Se agrega la respuesta a la historia
@@ -156,7 +157,7 @@ class GPT(LLM):
         )
 
     def final_response(self, query: str, data: str | dict) -> str:
-        system_message: str = chat_asistant
+        system_message: str = chat_asistant + language_prompt(self.current_language)
 
         response = self.call_completion(
             system_message=system_message,

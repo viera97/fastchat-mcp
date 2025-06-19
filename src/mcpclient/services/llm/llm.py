@@ -2,21 +2,25 @@ import json
 from ...mcp_manager.client import ClientManagerMCP
 
 
-
-
 class LLM:
     def __init__(self):
         self.client_manager_mcp: ClientManagerMCP = ClientManagerMCP()
+        self.current_language: str = "English"
 
     def __call__(self, query: str):
-        querys: list[str] = self.preprocess_query(query=query)
+        processed_query: dict = self.preprocess_query(query=query)
+        querys: list[str] = processed_query["querys"]
+        self.current_language = processed_query["language"]
+
         end_response: str = ""
         for query in querys:
             end_response += self.proccess_query(query) + "\n\n"
         return end_response
 
-    def preprocess_query(self, query: str) -> list[str]:
-        """Devuelve una lista con todas las querys en las que se divide la query principal. Pued ser solo una query"""
+    def preprocess_query(self, query: str) -> dict:
+        """
+        Devuelve una lista con todas las querys en las que se divide la query principal y el lenguaje usado en la query. Puede ser solo una query
+        """
         Exception("Not Implemented")
 
     def proccess_query(self, query: str) -> str:
