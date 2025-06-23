@@ -6,4 +6,7 @@ client: ClientLLM = ClientLLM()
 clear_console()
 while True:
     query = input("> ")
-    print(client(query))
+    response = client(query)
+    for step in response:
+        print(step)
+    print(response)

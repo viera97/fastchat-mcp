@@ -35,7 +35,13 @@ class ClientManagerMCP:
 
         for server_key in mcp_servers.keys():
             server = {"key": server_key} | mcp_servers[server_key]
-            session: dict = get_session_data(server["http"])
+            try:
+                session: dict = get_session_data(server["http"])
+            except Exception as e:
+                print(
+                    f"Warning: No se ha logrado establecer conexion con el servidor {server_key}. Causa: {e}"
+                )
+                continue
             for tool in session["tools"]:
                 self.tools[f"{server_key}_{tool.name}"] = Tool(
                     http=server["http"], data=tool, server=server
