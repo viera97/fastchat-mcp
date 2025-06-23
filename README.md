@@ -81,7 +81,7 @@ Protocols for communication with MCP servers:
 
 * **`.env` file**: The `.env` file contains the authentication credentials necessary for integration with external services. This file must be created in the project root directory with the following format:
 
-    ```python
+    ```env
     # .env
     # OpenAI Authentication
     OPENAI_API_KEY=<YOUR OPENAI-API-KEY>
@@ -113,16 +113,8 @@ Protocols for communication with MCP servers:
 
 ```python
 #main.py
-from mcpclient import ClientLLM
-
-#Create a client
-client: ClientLLM = ClientLLM()
-
-while True:
-    query:str = input("> ")
-    #call client with a string query
-    print(client(query))
-
+from mcpclient import import open_local_chat
+open_local_chat()
 ```
 
 ## Version History
