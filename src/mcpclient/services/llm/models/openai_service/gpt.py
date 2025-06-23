@@ -128,7 +128,7 @@ class GPT(LLM):
         self.chat_history[-1].append({"role": "assistant", "content": response})
         return response
 
-    def select_services(self, query: str) -> str:
+    def select_service(self, query: str) -> str:
         """
         Funcion encargada de seleccionar los servicios utiles para el contexto de la consulta, usando los servicios expuestos por cada uno
         de los servidores
@@ -158,10 +158,11 @@ class GPT(LLM):
 
     def final_response(self, query: str, data: str | dict) -> str:
         system_message: str = chat_asistant + language_prompt(self.current_language)
+        user_message = query_and_data(query=query, data=data)
 
         response = self.call_completion(
             system_message=system_message,
-            query=query_and_data(query=query, data=data),
+            query=user_message,
             json_format=False,
         )
 

@@ -1,6 +1,7 @@
 import json
 from ...mcp_manager.client import ClientManagerMCP
-from .steps.step import BaseSteps, Step, StepType
+from .steps.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
+from typing import Generator
 
 
 class LLM:
@@ -8,17 +9,18 @@ class LLM:
         self.client_manager_mcp: ClientManagerMCP = ClientManagerMCP()
         self.current_language: str = "English"
 
-    def __call__(self, query: str):
-        yield str(BaseSteps.analize_query)
-        processed_query: dict = self.preprocess_query(query=query)
+    def __call__(self, query: str) -> Generator[Step]:
+        yield Step(step_type=StepMessage.ANALYZE_QUERY)
 
+        processed_query: dict = self.preprocess_query(query=query)
         querys: list[str] = processed_query["querys"]
         self.current_language = processed_query["language"]
 
-        end_response: str = ""
+        yield DataStep(data={"querys": querys})
+
         for query in querys:
-            end_response += self.proccess_query(query) + "\n\n"
-        return end_response
+            for step in self.proccess_query(query):
+                yield step
 
     def preprocess_query(self, query: str) -> dict:
         """
@@ -26,17 +28,22 @@ class LLM:
         """
         Exception("Not Implemented")
 
-    def proccess_query(self, query: str, merge_count: int = 0) -> str:
+    def proccess_query(self, query: str, merge_count: int = 0) -> Generator[Step]:
         """
         ### Args
         - query: consulta
         - merge_count: cantidad de consultas anteriores que se uniran a la informacion de esta consulta
         """
         self.append_chat_history()
+        yield QueryStep(query)
+        yield Step(step_type=StepMessage.SELECT_SERVICE)
         # Cargar los servicios utiles
-        service = json.loads(self.select_services(query))["service"]
+        service = json.loads(self.select_service(query))["service"]
+        yield DataStep(data={"service": service})
+
         if len(service) == 0:
-            return self.simple_query(query)
+            yield ResponseStep(response=self.simple_query(query), data=data)
+            # return self.simple_query(query)
         else:
             service = (
                 self.client_manager_mcp.resources[service]
@@ -48,9 +55,13 @@ class LLM:
                 )
             )
 
+        yield Step(step_type=StepMessage.CREATE_ARGUMENTS)
         args = json.loads(self.generate_args(query=query, service=service))["args"]
         data = service(args)[0].text
-        return self.final_response(query, data)
+        yield DataStep(data={"args": args})
+        
+        response = self.final_response(query, data)
+        yield ResponseStep(response=response, data=data)
 
     def append_chat_history(self):
         Exception("Not Implemented Exception")
@@ -58,7 +69,7 @@ class LLM:
     def simple_query(self, query: str) -> str:
         Exception("Not Implemented Exception")
 
-    def select_services(self, query: str) -> str:
+    def select_service(self, query: str) -> str:
         Exception("Not Implemented Exception")
 
     def generate_args(self, query: str, service: str) -> str:

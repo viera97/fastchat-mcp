@@ -5,8 +5,8 @@ config.json
 # Cache
 *.cpython-313.pyc
 
-#Conversations Tests
-conversations
+#Chats
+chats
 
 #Publish files
 dist/*
