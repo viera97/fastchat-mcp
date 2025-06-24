@@ -18,3 +18,4 @@ src/mcp_llm_client.egg-info/*
 
 #Dev Test
 test.py
+xbuild.md

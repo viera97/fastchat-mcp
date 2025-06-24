@@ -107,7 +107,7 @@ Protocols for communication with MCP servers:
 
 * `Python = ">=3.11"`
 * `openai = "^1.68.2"`
-* `fastmcp = "^2.5.2"`
+* `"mcp[cli]"`
 
 ## Usage Example
 
@@ -131,6 +131,12 @@ open_local_chat()
 ### v0.0.4
 
 * Package dependencies are incorporated during its initial installation process.
+
+### v0.0.5
+
+* El sistema de LLM esta definido por pasos, cada paso se devuelve al cliente que esta haciendo la consulta. De esta forma se puede saber por que paso del proceso de la consulta va.
+* Deteccion eficiente del lenguaje en las consultas, para dar respuestas sobre la base de este lenguaje.
+* Se agrego la funcion `open_local_chat()` para usar un chat local de forma facil.
 
 ## Project Status
 >

@@ -4,6 +4,7 @@ from .connections.call_tool import call_tool
 from .connections.read_resource import read_resource
 from ..tools.get_uri_args import get_args_from_uri
 from .services.service import Tool, Resource, Prompt, Service
+from ..config.logger import logger
 from mcp import ClientSession
 
 
@@ -38,8 +39,8 @@ class ClientManagerMCP:
             try:
                 session: dict = get_session_data(server["http"])
             except Exception as e:
-                print(
-                    f"Warning: No se ha logrado establecer conexion con el servidor {server_key}. Causa: {e}"
+                logger.warning(
+                    f"Failed to establish connection with server {server_key}. Cause: {e}"
                 )
                 continue
             for tool in session["tools"]:
