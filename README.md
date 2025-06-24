@@ -134,9 +134,9 @@ open_local_chat()
 
 ### v0.0.5
 
-* El sistema de LLM esta definido por pasos, cada paso se devuelve al cliente que esta haciendo la consulta. De esta forma se puede saber por que paso del proceso de la consulta va.
-* Deteccion eficiente del lenguaje en las consultas, para dar respuestas sobre la base de este lenguaje.
-* Se agrego la funcion `open_local_chat()` para usar un chat local de forma facil.
+* The LLM system is structured in steps, with each step being returned to the client making the query. This approach allows for the identification of the current stage within the query process.
+* Efficient language detection has been implemented for queries, enabling responses to be provided based on the detected language.
+* The `open_local_chat()` function has been added, making it easy to use a local chat.
 
 ## Project Status
 >
