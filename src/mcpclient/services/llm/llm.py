@@ -39,12 +39,13 @@ class LLM:
         yield Step(step_type=StepMessage.SELECT_SERVICE)
         # Cargar los servicios utiles
         service = json.loads(self.select_service(query))["service"]
-        yield DataStep(data={"service": service})
 
         if len(service) == 0:
-            yield ResponseStep(response=self.simple_query(query), data=data)
-            # return self.simple_query(query)
+            yield DataStep(data={"service": None})
+            yield ResponseStep(response=self.simple_query(query), data=None)
+            return
         else:
+            yield DataStep(data={"service": service})
             service = (
                 self.client_manager_mcp.resources[service]
                 if (self.client_manager_mcp.service_type(service) == "resource")

@@ -113,7 +113,7 @@ Protocols for communication with MCP servers:
 
 ```python
 #main.py
-from mcpclient import import open_local_chat
+from mcpclient import open_local_chat
 open_local_chat()
 ```
 
