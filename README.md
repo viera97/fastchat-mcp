@@ -112,9 +112,37 @@ Protocols for communication with MCP servers:
 ## Usage Example
 
 ```python
-#main.py
+#example1.py
 from mcpclient import open_local_chat
 open_local_chat()
+```
+
+```python
+#example2.py
+from mcpclient import Chat
+chat: Chat = Chat()
+while True:
+    query = input("> ")
+    if query == "":
+        break
+    for step in chat(query):
+        print(f"<< {step.json}")
+```
+
+Alternatively, you may test this service using the following [template available on GitHub](https://github.com/rb58853/template_mcp_llm_client):
+
+```shell
+# clone repo
+git clone https://github.com/rb58853/template_mcp_llm_client.git
+
+# change to project dir
+cd template_mcp_llm_client
+
+# install dependencies
+pip install -r requirements.txt
+
+# open in vscode
+code .
 ```
 
 ## Version History
@@ -137,6 +165,10 @@ open_local_chat()
 * The LLM system is structured in steps, with each step being returned to the client making the query. This approach allows for the identification of the current stage within the query process.
 * Efficient language detection has been implemented for queries, enabling responses to be provided based on the detected language.
 * The `open_local_chat()` function has been added, making it easy to use a local chat.
+
+### v0.0.6
+
+* The exposed services have been added to the context of all queries, including those that do not require the use of a specific service. This approach allows for general inquiries regarding the available services.
 
 ## Project Status
 >

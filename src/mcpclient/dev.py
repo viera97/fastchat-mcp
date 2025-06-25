@@ -1,11 +1,11 @@
-from mcpclient.services.llm.client_llm import Chat
+from mcpclient.services.llm.chat.chat import Chat
 from mcpclient.tools.clear_console import clear_console
 import os
 
 
 def open_local_chat():
     clear_console()
-    client: Chat = Chat()
+    chat: Chat = Chat()
     print("\n")
 
     md: str = ""
@@ -27,7 +27,7 @@ def open_local_chat():
 
         md += f"# {query}"
         index = 1
-        for step in client(query):
+        for step in chat(query):
             md += str(step)
             if step.type == "response":
                 print(f"<< {step.response}")
@@ -35,7 +35,7 @@ def open_local_chat():
                 print(f">> {step.query}")
                 index = 1
             if step.type == "data":
-                print(f'   {str(step).replace("*", "").replace("-", "*")}')
+                print(f'   {str(step).replace("*", "").replace("- ", "• ")}')
             if step.type == "step":
                 print(f"  {index}. {step.step}")
                 index += 1

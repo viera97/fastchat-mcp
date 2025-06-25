@@ -1,60 +1,10 @@
-import json
 from ...mcp_manager.client import ClientManagerMCP
-from .steps.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
-from typing import Generator
 
 
 class LLM:
     def __init__(self):
         self.client_manager_mcp: ClientManagerMCP = ClientManagerMCP()
         self.current_language: str = "English"
-
-    def __call__(self, query: str) -> Generator[Step]:
-        yield Step(step_type=StepMessage.ANALYZE_QUERY)
-
-        processed_query: dict = self.preprocess_query(query=query)
-        querys: list[str] = processed_query["querys"]
-        self.current_language = processed_query["language"]
-
-        yield DataStep(data={"querys": querys})
-
-        for query in querys:
-            for step in self.proccess_query(query):
-                yield step
-
-    def proccess_query(self, query: str) -> Generator[Step]:
-        """ """
-        self.append_chat_history()
-        yield QueryStep(query)
-        yield Step(step_type=StepMessage.SELECT_SERVICE)
-        # Cargar los servicios utiles
-        service = json.loads(self.select_service(query))["service"]
-
-        if len(service) == 0:
-            yield DataStep(data={"service": None})
-            yield ResponseStep(
-                response=self.simple_query(query, use_services_contex=True), data=None
-            )
-            return
-        else:
-            yield DataStep(data={"service": service})
-            service = (
-                self.client_manager_mcp.resources[service]
-                if (self.client_manager_mcp.service_type(service) == "resource")
-                else (
-                    self.client_manager_mcp.tools[service]
-                    if (self.client_manager_mcp.service_type(service) == "tool")
-                    else None
-                )
-            )
-
-        yield Step(step_type=StepMessage.CREATE_ARGUMENTS)
-        args = json.loads(self.generate_args(query=query, service=service))["args"]
-        data = service(args)[0].text
-        yield DataStep(data={"args": args})
-
-        response = self.final_response(query, data)
-        yield ResponseStep(response=response, data=data)
 
     def preprocess_query(self, query: str) -> dict:
         """
