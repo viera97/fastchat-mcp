@@ -28,7 +28,7 @@ class Chat:
         yield DataStep(data={"querys": querys})
 
         for query in querys:
-            for step in self.llm.proccess_query(query):
+            for step in self.proccess_query(query):
                 yield step
 
     def proccess_query(self, query: str) -> Generator[Step]:
@@ -65,6 +65,3 @@ class Chat:
 
         response = self.llm.final_response(query, data)
         yield ResponseStep(response=response, data=data)
-
-    def __call__(self, query: str) -> Generator[Step]:
-        return self.llm.llm(query=query)
