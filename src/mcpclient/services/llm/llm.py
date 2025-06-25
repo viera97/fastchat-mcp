@@ -22,18 +22,8 @@ class LLM:
             for step in self.proccess_query(query):
                 yield step
 
-    def preprocess_query(self, query: str) -> dict:
-        """
-        Devuelve una lista con todas las querys en las que se divide la query principal y el lenguaje usado en la query. Puede ser solo una query
-        """
-        Exception("Not Implemented")
-
-    def proccess_query(self, query: str, merge_count: int = 0) -> Generator[Step]:
-        """
-        ### Args
-        - query: consulta
-        - merge_count: cantidad de consultas anteriores que se uniran a la informacion de esta consulta
-        """
+    def proccess_query(self, query: str) -> Generator[Step]:
+        """ """
         self.append_chat_history()
         yield QueryStep(query)
         yield Step(step_type=StepMessage.SELECT_SERVICE)
@@ -42,7 +32,9 @@ class LLM:
 
         if len(service) == 0:
             yield DataStep(data={"service": None})
-            yield ResponseStep(response=self.simple_query(query), data=None)
+            yield ResponseStep(
+                response=self.simple_query(query, use_services_contex=True), data=None
+            )
             return
         else:
             yield DataStep(data={"service": service})
@@ -60,14 +52,20 @@ class LLM:
         args = json.loads(self.generate_args(query=query, service=service))["args"]
         data = service(args)[0].text
         yield DataStep(data={"args": args})
-        
+
         response = self.final_response(query, data)
         yield ResponseStep(response=response, data=data)
+
+    def preprocess_query(self, query: str) -> dict:
+        """
+        Devuelve una lista con todas las querys en las que se divide la query principal y el lenguaje usado en la query. Puede ser solo una query
+        """
+        Exception("Not Implemented")
 
     def append_chat_history(self):
         Exception("Not Implemented Exception")
 
-    def simple_query(self, query: str) -> str:
+    def simple_query(self, query: str, use_services_contex: bool = False) -> str:
         Exception("Not Implemented Exception")
 
     def select_service(self, query: str) -> str:

@@ -121,7 +121,7 @@ open_local_chat()
 
 ### v0.0.1
 
-* Initial implementation of `ClientLLM` client
+* Initial implementation of `Chat` client
 * Complete integration of `httpstream` protocol ([fasmcp](https://github.com/modelcontextprotocol/python-sdk))
 * Connectivity with multiple servers
 * Simplified config.json file for connection management

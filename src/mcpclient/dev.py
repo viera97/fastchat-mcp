@@ -1,11 +1,11 @@
-from mcpclient.services.llm.client_llm import ClientLLM
+from mcpclient.services.llm.client_llm import Chat
 from mcpclient.tools.clear_console import clear_console
 import os
 
 
 def open_local_chat():
     clear_console()
-    client: ClientLLM = ClientLLM()
+    client: Chat = Chat()
     print("\n")
 
     md: str = ""

@@ -120,8 +120,10 @@ class GPT(LLM):
         response = completion.choices[0].message.content
         return json.loads(response)
 
-    def simple_query(self, query: str) -> str:
-        system_message: str = chat_asistant + language_prompt(self.current_language)
+    def simple_query(self, query: str, use_services_contex: bool = False) -> str:
+        system_message: str = chat_asistant(
+            self.client_manager_mcp.get_services() if use_services_contex else None
+        ) + language_prompt(self.current_language)
         response = self.call_completion(system_message=system_message, query=query)
 
         # Se agrega la respuesta a la historia
