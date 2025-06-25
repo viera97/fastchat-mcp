@@ -159,7 +159,7 @@ class GPT(LLM):
         )
 
     def final_response(self, query: str, data: str | dict) -> str:
-        system_message: str = chat_asistant + language_prompt(self.current_language)
+        system_message: str = chat_asistant() + language_prompt(self.current_language)
         user_message = query_and_data(query=query, data=data)
 
         response = self.call_completion(
