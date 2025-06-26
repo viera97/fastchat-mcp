@@ -21,5 +21,5 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/rb58853/python-mcp-client"
-Issues = "https://github.com/rb58853/python-mcp-client/issues"
+Homepage = "https://github.com/rb58853/mcp-llm-client"
+Issues = "https://github.com/rb58853/mcp-llm-client/issues"

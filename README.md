@@ -1,4 +1,4 @@
-# Python MCP Client
+# MCP LLM client
 
 <div align = center>
 
