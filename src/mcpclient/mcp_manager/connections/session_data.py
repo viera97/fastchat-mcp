@@ -1,15 +1,26 @@
 from mcp.client.streamable_http import streamablehttp_client
+from mcp.client.auth import OAuthClientProvider
 from mcp import ClientSession
 import asyncio
 
-
-def get_session_data(http: str) -> dict:
-    return asyncio.run(async_get_session(http))
+from mcp_oauth import OAuthClient
 
 
-async def async_get_session(http: str):
+def get_session_data(http: str, oauth_client: OAuthClient) -> dict:
+    return asyncio.run(
+        async_get_session(
+            http=http,
+            oauth_client=oauth_client,
+        )
+    )
+
+
+async def async_get_session(http: str, oauth_client: OAuthClient):
     # Connect to a streamable HTTP server
-    async with streamablehttp_client(http) as (
+    oauth: OAuthClientProvider = (
+        oauth_client.oauth if oauth_client is not None else None
+    )
+    async with streamablehttp_client(url=http, auth=oauth) as (
         read_stream,
         write_stream,
         _,
@@ -18,8 +29,8 @@ async def async_get_session(http: str):
         async with ClientSession(read_stream, write_stream) as session:
             # Initialize the connection
             await session.initialize()
-            
-            # Generate data 
+
+            # Generate data
             tools = await session.list_tools()
             resources = await session.list_resource_templates()
             prompts = await session.list_prompts()
@@ -29,6 +40,5 @@ async def async_get_session(http: str):
                 "resources": resources.resourceTemplates,
                 "prompts": prompts.prompts,
             }
-            
 
         return data

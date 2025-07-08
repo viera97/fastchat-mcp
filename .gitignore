@@ -5,9 +5,6 @@ config.json
 # Cache
 *.cpython-313.pyc
 
-#Chats
-chats
-querys
 
 #Publish files
 dist/*
@@ -19,3 +16,9 @@ src/mcp_llm_client.egg-info/*
 #Dev Test
 test.py
 xbuild.md
+
+#Chats
+chats
+
+#token storage
+data

@@ -9,7 +9,8 @@ from mcp import ClientSession
 
 
 class ClientManagerMCP:
-    def __init__(self):
+    def __init__(self, app_name: str = "mcp-llm-client"):
+        self.app_name: str = app_name
         self.tools: dict[str:Tool] | None = {}
         self.resources: dict[str:Resource] | None = {}
         self.prompts: dict[str:Prompt] | None = {}
@@ -37,7 +38,9 @@ class ClientManagerMCP:
         for server_key in mcp_servers.keys():
             server = {"key": server_key} | mcp_servers[server_key]
             try:
-                session: dict = get_session_data(server["http"])
+                session: dict = get_session_data(
+                    server["httpstream-url"], server["oauth_client"]
+                )
             except Exception as e:
                 logger.warning(
                     f"Failed to establish connection with server {server_key}. Cause: {e}"
@@ -45,16 +48,16 @@ class ClientManagerMCP:
                 continue
             for tool in session["tools"]:
                 self.tools[f"{server_key}_{tool.name}"] = Tool(
-                    http=server["http"], data=tool, server=server
+                    http=server["httpstream-url"], data=tool, server=server
                 )
             for resource in session["resources"]:
                 self.resources[f"{server_key}_{resource.name}"] = Resource(
-                    http=server["http"], data=resource, server=server
+                    http=server["httpstream-url"], data=resource, server=server
                 )
 
             for prompt in session["prompts"]:
                 self.prompts[f"{server_key}_{prompt.name}"] = Prompt(
-                    http=server["http"], data=prompt, server=server
+                    http=server["httpstream-url"], data=prompt, server=server
                 )
 
     def service_type(self, service_key: str) -> str:

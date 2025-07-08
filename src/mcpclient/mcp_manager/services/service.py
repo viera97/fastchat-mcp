@@ -1,3 +1,5 @@
+from mcp_oauth import OAuthClient
+from mcp.client.auth import OAuthClientProvider
 from ...tools.get_uri_args import get_args_from_uri
 from mcp.client.streamable_http import streamablehttp_client
 from mcp import ClientSession
@@ -16,6 +18,7 @@ class Service:
         self.description: str = data.description
         self.args: dict[str, any] = None
         self.server: dict = server
+        self.oauth_client: OAuthClient | None = server["oauth_client"]
 
     def __str__(self):
         return str(
@@ -40,10 +43,17 @@ class Tool(Service):
         return self.call(args)
 
     def call(self, args: dict[str, any]):
-        return asyncio.run(Tool.async_call(self.http, self.name, args))
+        return asyncio.run(
+            Tool.async_call(self.http, self.name, args, self.oauth_client)
+        )
 
-    async def async_call(http: str, toolname: str, args: dict):
-        async with streamablehttp_client(http) as (
+    async def async_call(
+        http: str, toolname: str, args: dict, oauth_client: OAuthClient | None
+    ):
+        oauth: OAuthClientProvider = (
+            oauth_client.oauth if oauth_client is not None else None
+        )
+        async with streamablehttp_client(url=http, auth=oauth) as (
             read_stream,
             write_stream,
             _,
@@ -69,10 +79,13 @@ class Resource(Service):
         uri = self.data.uriTemplate
         for key in args:
             uri = uri.replace("{" + key + "}", str(args[key]))
-        return asyncio.run(Resource.async_read(self.http, uri))
+        return asyncio.run(Resource.async_read(self.http, uri, self.oauth_client))
 
-    async def async_read(http: str, uri: str):
-        async with streamablehttp_client(http) as (
+    async def _async_read(http: str, uri: str, oauth_client: OAuthClient | None):
+        oauth: OAuthClientProvider = (
+            oauth_client.oauth if oauth_client is not None else None
+        )
+        async with streamablehttp_client(url=http, auth=oauth) as (
             read_stream,
             write_stream,
             _,

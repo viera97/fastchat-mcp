@@ -1,14 +1,15 @@
 from mcp.client.streamable_http import streamablehttp_client
 from mcp import ClientSession
+from mcp_oauth import OAuthClient
 import asyncio
 
 
-def read_resource(http: str, uri: str) -> any:
-    return asyncio.run(async_read_resource(http, uri))
+def read_resource(http: str, uri: str, oauth_client: OAuthClient) -> any:
+    return asyncio.run(_async_read_resource(http=http, uri=uri))
 
 
-async def async_read_resource(http: str, uri: str):
-    async with streamablehttp_client(http) as (
+async def _async_read_resource(http: str, uri: str, oauth_client: OAuthClient):
+    async with streamablehttp_client(url=http, auth=oauth_client.oauth) as (
         read_stream,
         write_stream,
         _,

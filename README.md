@@ -92,10 +92,25 @@ Protocols for communication with MCP servers:
     ```json
     {
         "mcp_servers": {
-            "example_server": {
-                "http": "http://0.0.0.0:8000/server/mcp",
-                "name": "Example mcp server",
-                "description": "A simple example MCP server"
+            "example_public_server": {
+                "transport": "httpstream",
+                "httpstream-url": "http://127.0.0.1:8000/public-example-server/mcp",
+                "name": "example-public-server",
+                "description": "Example public server."
+            },
+            "example_private_mcp": {
+                "transport": "httpstream",
+                "httpstream-url": "http://127.0.0.1:8000/private-example-server/mcp",
+                "name": "example-private-server",
+                "description": "Example private server with oauth required.",
+                "auth": {
+                    "required": true,
+                    "server": "http://127.0.0.1:9000",
+                    "secrets": {
+                        "username": "user",
+                        "password": "password"
+                    }
+                }
             }
         }
     }
@@ -108,6 +123,7 @@ Protocols for communication with MCP servers:
 * `Python = ">=3.11"`
 * `openai = "^1.68.2"`
 * `"mcp[cli]"`
+* `mcp-oauth`
 
 ## Usage Example
 
@@ -169,6 +185,10 @@ code .
 ### v0.0.6
 
 * The exposed services have been added to the context of all queries, including those that do not require the use of a specific service. This approach allows for general inquiries regarding the available services.
+
+### v0.0.7
+
+* A simple authorization system based on user credential authentication (username and password) was integrated. For further reference, please see [mcp-oauth](https://github.com/rb58853/mcp-oauth).
 
 ## Project Status
 >
