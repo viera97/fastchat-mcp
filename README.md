@@ -190,6 +190,11 @@ code .
 
 * A simple authorization system based on user credential authentication (username and password) was integrated. For further reference, please see [mcp-oauth](https://github.com/rb58853/mcp-oauth).
 
+### v0.0.8
+
+* The prompts for language models (LLMs) were optimized to deliver responses that are more closely aligned with the MCP context.
+* The service extraction step was merged with the argument creation step, enabling both services and arguments to be identified in a single stage.
+
 ## Project Status
 >
 >⚠️ **Important Notice:** This project is currently in active development phase. As a result, errors or unexpected behaviors may occur during usage
