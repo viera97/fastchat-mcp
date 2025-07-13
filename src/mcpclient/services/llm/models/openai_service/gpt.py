@@ -136,25 +136,12 @@ class GPT(LLM):
         de los servidores
         """
         system_message: str = select_service
-        return self.call_completion(
-            system_message=system_message,
-            query=query_and_services(
-                query=query, services=self.client_manager_mcp.get_services()
-            ),
-            json_format=True,
+        query: str = query_and_services(
+            query=query, services=self.client_manager_mcp.get_services()
         )
-
-    def generate_args(self, query: str, service: Service) -> str:
-        """
-        Funcion encargada de crear argumentos para los servicios expuestos que se usaran
-        """
-        system_message: str = create_args
-
-        service = str(service)
-
         return self.call_completion(
             system_message=system_message,
-            query=service2args(query=query, service=service),
+            query=query,
             json_format=True,
         )
 

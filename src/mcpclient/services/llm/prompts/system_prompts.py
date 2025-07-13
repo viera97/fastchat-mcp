@@ -12,14 +12,19 @@ def chat_asistant(services: list | None = None) -> str:
         )
     )
 
+select_service:str="""
+You are an expert in data comprehension with access to various services. You receive a user query and a JSON containing information about all available services in the format {key1: data1, key2: data2, ...}, where each value contains the necessary information about the service (name, description, and arguments).
 
-select_service: str = (
-    """You are an expert in data comprehension and have access to several services. Given the user's query and the services that pass you with the format JSON {key1 : service_data1, key2 : service_data2, ...}, your task is to define whether there exists or not a useful service for the query context, in case there exists extract the service that will be useful for the given context; in case there is no useful service for the context you must return empty value {"service":""}. Ensure returning a JSON with format {"service":"key of the service selected for the context"}. Ensure selecting services correctly, an empty service ("") is a valid selection."""
-)
+Your task is:
+1. Identify if the user's query requests to use any service.
+   - If so, select the key of the most useful service for the context and extract the necessary arguments to execute it from the provided data.
+   - If there is no useful service or the query only asks for information about the services (without requesting their use), select an empty service ("") and the arguments should be {}; {"service":"", "args":{}}.
 
-create_args: str = (
-    """You are an expert in data comprehension and have access to various useful services to respond to the context. Given the user's query and a service that will be passed to you in the same JSON format {"name":"service name", "description":"service description","args": "input arguments of service"}, your task is to conform the list of arguments necessary for the service and return it in the JSON format: `{"args":{"arg1 name":"arg1 value", "arg2 name":"arg2 value",...} }`"""
-)
+2. ALWAYS return a JSON in the following format:
+{"service":"service_key", "args":{...}}
+
+Correctly select and extract both the service and the arguments from the input JSON.
+"""
 
 
 def preproccess_query(services: list) -> str:

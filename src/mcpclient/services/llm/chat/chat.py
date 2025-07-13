@@ -37,7 +37,9 @@ class Chat:
         yield QueryStep(query)
         yield Step(step_type=StepMessage.SELECT_SERVICE)
         # Cargar los servicios utiles
-        service = json.loads(self.llm.select_service(query))["service"]
+        service = json.loads(self.llm.select_service(query))
+        args = service["args"]
+        service = service["service"]
 
         if len(service) == 0:
             yield DataStep(data={"service": None})
@@ -45,9 +47,9 @@ class Chat:
                 response=self.llm.simple_query(query, use_services_contex=True),
                 data=None,
             )
-            return
         else:
             yield DataStep(data={"service": service})
+            yield DataStep(data={"args": args})
             service = (
                 self.llm.client_manager_mcp.resources[service]
                 if (self.llm.client_manager_mcp.service_type(service) == "resource")
@@ -58,10 +60,6 @@ class Chat:
                 )
             )
 
-        yield Step(step_type=StepMessage.CREATE_ARGUMENTS)
-        args = json.loads(self.llm.generate_args(query=query, service=service))["args"]
-        data = service(args)[0].text
-        yield DataStep(data={"args": args})
-
-        response = self.llm.final_response(query, data)
-        yield ResponseStep(response=response, data=data)
+            data = service(args)[0].text
+            response = self.llm.final_response(query, data)
+            yield ResponseStep(response=response, data=data)

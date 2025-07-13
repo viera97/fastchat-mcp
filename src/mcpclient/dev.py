@@ -35,7 +35,7 @@ def open_local_chat():
                 print(f">> {step.query}")
                 index = 1
             if step.type == "data":
-                print(f'   {str(step).replace("*", "").replace("- ", "• ")}')
+                print(f'   {str(step).replace("**", "").replace("- ", "• ")}')
             if step.type == "step":
                 print(f"  {index}. {step.step}")
                 index += 1

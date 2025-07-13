@@ -87,7 +87,7 @@ class DataStep(Step):
     def __str__(self):
         result = ""
         if self.data is not None and len(self.data) > 0:
-            # result += "#### Data\n"
             for key in self.data.keys():
                 result += f"- **{key}:** {self.data[key]}\n"
-        return result
+
+        return result[:-1] if len(result) > 1 else result

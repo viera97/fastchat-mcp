@@ -14,6 +14,7 @@ src/mcp_llm_client.egg-info/*
 .vscode/*
 
 #Dev Test
+_old_prompts/*
 test.py
 xbuild.md
 
@@ -22,3 +23,4 @@ chats
 
 #token storage
 data
+

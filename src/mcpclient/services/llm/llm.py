@@ -21,9 +21,6 @@ class LLM:
     def select_service(self, query: str) -> str:
         Exception("Not Implemented Exception")
 
-    def generate_args(self, query: str, service: str) -> str:
-        Exception("Not Implemented Exception")
-
     def final_response(self, query: str, data: str | dict) -> str:
         Exception("Not Implemented Exception")
 
