@@ -31,13 +31,12 @@ class Servers:
         """Genera un oauth client para este servidor, usando los datos proporcionados en `config.json`"""
         oauth_client: OAuthClient | None = None
 
-        if server.keys().__contains__("auth") and (
-            server["auth"].keys().__contains__("required")
-            and server["auth"]["required"]
+        if "auth" in server.keys() and (
+            "required" in server["auth"].keys() and server["auth"]["required"]
         ):
             server_url: str = server["auth"]["server"]
             server_name: str | None = (
-                server["name"] if server.keys().__contains__("name") else None
+                server["name"] if "name" in server.keys() else None
             )
             server_full_name: str = (
                 f""" "{server_name}[{server_url}]" """
@@ -49,7 +48,7 @@ class Servers:
             password: str = None
 
             try:
-                if server["auth"].keys().__contains__("secrets"):
+                if "secrets" in server["auth"].keys():
                     username = server["auth"]["secrets"]["username"]
                     password = server["auth"]["secrets"]["password"]
             except:

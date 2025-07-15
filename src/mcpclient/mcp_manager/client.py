@@ -61,9 +61,9 @@ class ClientManagerMCP:
                 )
 
     def service_type(self, service_key: str) -> str:
-        if self.tools.keys().__contains__(service_key):
+        if service_key in self.tools.keys():
             return "tool"
-        if self.resources.keys().__contains__(service_key):
+        if service_key in self.resources.keys():
             return "resource"
 
     def get_services(self):
