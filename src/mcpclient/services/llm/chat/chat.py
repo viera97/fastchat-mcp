@@ -40,8 +40,12 @@ class Chat:
         # region ########### GET PROMTPS ###########
         yield Step(step_type=StepMessage.SELECT_PROMPTS)
         prompts = json.loads(self.llm.select_prompts(query))["prompt_services"]
-        for prompt in prompts:
-            yield DataStep(data={"prompt": prompt["prompt_service"]})
+
+        if len(prompts) == 0:
+            yield DataStep(data={"prompts": None})
+
+        for index, prompt in enumerate(prompts):
+            yield DataStep(data={f"prompt {index+1}": prompt["prompt_service"]})
 
         extra_messages = [
             self.llm.client_manager_mcp.prompts[prompt["prompt_service"]](
@@ -85,7 +89,7 @@ class Chat:
                     else None
                 )
             )
-            
+
             data = service(args)[0].text
             response = self.llm.final_response(query, data)
             yield ResponseStep(response=response, data=data)
