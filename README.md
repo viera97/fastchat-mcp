@@ -163,37 +163,16 @@ code .
 
 ## Version History
 
-### v0.0.1
+### Last Version Features
 
-* Initial implementation of `Chat` client
-* Complete integration of `httpstream` protocol ([fasmcp](https://github.com/modelcontextprotocol/python-sdk))
-* Connectivity with multiple servers
-* Simplified config.json file for connection management
-* Efficient processing of multiple simultaneous requests to tools and resources within a single query
-* Simple connection without authorization (compatible only with servers that do not require authentication)
+* 💬 Fully functional chat by passing a query; see [`Chat`](./src/mcpclient/services/llm/chat/chat.py).
+* ⚙️ Integration with `Tools`, `Resources`, and `Prompts` from MCP servers, achieving a well-integrated client workflow with each of these services.
+* 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#environmental-configuration).
+* 👾 OpenAI GPT as an integrated LLM using the model `"gpt4o-mini"`.
+* 📡 Support for the httpstream transport protocol.
+* 💻 Easy console usage via [`open_local_chat()`](./src/mcpclient/dev.py); see [example1](#usage-example) for the use case.
 
-### v0.0.4
-
-* Package dependencies are incorporated during its initial installation process.
-
-### v0.0.5
-
-* The LLM system is structured in steps, with each step being returned to the client making the query. This approach allows for the identification of the current stage within the query process.
-* Efficient language detection has been implemented for queries, enabling responses to be provided based on the detected language.
-* The `open_local_chat()` function has been added, making it easy to use a local chat.
-
-### v0.0.6
-
-* The exposed services have been added to the context of all queries, including those that do not require the use of a specific service. This approach allows for general inquiries regarding the available services.
-
-### v0.0.7
-
-* A simple authorization system based on user credential authentication (username and password) was integrated. For further reference, please see [mcp-oauth](https://github.com/rb58853/mcp-oauth).
-
-### v0.0.8
-
-* The prompts for language models (LLMs) were optimized to deliver responses that are more closely aligned with the MCP context.
-* The service extraction step was merged with the argument creation step, enabling both services and arguments to be identified in a single stage.
+[See more in changelog](/CHANGELOG.md)
 
 ## Project Status
 >
