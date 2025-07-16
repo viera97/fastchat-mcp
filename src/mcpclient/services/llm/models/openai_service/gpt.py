@@ -63,16 +63,16 @@ class GPT(LLM):
         messages: list[dict[str, str]] = [{"role": "system", "content": system_message}]
 
         for message in extra_messages:
-            if message["role"] == "user" or message["role"] == "assistant":
-                self.chat_history[-1].append(message)
             if message["role"] == "system":
                 messages.append(message)
-
         messages += [
             message
             for messages in self.chat_history[-self.max_len_history :]
             for message in messages
         ]
+        for message in extra_messages:
+            if message["role"] == "user" or message["role"] == "assistant":
+                messages.append(message)
 
         if json_format:
             completion = self.client.chat.completions.create(
@@ -171,7 +171,9 @@ class GPT(LLM):
             extra_messages=extra_messages,
         )
 
-    def select_service(self, query: str) -> str:
+    def select_service(
+        self, query: str, extra_messages: list[dict[str, str]] = []
+    ) -> str:
         """
         Funcion encargada de seleccionar los servicios utiles para el contexto de la consulta, usando los servicios expuestos por cada uno
         de los servidores
@@ -184,4 +186,5 @@ class GPT(LLM):
             system_message=system_message,
             query=query,
             json_format=True,
+            extra_messages=extra_messages,
         )

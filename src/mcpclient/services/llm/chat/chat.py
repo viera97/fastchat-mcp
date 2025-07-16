@@ -36,6 +36,8 @@ class Chat:
         """ """
         self.llm.append_chat_history()
         yield QueryStep(query)
+
+        # region ########### GET PROMTPS ###########
         yield Step(step_type=StepMessage.SELECT_PROMPTS)
         prompts = json.loads(self.llm.select_prompts(query))["prompt_services"]
         for prompt in prompts:
@@ -52,13 +54,19 @@ class Chat:
             for prompt_message in extra_messages
             for message in prompt_message
         ]
+        # endregion ###################################################
 
+        # region ########### SELECT SERVICE AND ARGS ############
         yield Step(step_type=StepMessage.SELECT_SERVICE)
         # Cargar los servicios utiles
-        service = json.loads(self.llm.select_service(query))
+        service = json.loads(
+            self.llm.select_service(query, extra_messages=extra_messages)
+        )
         args = service["args"]
         service = service["service"]
+        # endregion ###################################################
 
+        # region ########### RESPONSE ############
         if len(service) == 0:
             yield DataStep(data={"service": None})
             yield ResponseStep(
@@ -77,10 +85,11 @@ class Chat:
                     else None
                 )
             )
-
+            
             data = service(args)[0].text
             response = self.llm.final_response(query, data)
             yield ResponseStep(response=response, data=data)
+        # endregion ###################################################
 
 
 def prompt_message2dict(prompt_message: PromptMessage):

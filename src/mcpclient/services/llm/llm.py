@@ -21,7 +21,9 @@ class LLM:
     def select_prompts(self, query: str) -> str:
         raise Exception("Not Implemented")
 
-    def select_service(self, query: str) -> str:
+    def select_service(
+        self, query: str, extra_messages: list[dict[str, str]] = []
+    ) -> str:
         raise Exception("Not Implemented")
 
     def final_response(self, query: str, data: str | dict) -> str:
