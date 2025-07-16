@@ -13,7 +13,7 @@
 
 </div>
 
-Python client, based on [`fastmcp`](https://github.com/modelcontextprotocol/python-sdk), for connecting to MCP servers through multiple protocols, specifically designed to work with integrated language models.
+Python client, based on [`"mcp[cli]"`](https://github.com/modelcontextprotocol/python-sdk), for connecting to MCP servers through multiple protocols, specifically designed to work with integrated language models.
 
 ## Table of Contents
 
