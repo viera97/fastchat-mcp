@@ -34,6 +34,33 @@ Your task is:
 Correctly select and extract both the service and the arguments from the input JSON.
 """
 
+select_prompts: str = """
+You are an expert in data comprehension with access to various prompt_services. You receive a user query and a JSON containing information about all available prompt_services in the format {key1: data1, key2: data2, ...}, where each value contains the necessary information about the prompt_service (name, description, and arguments).
+
+Your task is:
+1. Identify if the user's query requests to use any prompt_service.
+   - If so, select the keys of the mosts useful prompt_services for the context and extract the necessary arguments to execute each from the provided data.
+   - If there is no useful prompt_service or the query only asks for information about the prompt_services (without requesting their use), select an empty prompt_services: {prompt_services: []}.
+
+2. ALWAYS return a JSON in the following format:
+{
+    "prompt_services":
+        [
+            {
+                "prompt_service":"prompt_service_1_key", 
+                "args":{...}
+            },
+            {
+                "prompt_service":"prompt_service_2_key", 
+                "args":{...}
+            },
+            ...
+        ]
+}
+
+Correctly select and extract both the prompt_services and the arguments from the input JSON.
+"""
+
 
 def preproccess_query(services: list) -> str:
     return (

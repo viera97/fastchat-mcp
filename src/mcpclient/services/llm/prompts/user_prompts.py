@@ -8,6 +8,10 @@ def query_and_services(query: str, services: str | list):
     # return f"{query}.\n The available services for obtaining information are:\n{services}"
 
 
+def exposed_prompts(prompt_services: str | list):
+    return f"All prompt services:{prompt_services}"
+
+
 def query_and_data(query: str, data: str | dict):
     return f"{query}.\n Use the following retrievd data to answer my query:\n{data}"
     # return "{" + f'"User Query": {query}, "Context":{data}' + "}"

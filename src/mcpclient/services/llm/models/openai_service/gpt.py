@@ -1,10 +1,6 @@
-from ...prompts.system_prompts import (
-    chat_asistant,
-    select_service,
-    preproccess_query,
-    language_prompt,
-)
-from ...prompts.user_prompts import query_and_data, query_and_services, service2args
+from ...prompts import system_prompts, user_prompts
+
+# from ...prompts.user_prompts import query_and_data, query_and_services, service2args
 from .....config.llm_config import ConfigGPT
 from ...llm import LLM
 from .....mcp_manager.services.service import Service
@@ -56,18 +52,28 @@ class GPT(LLM):
         self.chat_history[-1].append({})
 
     def call_completion(
-        self, system_message: str, query: str, json_format: bool = False
+        self,
+        system_message: str,
+        query: str,
+        json_format: bool = False,
+        extra_messages: list[dict[str, str]] = [],
     ):
         """ """
         self.chat_history[-1][0] = {"role": "user", "content": query}
+        messages: list[dict[str, str]] = [{"role": "system", "content": system_message}]
 
-        messages: list[dict[str, str]] = [
-            {"role": "system", "content": system_message}
-        ] + [
+        for message in extra_messages:
+            if message["role"] == "user" or message["role"] == "assistant":
+                self.chat_history[-1].append(message)
+            if message["role"] == "system":
+                messages.append(message)
+
+        messages += [
             message
             for messages in self.chat_history[-self.max_len_history :]
             for message in messages
         ]
+
         if json_format:
             completion = self.client.chat.completions.create(
                 model=self.model,
@@ -103,7 +109,7 @@ class GPT(LLM):
         return price
 
     def preprocess_query(self, query: str) -> dict:
-        system_message: str = preproccess_query(
+        system_message: str = system_prompts.preproccess_query(
             services=self.client_manager_mcp.get_services()
         )
         messages: list[dict[str, str]] = [
@@ -120,33 +126,22 @@ class GPT(LLM):
         return json.loads(response)
 
     def simple_query(self, query: str, use_services_contex: bool = False) -> str:
-        system_message: str = chat_asistant(
+        system_message: str = system_prompts.chat_asistant(
             self.client_manager_mcp.get_services() if use_services_contex else None
-        ) + language_prompt(self.current_language)
+        ) + system_prompts.language_prompt(self.current_language)
         response = self.call_completion(system_message=system_message, query=query)
 
         # Se agrega la respuesta a la historia
         self.chat_history[-1].append({"role": "assistant", "content": response})
         return response
 
-    def select_service(self, query: str) -> str:
-        """
-        Funcion encargada de seleccionar los servicios utiles para el contexto de la consulta, usando los servicios expuestos por cada uno
-        de los servidores
-        """
-        system_message: str = select_service
-        query: str = query_and_services(
-            query=query, services=self.client_manager_mcp.get_services()
-        )
-        return self.call_completion(
-            system_message=system_message,
-            query=query,
-            json_format=True,
-        )
-
     def final_response(self, query: str, data: str | dict) -> str:
-        system_message: str = chat_asistant() + language_prompt(self.current_language)
-        user_message = query_and_data(query=query, data=data)
+        system_message: (
+            str
+        ) = system_prompts.chat_asistant() + system_prompts.language_prompt(
+            self.current_language
+        )
+        user_message = user_prompts.query_and_data(query=query, data=data)
 
         response = self.call_completion(
             system_message=system_message,
@@ -157,3 +152,36 @@ class GPT(LLM):
         # Se agrega la respuesta a la historia
         self.chat_history[-1].append({"role": "assistant", "content": response})
         return response
+
+    def select_prompts(self, query: str) -> str:
+        system_message: str = system_prompts.select_prompts
+        prompts = self.client_manager_mcp.get_prompts()
+
+        extra_messages: list[dict[str, str]] = [
+            {
+                "role": "user",
+                "content": user_prompts.exposed_prompts(prompts),
+            }
+        ]
+
+        return self.call_completion(
+            system_message=system_message,
+            query=query,
+            json_format=True,
+            extra_messages=extra_messages,
+        )
+
+    def select_service(self, query: str) -> str:
+        """
+        Funcion encargada de seleccionar los servicios utiles para el contexto de la consulta, usando los servicios expuestos por cada uno
+        de los servidores
+        """
+        system_message: str = system_prompts.select_service
+        query: str = user_prompts.query_and_services(
+            query=query, services=self.client_manager_mcp.get_services()
+        )
+        return self.call_completion(
+            system_message=system_message,
+            query=query,
+            json_format=True,
+        )

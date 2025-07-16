@@ -101,9 +101,36 @@ class Resource(Service):
 class Prompt(Service):
     def __init__(self, http, data, server):
         super().__init__(http, data, server)
+        self.args = [{"name": arg.name, "type": "string"} for arg in data.arguments]
 
     def __call__(self, args: dict[str, any]):
         return self.get(args)
 
-    def get(self, args: dict[str, str]):
-        pass
+    def get(self, args: dict[str, any]):
+        return asyncio.run(
+            Prompt.async_get(self.http, self.name, args, self.oauth_client)
+        )
+
+    async def async_get(
+        http: str, promptname: str, args: dict, oauth_client: OAuthClient | None
+    ):
+        args = {key: str(args[key]) for key in args.keys()}
+        # if len(args) == 0:
+        #     args = None
+
+        oauth: OAuthClientProvider = (
+            oauth_client.oauth if oauth_client is not None else None
+        )
+        async with streamablehttp_client(url=http, auth=oauth) as (
+            read_stream,
+            write_stream,
+            _,
+        ):
+            async with ClientSession(read_stream, write_stream) as session:
+                await session.initialize()
+
+                # get a prompt
+                prompt_result = await session.get_prompt(
+                    name=promptname, arguments=args
+                )
+                return prompt_result.messages

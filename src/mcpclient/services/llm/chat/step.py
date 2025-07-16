@@ -17,9 +17,9 @@ class StepMessage(Enum):
         "Select the most appropriate service for the current query.",
     )
 
-    CREATE_ARGUMENTS = (
-        "create arguments",
-        "Generate the necessary arguments for use with the selected service.",
+    SELECT_PROMPTS = (
+        "select prompts",
+        "Select the mosts appropriates prompts for the current query and generate the necessary arguments for use with the selected prompts",
     )
 
 

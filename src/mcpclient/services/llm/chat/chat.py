@@ -4,6 +4,7 @@ from typing import Generator
 from .step import Step
 from .step import Step, StepMessage, DataStep, ResponseStep, QueryStep
 import json
+from mcp.types import PromptMessage
 
 
 class Chat:
@@ -35,6 +36,23 @@ class Chat:
         """ """
         self.llm.append_chat_history()
         yield QueryStep(query)
+        yield Step(step_type=StepMessage.SELECT_PROMPTS)
+        prompts = json.loads(self.llm.select_prompts(query))["prompt_services"]
+        for prompt in prompts:
+            yield DataStep(data={"prompt": prompt["prompt_service"]})
+
+        extra_messages = [
+            self.llm.client_manager_mcp.prompts[prompt["prompt_service"]](
+                prompt["args"]
+            )
+            for prompt in prompts
+        ]
+        extra_messages = [
+            prompt_message2dict(message)
+            for prompt_message in extra_messages
+            for message in prompt_message
+        ]
+
         yield Step(step_type=StepMessage.SELECT_SERVICE)
         # Cargar los servicios utiles
         service = json.loads(self.llm.select_service(query))
@@ -63,3 +81,8 @@ class Chat:
             data = service(args)[0].text
             response = self.llm.final_response(query, data)
             yield ResponseStep(response=response, data=data)
+
+
+def prompt_message2dict(prompt_message: PromptMessage):
+    data: dict = json.loads(prompt_message.content.text)
+    return {"role": prompt_message.role, "content": data["content"]["text"]}

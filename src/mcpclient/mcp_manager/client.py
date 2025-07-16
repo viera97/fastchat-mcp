@@ -15,17 +15,19 @@ class ClientManagerMCP:
         self.resources: dict[str:Resource] | None = {}
         self.prompts: dict[str:Prompt] | None = {}
         self.refresh_data()
-        self.services: list[dict] = []
+        self.__services: list[dict] = []
         """Lista de servicios en forma de string para pasarse al LLM"""
+        self.__prompts_context: list[dict] = []
+        """Lista de prompts en forma de string para pasarse al LLM"""
 
     def call_tool(self, name: str, args: dict) -> str | None:
-        return self.tools[name].call()
+        return self.tools[name](args)
 
     def read_resource(self, name: str, args: dict) -> str | None:
-        return self.resources[name].read()
+        return self.resources[name](args)
 
-    def get_promps(self) -> dict:
-        pass
+    def get_prompt(self, name: str, args: dict) -> dict:
+        self.prompts[name](args)
 
     def refresh_data(self):
         """
@@ -66,11 +68,18 @@ class ClientManagerMCP:
         if service_key in self.resources.keys():
             return "resource"
 
-    def get_services(self):
-        if len(self.services) != len(self.tools) + len(self.resources):
+    def get_services(self) -> list[dict[str, any]]:
+        if len(self.__services) != len(self.tools) + len(self.resources):
             services = self.tools | self.resources
-            self.services = [
+            self.__services = [
                 {service: str(services[service])} for service in services.keys()
             ]
 
-        return self.services
+        return self.__services
+
+    def get_prompts(self) -> list[dict[str, any]]:
+        if len(self.__prompts_context) != len(self.prompts):
+            self.__prompts_context = [
+                {key: str(self.prompts[key])} for key in self.prompts.keys()
+            ]
+        return self.__prompts_context
