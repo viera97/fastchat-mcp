@@ -1,4 +1,5 @@
 # MCP LLM client
+![alt text](/doc/images/mcp-llm-client_2.png)
 
 <div align = center>
 
