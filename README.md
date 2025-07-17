@@ -180,4 +180,4 @@ code .
 
 ## License
 
-MIT License. See [`license`](license).
+MIT License. See [`license`](LICENSE).
