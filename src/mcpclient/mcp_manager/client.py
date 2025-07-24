@@ -38,15 +38,23 @@ class ClientManagerMCP:
 
         for server_key in mcp_servers.keys():
             server = {"key": server_key} | mcp_servers[server_key]
-            try:
-                session: dict = get_session_data(
-                    server["httpstream-url"], server["oauth_client"]
+            session: dict = get_session_data(
+                    server["httpstream-url"],
+                    server["oauth_client"],
+                    headers=server.get("headers", None),
                 )
-            except Exception as e:
-                logger.warning(
-                    f"Failed to establish connection with server {server_key}. Cause: {e}"
-                )
-                continue
+            # try:
+            #     session: dict = get_session_data(
+            #         server["httpstream-url"],
+            #         server["oauth_client"],
+            #         headers=server.get("headers", None),
+            #     )
+            # except Exception as e:
+            #     logger.warning(
+            #         f"Failed to establish connection with server {server_key}. Cause: {e}"
+            #     )
+            #     continue
+            
             for tool in session["tools"]:
                 self.tools[f"{server_key}_{tool.name}"] = Tool(
                     http=server["httpstream-url"], data=tool, server=server

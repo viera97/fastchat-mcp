@@ -6,21 +6,30 @@ import asyncio
 from mcp_oauth import OAuthClient
 
 
-def get_session_data(http: str, oauth_client: OAuthClient) -> dict:
+def get_session_data(
+    http: str,
+    oauth_client: OAuthClient,
+    headers: dict[str, str] = None,
+) -> dict:
     return asyncio.run(
         async_get_session(
             http=http,
             oauth_client=oauth_client,
+            headers=headers,
         )
     )
 
 
-async def async_get_session(http: str, oauth_client: OAuthClient):
+async def async_get_session(
+    http: str,
+    oauth_client: OAuthClient,
+    headers: dict[str, str] = None,
+):
     # Connect to a streamable HTTP server
     oauth: OAuthClientProvider = (
         oauth_client.oauth if oauth_client is not None else None
     )
-    async with streamablehttp_client(url=http, auth=oauth) as (
+    async with streamablehttp_client(url=http, auth=oauth, headers=headers) as (
         read_stream,
         write_stream,
         _,

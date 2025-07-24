@@ -31,38 +31,19 @@ class Servers:
         """Genera un oauth client para este servidor, usando los datos proporcionados en `config.json`"""
         oauth_client: OAuthClient | None = None
 
+        server_url: str | None = (
+            server["httpstream-url"] if "httpstream-url" in server else None
+        )
+        
         if "auth" in server.keys() and (
             "required" in server["auth"].keys() and server["auth"]["required"]
         ):
-            server_url: str = server["auth"]["server"]
-            server_name: str | None = (
-                server["name"] if "name" in server.keys() else None
-            )
-            server_full_name: str = (
-                f""" "{server_name}[{server_url}]" """
-                if server_name is not None
-                else f""" "[{server_url}]" """
-            )
-
-            username: str = None
-            password: str = None
-
-            try:
-                if "secrets" in server["auth"].keys():
-                    username = server["auth"]["secrets"]["username"]
-                    password = server["auth"]["secrets"]["password"]
-            except:
-                pass
-
-            if username is None or password is None:
-                logger.info(
-                    f"Server {server_full_name} require manual login in webbrowser that will be open."
-                )
+            auth:dict=server["auth"]
+            post_body = auth["post_body"]
             oauth_client = OAuthClient(
                 client_name=self.app_name,
                 server_url=server_url,
-                authorized_username=username,
-                authorized_username_password=password,
+                body=post_body
             )
 
         server["oauth_client"] = oauth_client

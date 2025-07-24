@@ -4,6 +4,7 @@ from ...tools.get_uri_args import get_args_from_uri
 from mcp.client.streamable_http import streamablehttp_client
 from mcp import ClientSession
 import asyncio
+from typing import Literal
 
 
 class Service:
@@ -19,6 +20,7 @@ class Service:
         self.args: dict[str, any] = None
         self.server: dict = server
         self.oauth_client: OAuthClient | None = server["oauth_client"]
+        self.headers: dict[str, str] = server.get("headers", None)
 
     def __str__(self):
         return str(
@@ -32,6 +34,30 @@ class Service:
     def __call__(self, args: dict[str, any]):
         Exception("Not Implemented")
 
+    # async def __async_call_service(
+    #     self,
+    #     service: Literal["tool", "resource", "prompt"],
+    #     http: str,
+    #     service_name: str,
+    #     args: dict,
+    #     oauth_client: OAuthClient | None,
+    #     headers: dict[str, str] = None,
+    # ):
+    #     oauth: OAuthClientProvider = (
+    #         oauth_client.oauth if oauth_client is not None else None
+    #     )
+    #     async with streamablehttp_client(url=http, auth=oauth) as (
+    #         read_stream,
+    #         write_stream,
+    #         _,
+    #     ):
+    #         async with ClientSession(read_stream, write_stream) as session:
+    #             await session.initialize()
+
+    #             # Call a tool
+    #             tool_result = await session.call_tool(service_name, args)
+    #             return tool_result.content
+
 
 class Tool(Service):
     def __init__(self, http, data, server):
@@ -43,17 +69,26 @@ class Tool(Service):
         return self.call(args)
 
     def call(self, args: dict[str, any]):
+        # return asyncio.run(
+        #     self.__async_call_service(
+        #         "tool", self.http, self.name, args, self.oauth_client, self.headers
+        #     )
+        # )
         return asyncio.run(
             Tool.async_call(self.http, self.name, args, self.oauth_client)
         )
 
     async def async_call(
-        http: str, toolname: str, args: dict, oauth_client: OAuthClient | None
+        http: str,
+        toolname: str,
+        args: dict,
+        oauth_client: OAuthClient | None,
+        headers: dict[str, str] = None,
     ):
         oauth: OAuthClientProvider = (
             oauth_client.oauth if oauth_client is not None else None
         )
-        async with streamablehttp_client(url=http, auth=oauth) as (
+        async with streamablehttp_client(url=http, auth=oauth, headers=headers) as (
             read_stream,
             write_stream,
             _,
@@ -81,11 +116,16 @@ class Resource(Service):
             uri = uri.replace("{" + key + "}", str(args[key]))
         return asyncio.run(Resource.async_read(self.http, uri, self.oauth_client))
 
-    async def _async_read(http: str, uri: str, oauth_client: OAuthClient | None):
+    async def _async_read(
+        http: str,
+        uri: str,
+        oauth_client: OAuthClient | None,
+        headers: dict[str, str] = None,
+    ):
         oauth: OAuthClientProvider = (
             oauth_client.oauth if oauth_client is not None else None
         )
-        async with streamablehttp_client(url=http, auth=oauth) as (
+        async with streamablehttp_client(url=http, auth=oauth, headers=headers) as (
             read_stream,
             write_stream,
             _,
@@ -107,21 +147,23 @@ class Prompt(Service):
         return self.get(args)
 
     def get(self, args: dict[str, any]):
+        args = {key: str(args[key]) for key in args.keys()}
+
         return asyncio.run(
             Prompt.async_get(self.http, self.name, args, self.oauth_client)
         )
 
     async def async_get(
-        http: str, promptname: str, args: dict, oauth_client: OAuthClient | None
+        http: str,
+        promptname: str,
+        args: dict,
+        oauth_client: OAuthClient | None,
+        headers: dict[str, str] = None,
     ):
-        args = {key: str(args[key]) for key in args.keys()}
-        # if len(args) == 0:
-        #     args = None
-
         oauth: OAuthClientProvider = (
             oauth_client.oauth if oauth_client is not None else None
         )
-        async with streamablehttp_client(url=http, auth=oauth) as (
+        async with streamablehttp_client(url=http, auth=oauth, headers=headers) as (
             read_stream,
             write_stream,
             _,
