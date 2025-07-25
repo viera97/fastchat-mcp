@@ -1,7 +1,5 @@
 from .servers import Servers
 from .connections.session_data import get_session_data
-from .connections.call_tool import call_tool
-from .connections.read_resource import read_resource
 from ..tools.get_uri_args import get_args_from_uri
 from .services.service import Tool, Resource, Prompt
 from ..config.logger import logger

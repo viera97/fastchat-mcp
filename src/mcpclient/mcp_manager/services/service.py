@@ -75,7 +75,13 @@ class Tool(Service):
         #     )
         # )
         return asyncio.run(
-            Tool.async_call(self.http, self.name, args, self.oauth_client)
+            Tool.async_call(
+                self.http,
+                self.name,
+                args,
+                self.oauth_client,
+                self.headers,
+            )
         )
 
     async def async_call(
@@ -114,9 +120,16 @@ class Resource(Service):
         uri = self.data.uriTemplate
         for key in args:
             uri = uri.replace("{" + key + "}", str(args[key]))
-        return asyncio.run(Resource.async_read(self.http, uri, self.oauth_client))
+        return asyncio.run(
+            Resource.async_read(
+                self.http,
+                uri,
+                self.oauth_client,
+                self.headers,
+            )
+        )
 
-    async def _async_read(
+    async def async_read(
         http: str,
         uri: str,
         oauth_client: OAuthClient | None,
@@ -150,7 +163,13 @@ class Prompt(Service):
         args = {key: str(args[key]) for key in args.keys()}
 
         return asyncio.run(
-            Prompt.async_get(self.http, self.name, args, self.oauth_client)
+            Prompt.async_get(
+                self.http,
+                self.name,
+                args,
+                self.oauth_client,
+                self.headers,
+            )
         )
 
     async def async_get(

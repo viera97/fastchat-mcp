@@ -1,5 +1,11 @@
 ## Version History 🚀
 
+### v0.1.1 ⚙️
+
+- 🔐 **Full integration with the new OAuth system:** Enhanced security and compatibility.
+- ⚙️ **Advanced customization:** You can now add **custom headers** directly from the configuration.
+- 🏷️ **Improved flexibility:** Support for passing `app_name` from the configuration for better identification.
+
 ### v0.1.0 ✨
 
 * 🌟 Full integration of prompts from MCP servers into the client workflow.
@@ -49,4 +55,3 @@
 * 🔧 Simplified config.json file for connection management
 * ⚡ Efficient processing of multiple simultaneous requests to tools and resources within a single query
 * 🔓 Simple connection without authorization (compatible only with servers that do not require authentication)
-

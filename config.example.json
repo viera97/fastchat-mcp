@@ -1,4 +1,5 @@
 {
+    "app_name": "mcp-llm-client",
     "mcp_servers": {
         "example_public_server": {
             "transport": "httpstream",
@@ -17,6 +18,19 @@
                     "username": "user",
                     "password": "password"
                 }
+            }
+        },
+        "github": {
+            "transport": "httpstream",
+            "httpstream-url": "https://api.githubcopilot.com/mcp",
+            "name": "github",
+            "description": "This server specializes in github operations.",
+            "auth": {
+                "required": false,
+                "post_body": null
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}"
             }
         }
     }

@@ -1,4 +1,5 @@
 # MCP LLM client
+
 ![alt text](/doc/images/mcp-llm-client_2.png)
 
 <div align = center>
@@ -92,6 +93,7 @@ Protocols for communication with MCP servers:
 
     ```json
     {
+        "app_name": "mcp-llm-client",
         "mcp_servers": {
             "example_public_server": {
                 "transport": "httpstream",
@@ -106,11 +108,23 @@ Protocols for communication with MCP servers:
                 "description": "Example private server with oauth required.",
                 "auth": {
                     "required": true,
-                    "server": "http://127.0.0.1:9000",
-                    "secrets": {
+                    "post_body": {
                         "username": "user",
                         "password": "password"
                     }
+                }
+            },
+            "github": {
+                "transport": "httpstream",
+                "httpstream-url": "https://api.githubcopilot.com/mcp",
+                "name": "github",
+                "description": "This server specializes in github operations.",
+                "auth": {
+                    "required": false,
+                    "post_body": null
+                },
+                "headers": {
+                    "Authorization": "Bearer {access_token}"
                 }
             }
         }
@@ -123,7 +137,7 @@ Protocols for communication with MCP servers:
 
 * `Python = ">=3.11"`
 * `openai = "^1.68.2"`
-* `"mcp[cli]"`
+* `mcp[cli]`
 * `mcp-oauth`
 
 ## Usage Example
@@ -168,7 +182,7 @@ code .
 
 * 💬 Fully functional chat by passing a query; see [`Chat`](./src/mcpclient/services/llm/chat/chat.py).
 * ⚙️ Integration with `Tools`, `Resources`, and `Prompts` from MCP servers, achieving a well-integrated client workflow with each of these services.
-* 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#environmental-configuration).
+* 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#environmental-configuration). Also integrate headers authorization.
 * 👾 OpenAI GPT as an integrated LLM using the model `"gpt4o-mini"`.
 * 📡 Support for the httpstream transport protocol.
 * 💻 Easy console usage via [`open_local_chat()`](./src/mcpclient/dev.py); see [example1](#usage-example) for the use case.
