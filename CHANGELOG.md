@@ -1,14 +1,19 @@
-## Version History 🚀
+# Version History 🚀
 
 ### v0.1.2 🔧
 
-- 🐞 **Bug fixed:** A small error originating from the `dev` development branch has been resolved. ✅ Now, if an MCP server is detected, **no error will be thrown because of this**.
+- 🐞 **Bug fixed:** A small error originating from the `dev` development branch has been resolved.
+- ✅ Now, if an MCP server is detected, **no error will be thrown because of this**.
+
+---
 
 ### v0.1.1 ⚙️
 
 - 🔐 **Full integration with the new OAuth system:** Enhanced security and compatibility.
 - ⚙️ **Advanced customization:** You can now add **custom headers** directly from the configuration.
 - 🏷️ **Improved flexibility:** Support for passing `app_name` from the configuration for better identification.
+
+---
 
 ### v0.1.0 ✨
 
