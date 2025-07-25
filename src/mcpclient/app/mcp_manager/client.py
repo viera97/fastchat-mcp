@@ -1,8 +1,7 @@
 from .servers import Servers
 from .connections.session_data import get_session_data
-from ..tools.get_uri_args import get_args_from_uri
-from .services.service import Tool, Resource, Prompt
-from ..config.logger import logger
+from .connections.services import Tool, Resource, Prompt
+from ...config.logger import logger
 
 
 class ClientManagerMCP:
@@ -47,7 +46,7 @@ class ClientManagerMCP:
                     f"Failed to establish connection with server {server_key}. Cause: {e}"
                 )
                 continue
-            
+
             for tool in session["tools"]:
                 self.tools[f"{server_key}_{tool.name}"] = Tool(
                     http=server["httpstream-url"], data=tool, server=server

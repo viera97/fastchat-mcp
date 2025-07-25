@@ -1,6 +1,6 @@
 from mcp_oauth import OAuthClient
 from mcp.client.auth import OAuthClientProvider
-from ...tools.get_uri_args import get_args_from_uri
+from ....tools.get_uri_args import get_args_from_uri
 from mcp.client.streamable_http import streamablehttp_client
 from mcp import ClientSession
 import asyncio
@@ -34,30 +34,6 @@ class Service:
     def __call__(self, args: dict[str, any]):
         Exception("Not Implemented")
 
-    # async def __async_call_service(
-    #     self,
-    #     service: Literal["tool", "resource", "prompt"],
-    #     http: str,
-    #     service_name: str,
-    #     args: dict,
-    #     oauth_client: OAuthClient | None,
-    #     headers: dict[str, str] = None,
-    # ):
-    #     oauth: OAuthClientProvider = (
-    #         oauth_client.oauth if oauth_client is not None else None
-    #     )
-    #     async with streamablehttp_client(url=http, auth=oauth) as (
-    #         read_stream,
-    #         write_stream,
-    #         _,
-    #     ):
-    #         async with ClientSession(read_stream, write_stream) as session:
-    #             await session.initialize()
-
-    #             # Call a tool
-    #             tool_result = await session.call_tool(service_name, args)
-    #             return tool_result.content
-
 
 class Tool(Service):
     def __init__(self, http, data, server):
@@ -69,11 +45,6 @@ class Tool(Service):
         return self.call(args)
 
     def call(self, args: dict[str, any]):
-        # return asyncio.run(
-        #     self.__async_call_service(
-        #         "tool", self.http, self.name, args, self.oauth_client, self.headers
-        #     )
-        # )
         return asyncio.run(
             Tool.async_call(
                 self.http,

@@ -1,7 +1,6 @@
 import os
 import json
 from mcp_oauth import OAuthClient
-from ..config.logger import logger
 
 
 class Servers:

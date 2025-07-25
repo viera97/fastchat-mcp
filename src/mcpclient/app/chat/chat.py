@@ -1,5 +1,5 @@
-from ..llm import LLM
-from ..models.openai_service.gpt import GPT
+from ..services.llm import LLM
+from ..services.llm.models.openai_service.gpt import GPT
 from typing import Generator
 from .step import Step
 from .step import Step, StepMessage, DataStep, ResponseStep, QueryStep
@@ -10,7 +10,7 @@ from mcp.types import PromptMessage
 class Chat:
     def __init__(
         self,
-        name="openai",
+        llm_="openai",
         model="gpt4o-mini",
         len_context: int = 10,
         history: list = [],

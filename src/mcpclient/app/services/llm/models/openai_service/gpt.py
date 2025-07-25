@@ -1,9 +1,6 @@
 from ...prompts import system_prompts, user_prompts
-
-# from ...prompts.user_prompts import query_and_data, query_and_services, service2args
-from .....config.llm_config import ConfigGPT
+from ......config.llm_config import ConfigGPT
 from ...llm import LLM
-from .....mcp_manager.services.service import Service
 from openai import OpenAI, AsyncOpenAI
 import json
 
