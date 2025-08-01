@@ -73,10 +73,12 @@ class Chat:
         # region ########### RESPONSE ############
         if len(service) == 0:
             yield DataStep(data={"service": None})
-            yield ResponseStep(
-                response=self.llm.simple_query(query, use_services_contex=True),
-                data=None,
-            )
+            first_chunk = True
+            for chunk in self.llm.simple_query(query, use_services_contex=True):
+                yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
+                first_chunk = False
+            yield ResponseStep(response="\n", data=None)
+
         else:
             yield DataStep(data={"service": service})
             yield DataStep(data={"args": args})
@@ -91,8 +93,12 @@ class Chat:
             )
 
             data = service(args)[0].text
-            response = self.llm.final_response(query, data)
-            yield ResponseStep(response=response, data=data)
+            first_chunk = True
+            for chunk in self.llm.final_response(query, data):
+                yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
+                first_chunk = False
+            yield ResponseStep(response="\n", data=data)
+
         # endregion ###################################################
 
 

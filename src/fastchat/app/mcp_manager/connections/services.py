@@ -39,7 +39,22 @@ class Tool(Service):
     def __init__(self, http, data, server):
         super().__init__(http, data, server)
         args = data.inputSchema["properties"]
-        self.args = [{"name": key, "type": args[key]["type"]} for key in args.keys()]
+        self.args = []
+        for key in args.keys():
+            arg_type = args[key].get("type", None)
+            if arg_type is None:
+                if "anyOf" in args[key]:
+                    arg_type = ""
+                    for type_ in args[key]["anyOf"]:
+                        arg_type += type_["type"] + " | "
+                    arg_type = arg_type[:-3]  # Remove the last " | "
+
+            self.args.append(
+                {
+                    "name": key,
+                    "type": arg_type,
+                }
+            )
 
     def __call__(self, args: dict[str, any]):
         return self.call(args)

@@ -1,4 +1,4 @@
-"""MCP Client with Language Model Integration"""
+"""Chat that integrate "MCP Client with Language Model Integration" """
 
 from .app.chat.chat import Chat
 from .dev import open_local_chat

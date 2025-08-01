@@ -52,20 +52,32 @@ class Step:
 
 
 class ResponseStep(Step):
-    def __init__(self, response: str, data: dict[str, any] | None = None):
+    def __init__(
+        self,
+        response: str,
+        data: dict[str, any] | None = None,
+        first_chunk: bool = False,
+        # last_chunk: bool = False,
+    ):
         self.type: str = "response"
         self.response: str | None = response
         self.data: dict[str, any] | None = data
+        self.first_chunk: bool = first_chunk
+        self.last_chunk: bool = data is not None
+
         self.json: dict[str, any] = {
             "type": self.type,
             "response": self.response,
             "data": data,
+            "first_chunk": self.first_chunk,
         }
 
     def __str__(self):
-        return f"\n### Response\n{self.response}" + (
-            f"\n```json\n{self.data}\n```" if self.data is not None else ""
-        )
+        return (
+            f"\n### Response\n{self.response}"
+            if self.first_chunk
+            else f"{self.response}"
+        ) + (f"\n```json\n{self.data}\n```" if self.data is not None else "")
 
 
 class QueryStep(Step):

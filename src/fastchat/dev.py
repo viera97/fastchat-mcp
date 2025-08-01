@@ -29,8 +29,13 @@ def open_local_chat():
         index = 1
         for step in chat(query):
             md += str(step)
+
             if step.type == "response":
-                print(f"<< {step.response}")
+                if step.json["first_chunk"]:
+                    print(f"<< {step.response}", end="")
+                else:
+                    print(f"{step.response}", end="")
+
             if step.type == "query":
                 print(f">> {step.query}")
                 index = 1
