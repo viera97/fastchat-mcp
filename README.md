@@ -5,7 +5,7 @@
 <div align = center>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/pypi/v/mcp-llm-client?color=%2334D058&label=Version)](https://pypi.org/project/mcp-llm-client)
+[![Version](https://img.shields.io/pypi/v/fastchat-mcp?color=%2334D058&label=Version)](https://pypi.org/project/fastchat-mcp)
 [![Last commit](https://img.shields.io/github/last-commit/rb58853/python-mcp-client.svg?style=flat)](https://github.com/rb58853/python-mcp-client/commits)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/python-mcp-client)](https://github.com/rb58853/python-mcp-client/commits)
 [![Stars](https://img.shields.io/github/stars/rb58853/python-mcp-client?style=flat&logo=github)](https://github.com/rb58853/python-mcp-client/stargazers)
@@ -38,7 +38,7 @@ This package provides a Python interface to connect to MCP servers in an easy, i
 To install the MCP client, you can use pip:
 
 ```bash
-pip install mcp-llm-client
+pip install fastchat-mcp
 ```
 
 ## Implemented Models
@@ -93,7 +93,7 @@ Protocols for communication with MCP servers:
 
     ```json
     {
-        "app_name": "mcp-llm-client",
+        "app_name": "fastchat-mcp",
         "mcp_servers": {
             "example_public_server": {
                 "transport": "httpstream",
@@ -144,13 +144,13 @@ Protocols for communication with MCP servers:
 
 ```python
 #example1.py
-from mcpclient import open_local_chat
+from fastchat import open_local_chat
 open_local_chat()
 ```
 
 ```python
 #example2.py
-from mcpclient import Chat
+from fastchat import Chat
 chat: Chat = Chat()
 while True:
     query = input("> ")
@@ -180,12 +180,12 @@ code .
 
 ### Last Version Features
 
-* 💬 Fully functional chat by passing a query; see [`Chat`](./src/mcpclient/services/llm/chat/chat.py).
+* 💬 Fully functional chat by passing a query; see [`Chat`](./src/fastchat/services/llm/chat/chat.py).
 * ⚙️ Integration with `Tools`, `Resources`, and `Prompts` from MCP servers, achieving a well-integrated client workflow with each of these services.
 * 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#environmental-configuration). Also integrate headers authorization.
 * 👾 OpenAI GPT as an integrated LLM using the model `"gpt4o-mini"`.
 * 📡 Support for the httpstream transport protocol.
-* 💻 Easy console usage via [`open_local_chat()`](./src/mcpclient/dev.py); see [example1](#usage-example) for the use case.
+* 💻 Easy console usage via [`open_local_chat()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
 
 [See more in changelog](/CHANGELOG.md)
 

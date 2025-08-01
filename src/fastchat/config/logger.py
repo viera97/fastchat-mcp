@@ -35,7 +35,7 @@ def setup_logger() -> logging.Logger:
         logger.handlers.clear()
 
     # Define a consistent log directory in the user's home folder
-    log_dir = Path.home() / ".local" / "share" / "mcp-llm-client"
+    log_dir = Path.home() / ".local" / "share" / "fastchat-mcp"
     log_dir.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
 
     # Define the log file path

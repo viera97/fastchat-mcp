@@ -1,5 +1,5 @@
-from mcpclient.services.llm.chat.chat import Chat
-from mcpclient.tools.clear_console import clear_console
+from fastchat import Chat
+from fastchat.tools.clear_console import clear_console
 import os
 
 

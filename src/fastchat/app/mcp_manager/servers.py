@@ -10,7 +10,7 @@ class Servers:
     """
 
     def __init__(
-        self, config_file_path: str = "config.json", app_name: str = "mcp-llm-client"
+        self, config_file_path: str = "config.json", app_name: str = "fastchat-mcp"
     ):
         # self.config_file_path: str = config_file_path
         self.json_config: dict = self.__load_config_file(

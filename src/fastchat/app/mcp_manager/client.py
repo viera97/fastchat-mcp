@@ -5,7 +5,7 @@ from ...config.logger import logger
 
 
 class ClientManagerMCP:
-    def __init__(self, app_name: str = "mcp-llm-client"):
+    def __init__(self, app_name: str = "fastchat-mcp"):
         self.app_name: str = app_name
         self.tools: dict[str:Tool] | None = {}
         self.resources: dict[str:Resource] | None = {}
