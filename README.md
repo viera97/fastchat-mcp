@@ -6,12 +6,12 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/pypi/v/fastchat-mcp?color=%2334D058&label=Version)](https://pypi.org/project/fastchat-mcp)
-[![Last commit](https://img.shields.io/github/last-commit/rb58853/python-mcp-client.svg?style=flat)](https://github.com/rb58853/python-mcp-client/commits)
-[![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/python-mcp-client)](https://github.com/rb58853/python-mcp-client/commits)
-[![Stars](https://img.shields.io/github/stars/rb58853/python-mcp-client?style=flat&logo=github)](https://github.com/rb58853/python-mcp-client/stargazers)
-[![Forks](https://img.shields.io/github/forks/rb58853/python-mcp-client?style=flat&logo=github)](https://github.com/rb58853/python-mcp-client/network/members)
-[![Watchers](https://img.shields.io/github/watchers/rb58853/python-mcp-client?style=flat&logo=github)](https://github.com/rb58853/python-mcp-client)
-[![Contributors](https://img.shields.io/github/contributors/rb58853/python-mcp-client)](https://github.com/rb58853/python-mcp-client/graphs/contributors)
+[![Last commit](https://img.shields.io/github/last-commit/rb58853/fastchat-mcp.svg?style=flat)](https://github.com/rb58853/fastchat-mcp/commits)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/fastchat-mcp)](https://github.com/rb58853/fastchat-mcp/commits)
+[![Stars](https://img.shields.io/github/stars/rb58853/fastchat-mcp?style=flat&logo=github)](https://github.com/rb58853/fastchat-mcp/stargazers)
+[![Forks](https://img.shields.io/github/forks/rb58853/fastchat-mcp?style=flat&logo=github)](https://github.com/rb58853/fastchat-mcp/network/members)
+[![Watchers](https://img.shields.io/github/watchers/rb58853/fastchat-mcp?style=flat&logo=github)](https://github.com/rb58853/fastchat-mcp)
+[![Contributors](https://img.shields.io/github/contributors/rb58853/fastchat-mcp)](https://github.com/rb58853/fastchat-mcp/graphs/contributors)
 
 </div>
 
