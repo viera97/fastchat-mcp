@@ -15,7 +15,7 @@ classifiers = [
 ]
 license = "MIT"
 license-files = ["LICENSE*"]
-dependencies = ["openai==1.68.2", "mcp[cli]", "mcp-oauth>=0.0.5"]
+dependencies = ["openai>=1.68.2", "mcp[cli]", "mcp-oauth>=0.0.5"]
 
 [project.urls]
 Homepage = "https://github.com/rb58853/fastchat-mcp"

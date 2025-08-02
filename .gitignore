@@ -8,7 +8,7 @@ config.json
 
 #Publish files
 dist/*
-src/mcp_llm_client.egg-info/*
+*.egg-info
 
 #Text Editor
 .vscode/*
