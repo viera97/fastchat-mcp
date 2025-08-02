@@ -1,6 +1,6 @@
-# MCP LLM client
+# fastchat-mcp
 
-![alt text](/doc/images/mcp-llm-client_2.png)
+![alt text](/doc/images/fastchat.png)
 
 <div align = center>
 
@@ -180,7 +180,7 @@ code .
 
 ### Last Version Features
 
-* 💬 Fully functional chat by passing a query; see [`Chat`](./src/fastchat/services/llm/chat/chat.py).
+* 💬 Fully functional streaming chat by passing a query; see [`Chat`](./src/fastchat/services/llm/chat/chat.py).
 * ⚙️ Integration with `Tools`, `Resources`, and `Prompts` from MCP servers, achieving a well-integrated client workflow with each of these services.
 * 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#environmental-configuration). Also integrate headers authorization.
 * 👾 OpenAI GPT as an integrated LLM using the model `"gpt4o-mini"`.

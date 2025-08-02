@@ -1,5 +1,19 @@
 # Version History 🚀
 
+### v0.1.3 ⌛️
+
+- 🔧 Renamed the package to `fastchat-mcp`.
+- 💬 Enabled real-time chat responses using streaming for final outputs.
+- 🛠️ Refined parameter handling for tools, adding support for multi-typed arguments.
+
+---
+---
+---
+
+> ## Note
+>
+> Versions prior to `v0.1.3` specifically used the `mcp-llm-client` package. Starting from version `v0.1.3`, the package for this repository has been renamed to `fastchat-mcp`.
+
 ### v0.1.2 🔧
 
 - 🐞 **Bug fixed:** A small error originating from the `dev` development branch has been resolved.
