@@ -203,9 +203,9 @@ class GPT(LLM):
         de los servidores
         """
         system_message: str = system_prompts.select_service
-        query: str = user_prompts.query_and_services(
-            query=query, services=self.client_manager_mcp.get_services()
-        )
+        services = self.client_manager_mcp.get_services()
+        query: str = user_prompts.query_and_services(query=query, services=services)
+        
         return self.call_completion(
             system_message=system_message,
             query=query,

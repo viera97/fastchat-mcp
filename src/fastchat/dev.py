@@ -2,9 +2,9 @@ from fastchat import Chat
 from fastchat.tools.clear_console import clear_console
 import os
 
-
 def open_local_chat():
     clear_console()
+    print (logo)
     chat: Chat = Chat()
     print("\n")
 
@@ -45,3 +45,13 @@ def open_local_chat():
                 print(f"  {index}. {step.step}")
                 index += 1
         md += "\n"
+
+logo ="""
+  ______               _          _             _   
+ |  ____|             | |        | |           | |  
+ | |__   __ _   _____ | |_   ___ | |__    __ _ | |_ 
+ |  __| / _` | /  ___|| __| / __|| '_ \  / _` || __|
+ | |   | (_| | _\  \  | |_ | |__ | | | || (_| || |_ 
+ |_|    \__,_||_____\  \__| \___||_| |_| \__,_| \__|
+ 
+"""
