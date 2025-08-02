@@ -162,14 +162,14 @@ while True:
         print(f"<< {step.json}")
 ```
 
-Alternatively, you may test this service using the following [template available on GitHub](https://github.com/rb58853/template_mcp_llm_client):
+Alternatively, you may test this service using the following [template available on GitHub](https://github.com/rb58853/template-fastchat-mcp):
 
 ```shell
 # clone repo
-git clone https://github.com/rb58853/template_mcp_llm_client.git
+git clone https://github.com/rb58853/template-fastchat-mcp.git
 
 # change to project dir
-cd template_mcp_llm_client
+cd template-fastchat-mcp
 
 # install dependencies
 pip install -r requirements.txt
