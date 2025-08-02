@@ -148,6 +148,8 @@ from fastchat import open_local_chat
 open_local_chat()
 ```
 
+https://github.com/user-attachments/assets/1fcb0db8-5798-4745-8711-4b93198e36cc
+
 ```python
 #example2.py
 from fastchat import Chat
