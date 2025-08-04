@@ -54,9 +54,9 @@ The client currently supports the following language models:
 | ---      | ---    |---                    |
 | OpenAI   | Implemented |OpenAI is a leading provider of artificial intelligence-based language models that develop advanced technologies for automatic text processing and generation through models like GPT.|
 
-**Default Provider (`OpenAI`):** OpenAI is a leading provider of artificial intelligence-based language models that develop advanced technologies for automatic text processing and generation through models like GPT.
+>🚨 **CONFIGURATION NOTE** Currently, this project only work with `OpenAI` llm provider.
 
->🚨 **CRITICAL CONFIGURATION NOTE** Currently, this project only work with `OpenAI` llm provider.
+**Default Provider (`OpenAI`):** OpenAI is a leading provider of artificial intelligence-based language models that develop advanced technologies for automatic text processing and generation through models like GPT.
 
 ### LLM Models
 
@@ -121,7 +121,7 @@ The file is JSON formatted and follows this main structure:
 {
     "app_name": "fastchat-mcp",
     "mcp_servers": {
-    ...
+    "..."
     }
 }
 ```
@@ -268,10 +268,11 @@ code .
 ### Last Version Features
 
 * 💬 Fully functional streaming chat by passing a query; see [`Chat`](./src/fastchat/services/llm/chat/chat.py).
-* ⚙️ Integration with `Tools`, `Resources`, and `Prompts` from MCP servers, achieving a well-integrated client workflow with each of these services.
-* 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#environmental-configuration). Also integrate headers authorization.
-* 👾 OpenAI GPT as an integrated LLM using the model `"gpt4o-mini"`.
+* ⚙️ Integration with `Tools`, `Resources`, and `Prompts` from MCP servers, achieving a well-integrated client workflow with each of these services. [Check flow](./doc/FLOW.md)
+* 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#2-private-http-stream-server-with-authentication). Also integrate [headers authorization](#3-github-server-with-authentication-headers).
+* 👾 OpenAI GPT as an integrated LLM using any valid OpenAI language model.
 * 📡 Support for the httpstream transport protocol.
+* 📟 Support for the stdio transport protocol.
 * 💻 Easy console usage via [`open_local_chat()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
 
 [See more in changelog](/CHANGELOG.md)
