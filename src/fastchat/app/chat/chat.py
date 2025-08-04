@@ -100,9 +100,10 @@ class Chat:
             data = service(args)[0].text
             first_chunk = True
             for chunk in self.llm.final_response(query, data):
-                yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
+                if chunk is not None:
+                    yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
                 first_chunk = False
-            yield ResponseStep(response="\n", data=data)
+            yield ResponseStep(response="\n\n", data=data)
 
         # endregion ###################################################
 
