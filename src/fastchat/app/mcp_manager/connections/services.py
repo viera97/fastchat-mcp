@@ -8,9 +8,7 @@ from typing import Literal
 
 
 class Service:
-    """
-    Objeto que representa un servicio brindado o expuesto por un servidor mcp. Falicita la manipulacion del mismo
-    """
+    """Base class for all services (Tool, Resource, Prompt)."""
 
     def __init__(self, http: str, data, server: dict):
         self.http: str = http
@@ -21,6 +19,7 @@ class Service:
         self.server: dict = server
         self.oauth_client: OAuthClient | None = server["oauth_client"]
         self.headers: dict[str, str] = server.get("headers", None)
+        self.protocol = server.get("protocol", "httpstream")
 
     def __str__(self):
         return str(
@@ -36,6 +35,8 @@ class Service:
 
 
 class Tool(Service):
+    """Represents a tool that can be called with arguments."""
+
     def __init__(self, http, data, server):
         super().__init__(http, data, server)
         args = data.inputSchema["properties"]
@@ -70,6 +71,7 @@ class Tool(Service):
             )
         )
 
+    @staticmethod
     async def async_call(
         http: str,
         toolname: str,
@@ -94,6 +96,8 @@ class Tool(Service):
 
 
 class Resource(Service):
+    """Represents a resource that can be read with arguments."""
+
     def __init__(self, http, data, server):
         super().__init__(http, data, server)
         self.args = get_args_from_uri(data.uriTemplate)
@@ -115,6 +119,7 @@ class Resource(Service):
             )
         )
 
+    @staticmethod
     async def async_read(
         http: str,
         uri: str,
@@ -138,6 +143,8 @@ class Resource(Service):
 
 
 class Prompt(Service):
+    """Represents a prompt that can be called with arguments."""
+
     def __init__(self, http, data, server):
         super().__init__(http, data, server)
         self.args = [{"name": arg.name, "type": "string"} for arg in data.arguments]
@@ -158,6 +165,7 @@ class Prompt(Service):
             )
         )
 
+    @staticmethod
     async def async_get(
         http: str,
         promptname: str,

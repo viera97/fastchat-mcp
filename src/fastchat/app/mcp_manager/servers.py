@@ -5,13 +5,35 @@ from mcp_oauth import OAuthClient
 
 class Servers:
     """
-    Extrae las credenciales de cada uno de los servers en la configuracion `.config.json`. Aternativamente puede pasarse otro archivo `.json`
-    como argumento `config_file_path`
+    Manages server configurations and OAuth clients for the fastchat-mcp application.
+    This class loads server credentials and configuration from a JSON file, initializes
+    OAuth clients for each server, and provides access to server information.
+    Attributes:
+        json_config (dict): The loaded configuration from the JSON file.
+        app_name (str): The name of the application.
+        mcp_servers (dict[str, dict] | None): Dictionary containing server configurations.
+    Methods:
+        __init__(config_file_path: str = "config.json", app_name: str = "fastchat-mcp"):
+            Initializes the Servers instance, loads configuration, and sets up servers.
+        __load_config_file(config_file_path: str):
+            Loads and parses the configuration JSON file.
+        __load_servers():
+            Loads server credentials from the configuration and initializes OAuth clients.
+        __create_oauth_client(server: dict[str, dict]) -> None:
+            Creates an OAuth client for the specified server using provided credentials.
     """
 
     def __init__(
         self, config_file_path: str = "config.json", app_name: str = "fastchat-mcp"
     ):
+        """
+        Initializes the Servers instance.
+        Loads the configuration from the specified JSON file, sets the application name,
+        and initializes the server credentials and OAuth clients.
+        Args:
+            config_file_path (str): Path to the configuration JSON file.
+            app_name (str): Name of the application.
+        """
         # self.config_file_path: str = config_file_path
         self.json_config: dict = self.__load_config_file(
             config_file_path=config_file_path
@@ -23,19 +45,35 @@ class Servers:
         self.__load_servers()
 
     def __load_config_file(self, config_file_path: str):
+        """
+        Loads and parses the configuration JSON file.
+        Args:
+            config_file_path (str): Path to the configuration JSON file.
+        Returns:
+            dict: Parsed configuration data.
+        """
         with open(f"{os.getcwd()}{os.path.sep}{config_file_path}", "r") as file:
             json_config: dict = json.loads(file.read())
         return json_config
 
     def __load_servers(self):
-        """Carga cada uno de los credenciales de los servidores que se le conectan desde el `.config`"""
+        """
+        Loads server credentials from the configuration.
+        Initializes OAuth clients for each server defined in the configuration file.
+        """
         self.mcp_servers = self.json_config["mcp_servers"]
 
         for server in self.mcp_servers.values():
             self.__create_oauth_client(server=server)
 
     def __create_oauth_client(self, server: dict[str, dict]) -> None:
-        """Genera un oauth client para este servidor, usando los datos proporcionados en `config.json`"""
+        """
+        Creates an OAuth client for the specified server.
+        Uses the credentials provided in the configuration to generate an OAuth client
+        and attaches it to the server's configuration.
+        Args:
+            server (dict[str, dict]): Server configuration dictionary.
+        """
         oauth_client: OAuthClient | None = None
 
         server_url: str | None = (

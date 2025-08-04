@@ -1,5 +1,5 @@
 from .servers import Servers
-from .connections.session_data import get_session_data
+from .connections import httpstrem
 from .connections.services import Tool, Resource, Prompt
 from ...config.logger import logger
 
@@ -35,16 +35,8 @@ class ClientManagerMCP:
 
         for server_key in mcp_servers.keys():
             server = {"key": server_key} | mcp_servers[server_key]
-            try:
-                session: dict = get_session_data(
-                    server["httpstream-url"],
-                    server["oauth_client"],
-                    headers=server.get("headers", None),
-                )
-            except Exception as e:
-                logger.warning(
-                    f"Failed to establish connection with server {server_key}. Cause: {e}"
-                )
+            session = self.__get_session(server)
+            if session is None:
                 continue
 
             for tool in session["tools"]:
@@ -60,6 +52,21 @@ class ClientManagerMCP:
                 self.prompts[f"{server_key}_{prompt.name}"] = Prompt(
                     http=server["httpstream-url"], data=prompt, server=server
                 )
+
+    def __get_session(self, server: dict) -> dict:
+        try:
+            session: dict = httpstrem.get_session_data(
+                server["httpstream-url"],
+                server["oauth_client"],
+                headers=server.get("headers", None),
+            )
+            return session
+
+        except Exception as e:
+            logger.warning(
+                f"Failed to establish connection with server {server['key']}. Cause: {e}"
+            )
+            return None
 
     def service_type(self, service_key: str) -> str:
         if service_key in self.tools.keys():
