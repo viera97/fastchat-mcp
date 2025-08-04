@@ -254,15 +254,36 @@ Alternatively, you may test this service using the following [template available
 ```shell
 # clone repo
 git clone https://github.com/rb58853/template-fastchat-mcp.git
-
 # change to project dir
 cd template-fastchat-mcp
-
 # install dependencies
 pip install -r requirements.txt
-
 # open in vscode
 code .
+```
+
+## Chat Flow
+
+```mermaid
+flowchart TD
+    A[Start] --> B[Load Configuration]
+    B --> C[Initialize Servers]
+    C --> D[Initilize Tools, Resources and Prompts]
+    D --> E{Wait for User Query}
+    
+    E --> F[Send Query to LLM]
+    F --> H[Select Prompts from Servers]
+    F --> H[Select Tool or Resoruce and Args from Servers]
+    H --> I{LLM Decision}
+    I --> |Tool or Resource exist| J[Call Tool or Resource with Args] 
+    I --> |Tool or Resource is Null| K[Generate Simple Response based on Servers exposed information]
+    
+    J --> L[Add Result Data from call to LLM context]
+    L --> M[Generate Response based in passed Data] 
+    M --> N[Return Final Stream Response to user]
+    
+    K --> N
+    N --> E
 ```
 
 ## Version History

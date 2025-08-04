@@ -60,7 +60,9 @@ class ResponseStep(Step):
         # last_chunk: bool = False,
     ):
         self.type: str = "response"
-        self.response: str | None = response
+        self.response: str | None = (
+            response if (response is not None and response != "None") else ""
+        )
         self.data: dict[str, any] | None = data
         self.first_chunk: bool = first_chunk
         self.last_chunk: bool = data is not None

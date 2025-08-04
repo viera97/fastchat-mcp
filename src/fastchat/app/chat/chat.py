@@ -82,7 +82,7 @@ class Chat:
             for chunk in self.llm.simple_query(query, use_services_contex=True):
                 yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
                 first_chunk = False
-            yield ResponseStep(response="\n", data=None)
+            yield ResponseStep(response="\n\n", data=None)
 
         else:
             yield DataStep(data={"service": service})
@@ -100,8 +100,7 @@ class Chat:
             data = service(args)[0].text
             first_chunk = True
             for chunk in self.llm.final_response(query, data):
-                if chunk is not None:
-                    yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
+                yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
                 first_chunk = False
             yield ResponseStep(response="\n\n", data=data)
 
