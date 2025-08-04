@@ -3,6 +3,7 @@ from ..services.llm.models.openai_service.gpt import GPT
 from typing import Generator
 from .step import Step
 from .step import Step, StepMessage, DataStep, ResponseStep, QueryStep
+from ...config.llm_config import ConfigGPT
 import json
 from mcp.types import PromptMessage
 
@@ -11,13 +12,17 @@ class Chat:
     def __init__(
         self,
         llm_="openai",
-        model="gpt4o-mini",
+        model=ConfigGPT.DEFAULT_MODEL_NAME,
         len_context: int = 10,
         history: list = [],
         id: str | None = None,
     ):
         self.id = id
-        self.llm: LLM = GPT(max_history_len=len_context)
+        self.llm: LLM = GPT(
+            max_history_len=len_context,
+            model=model,
+            chat_history=history,
+        )
 
     def __call__(self, query: str) -> Generator[Step]:
         yield Step(step_type=StepMessage.ANALYZE_QUERY)

@@ -7,7 +7,7 @@
             "name": "example-public-server",
             "description": "Example public server."
         },
-        "example_private_server": {
+        "example_private_mcp": {
             "transport": "httpstream",
             "httpstream-url": "http://127.0.0.1:8000/private-example-server/mcp",
             "name": "example-private-server",
@@ -31,6 +31,17 @@
             },
             "headers": {
                 "Authorization": "Bearer {access_token}"
+            }
+        },
+        "my-stdio-server": {
+            "transport": "stdio",
+            "name": "my-stdio-server",
+            "config": {
+                "command": "npx",
+                "args": [
+                    "-y",
+                    "@modelcontextprotocol/example-stdio-server"
+                ]
             }
         }
     }

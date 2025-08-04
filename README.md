@@ -41,15 +41,23 @@ To install the MCP client, you can use pip:
 pip install fastchat-mcp
 ```
 
-## Implemented Models
+## LLM Implementation
+
+### LLM Providers
 
 The client currently supports the following language models:
 
-| Model | Technical Description |
-| --- | --- |
-| gpt4o-mini | Optimized implementation of the GPT-4 model that provides a balance between computational performance and resource efficiency. This model is specifically designed to operate in environments with memory constraints while maintaining superior predictive quality. |
+| Provider | Status | Technical Description |
+| ---      | ---    |---                    |
+| OpenAI   | Implemented |OpenAI is a leading provider of artificial intelligence-based language models that develop advanced technologies for automatic text processing and generation through models like GPT.|
 
->🚨 **CRITICAL CONFIGURATION NOTE** Currently, this project only work with `gpt4o-mini` llm model.
+**Default Provider (`OpenAI`):** OpenAI is a leading provider of artificial intelligence-based language models that develop advanced technologies for automatic text processing and generation through models like GPT.
+
+>🚨 **CRITICAL CONFIGURATION NOTE** Currently, this project only work with `OpenAI` llm provider.
+
+### LLM Models
+
+**Default Model (`"gpt4-o-mini"`):** gpt4-o-mini is an optimized implementation of the GPT-4 model that provides a balance between computational performance and resource efficiency. This model is specifically designed to operate in environments with memory constraints while maintaining superior predictive quality.
 
 ## Implemented Transfer Protocols
 
@@ -57,25 +65,11 @@ Protocols for communication with MCP servers:
 
 | Protocol | Status | Technical Characteristics |
 | --- | --- | --- |
-| HTTPStream | Implemented | Asynchronous HTTP-based protocol that enables continuous data streaming. Characterized by low memory consumption and real-time processing capability for partial responses. |
-| SSE (Server-Sent Events) | Not Implemented | Unidirectional protocol that allows the server to send multiple updated events through a single HTTP connection. Designed specifically for applications requiring real-time updates from the server. |
-| stdio | Not Implemented | Standard input/output interface that facilitates direct communication between processes. Will provide a lightweight alternative for local environments and unit testing. |
+| stdio | Implemented | Standard input/output interface that facilitates direct communication between processes.|
+| HTTPStream | Implemented | Asynchronous HTTP-based protocol that enables continuous data streaming.|
+| SSE (Server-Sent Events) | Not Implemented | Unidirectional protocol that allows the server to send multiple updated events through a single HTTP connection.|
 
->🚨 **CRITICAL CONFIGURATION NOTE** Currently, this project only work with `HTTPStream` protocol.
-
-## Future Development Planning
-
-### Pending Language Models
-
-* Integration of additional language models
-* Implementation of dynamic model selection system
-* Optimization of model loading and management
-
-### Pending Protocols
-
-* Complete implementation of SSE for better real-time event handling
-* Development of stdio interface for local environments
-* Performance optimization across all protocols
+>🚨 **CRITICAL CONFIGURATION NOTE** Currently, this project don't work with `SSE (Server-Sent Events)` protocol.
 
 ## System Requirements
 
@@ -85,53 +79,15 @@ Protocols for communication with MCP servers:
 
     ```env
     # .env
+    
+    #CRIPTOGRAFY_KEY by token data storage (OAuth2)
+    CRIPTOGRAFY_KEY=<any-criptografy-key>
+
     # OpenAI Authentication
-    OPENAI_API_KEY=<YOUR OPENAI-API-KEY>
+    OPENAI_API_KEY=<your-openai-key>
     ```
 
-* **`config.json` file**: The `config.json` file defines the configuration of available MCP servers. It must be created in the project root directory with the following structure:
-
-    ```json
-    {
-        "app_name": "fastchat-mcp",
-        "mcp_servers": {
-            "example_public_server": {
-                "transport": "httpstream",
-                "httpstream-url": "http://127.0.0.1:8000/public-example-server/mcp",
-                "name": "example-public-server",
-                "description": "Example public server."
-            },
-            "example_private_mcp": {
-                "transport": "httpstream",
-                "httpstream-url": "http://127.0.0.1:8000/private-example-server/mcp",
-                "name": "example-private-server",
-                "description": "Example private server with oauth required.",
-                "auth": {
-                    "required": true,
-                    "post_body": {
-                        "username": "user",
-                        "password": "password"
-                    }
-                }
-            },
-            "github": {
-                "transport": "httpstream",
-                "httpstream-url": "https://api.githubcopilot.com/mcp",
-                "name": "github",
-                "description": "This server specializes in github operations.",
-                "auth": {
-                    "required": false,
-                    "post_body": null
-                },
-                "headers": {
-                    "Authorization": "Bearer {access_token}"
-                }
-            }
-        }
-    }
-    ```
-
-    If you need an MCP server to test the code, you can use [simple-mcp-server](https://github.com/rb58853/simple-mcp-server).
+* **`config.json` file**: The `config.json` file defines the configuration of available MCP servers. It must be created in the project root directory with this [structure](#file-configjson)
 
 ### Dependencies
 
@@ -139,6 +95,126 @@ Protocols for communication with MCP servers:
 * `openai = "^1.68.2"`
 * `mcp[cli]`
 * `mcp-oauth`
+
+## File config.json
+
+This file defines the **configuration of available MCP servers** (Model Context Protocol) in the project.
+It must be placed in the root directory of the repository. Its main purpose is to inform the application which servers can be used and how to connect to them.
+
+### General Structure
+
+The file is JSON formatted and follows this main structure:
+
+```json
+{
+    "app_name": "fastchat-mcp",
+    "mcp_servers": {
+    ...
+    }
+}
+```
+
+* **`app_name`**: The identifiable name of the application or project using these MCP servers.
+* **`mcp_servers`**: An object listing one or more configured MCP servers, each with its unique key.
+
+### Server Definition
+
+Each MCP server inside `"mcp_servers"` has a custom configuration with these common properties:
+
+* **Server key** (e.g., `"example_public_server"`, `"github"`, etc.): internal name identifying this server.
+  
+* **`transport`**: Protocol or communication method. It can be:
+  * `"httpstream"`: Communication via HTTP streaming.
+  * `"stdio"`: Communication based on standard input/output (local command execution).
+
+### Server Configuration Examples
+
+#### 1. Public HTTP Stream Server
+
+```json
+"example_public_server": {
+    "transport": "httpstream",
+    "httpstream-url": "http://127.0.0.1:8000/public-example-server/mcp",
+    "name": "example-public-server",
+    "description": "Example public server."
+}
+```
+
+* **`httpstream-url`**: Base URL where the MCP HTTP streaming server is exposed.
+* No authentication required (public access).
+* `"name"` and `"description"` provide descriptive labels for users.
+
+#### 2. Private HTTP Stream Server with Authentication
+
+```json
+"example_private_mcp": {
+    "transport": "httpstream",
+    "httpstream-url": "http://127.0.0.1:8000/private-example-server/mcp",
+    "name": "example-private-server",
+    "description": "Example private server with oauth required.",
+    "auth": {
+        "required": true,
+        "post_body": {
+            "username": "user",
+            "password": "password"
+        }
+    }
+}
+```
+
+* Adds an `"auth"` object on top of basic config:
+  * **`required`**: `true` indicates authentication is needed.
+  * **`post_body`**: Data sent for authentication (username and password here).
+* Suitable for servers secured with OAuth2.
+
+#### 3. GitHub Server with Authentication Headers
+
+```json
+"github": {
+    "transport": "httpstream",
+    "httpstream-url": "https://api.githubcopilot.com/mcp",
+    "name": "github",
+    "description": "This server specializes in github operations.",
+    "headers": {
+        "Authorization": "Bearer {github_access_token}"
+    }
+}
+```
+
+* Uses a custom HTTP header `"Authorization"` for token-based authentication.
+* Perfect for sending API keys or tokens in headers to access the server.
+
+#### 4. Local Server using STDIO Transport
+
+```json
+"my-stdio-server": {
+    "transport": "stdio",
+    "name": "my-stdio-server",
+    "config": {
+        "command": "npx",
+        "args": [
+            "-y",
+            "@modelcontextprotocol/example-stdio-server"
+        ]
+    }
+}
+```
+
+* Does not use HTTP; communication happens by executing local commands.
+* `"config"` specifies the command and arguments to run the MCP server. This key value(or body) has the same Claude Desktop sintaxis.
+* Useful for local integrations or development testing without networking.
+
+### Notes
+
+[see config.example.json](config.example.json)
+
+> ⚠️ Place this file in the **project root** so the application can detect it automatically.
+
+>💡 If you need an httpstream MCP server to test the code, you can use [simple-mcp-server](https://github.com/rb58853/simple-mcp-server).
+
+> ✍️ If you need help configuring a specific server or using this configuration in your code, feel free to open discussion for help!
+
+---
 
 ## Usage Example
 
@@ -148,7 +224,7 @@ from fastchat import open_local_chat
 open_local_chat()
 ```
 
-https://github.com/user-attachments/assets/1fcb0db8-5798-4745-8711-4b93198e36cc
+<https://github.com/user-attachments/assets/1fcb0db8-5798-4745-8711-4b93198e36cc>
 
 ```python
 #example2.py
@@ -197,4 +273,8 @@ code .
 
 ## License
 
-MIT License. See [`license`](LICENSE).
+MIT License. See [`license`](LICENSE)
+
+---
+>
+> **If you find this project helpful, please don’t forget to ⭐ star the [repository](https://github.com/rb58853/fastchat-mcp) or [buy me a ☕ coffee]().**

@@ -19,6 +19,7 @@ class GPT(LLM):
         self,
         model=ConfigGPT.DEFAULT_MODEL_NAME,
         max_history_len: int = 10,
+        chat_history: list = [],
     ):
         super().__init__()
         self.client = OpenAI(api_key=ConfigGPT.OPENAI_API_KEY)
@@ -27,7 +28,7 @@ class GPT(LLM):
         """Cliente asincrono de GPT"""
         self.max_len_history: int = max_history_len
         """Maxima cantidad de mensajes previos que se le pasan como input"""
-        self.chat_history: list[list[dict[str, str]]] = []
+        self.chat_history: list[list[dict[str, str]]] = chat_history
         """Historial del chat asosiado a esta instancia de GPT, en forma lista de listas, por ejemplo 
         ```
         chat_history: str = [
@@ -205,7 +206,7 @@ class GPT(LLM):
         system_message: str = system_prompts.select_service
         services = self.client_manager_mcp.get_services()
         query: str = user_prompts.query_and_services(query=query, services=services)
-        
+
         return self.call_completion(
             system_message=system_message,
             query=query,
@@ -232,5 +233,5 @@ class GPT(LLM):
             self.current_price += price
             return price
         except Exception as e:
-            logger.warning(f"Error al calcular el precio: {e}")
+            logger.warning(f"Can't calculate usage price from: {self.model}")
             return 0.0
