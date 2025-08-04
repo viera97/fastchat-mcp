@@ -29,6 +29,7 @@ Python client, based on [`"mcp[cli]"`](https://github.com/modelcontextprotocol/p
 * [Usage Example](#usage-example)
 * [Version History](#version-history)
 * [Project Status](#project-status)
+* [Flow](./doc/FLOW.md)
 * [License](#license)
 
 ## Overview
@@ -125,7 +126,7 @@ The file is JSON formatted and follows this main structure:
 }
 ```
 
-* **`app_name`**: The identifiable name of the application or project using these MCP servers.
+* **`app_name`**: The identifiable name of the appslication or project using these MCP servers.
 * **`mcp_servers`**: An object listing one or more configured MCP servers, each with its unique key.
 
 ### Server Definition
@@ -262,30 +263,6 @@ pip install -r requirements.txt
 code .
 ```
 
-## Chat Flow
-
-```mermaid
-flowchart TD
-    A[Start] --> B[Load Configuration]
-    B --> C[Initialize Servers]
-    C --> D[Initilize Tools, Resources and Prompts]
-    D --> E{Wait for User Query}
-    
-    E --> F[Send Query to LLM]
-    F --> H[Select Prompts from Servers]
-    F --> H[Select Tool or Resoruce and Args from Servers]
-    H --> I{LLM Decision}
-    I --> |Tool or Resource exist| J[Call Tool or Resource with Args] 
-    I --> |Tool or Resource is Null| K[Generate Simple Response based on Servers exposed information]
-    
-    J --> L[Add Result Data from call to LLM context]
-    L --> M[Generate Response based in passed Data] 
-    M --> N[Return Final Stream Response to user]
-    
-    K --> N
-    N --> E
-```
-
 ## Version History
 
 ### Last Version Features
@@ -309,4 +286,4 @@ MIT License. See [`license`](LICENSE)
 
 ---
 >
-> **If you find this project helpful, please don’t forget to ⭐ star the [repository](https://github.com/rb58853/fastchat-mcp) or [buy me a ☕ coffee]().**
+> **If you find this project helpful, please don’t forget to ⭐ star the [repository](https://github.com/rb58853/fastchat-mcp) or [buy me a ☕ coffee](buymeacoffee.com/rb58853).**
