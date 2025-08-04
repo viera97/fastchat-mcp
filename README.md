@@ -21,7 +21,9 @@ Python client, based on [`"mcp[cli]"`](https://github.com/modelcontextprotocol/p
 
 * [Overview](#overview)
 * [Installation](#installation)
-* [Implemented Models](#implemented-models)
+* [LLM Implementation](#llm-implementation)
+  * [LLM Providers](#llm-providers)
+  * [LLM Models](#llm-models)
 * [Implemented Transfer Protocols](#implemented-transfer-protocols)
 * [System Requirements](#system-requirements)
 * [Usage Example](#usage-example)
@@ -56,6 +58,15 @@ The client currently supports the following language models:
 >🚨 **CRITICAL CONFIGURATION NOTE** Currently, this project only work with `OpenAI` llm provider.
 
 ### LLM Models
+
+This project can use any valid OpenAI language model, providing flexibility to choose the model that best fits your specific needs. To explore all available models, their features, and how to use them, it is recommended to consult the official [OpenAI documentation](https://platform.openai.com/docs/models).
+
+To select a model, you should create a chat instance like this:
+
+```python
+from fastchat import Chat
+chat = Chat(model="my-openai-model-name", ...)
+```
 
 **Default Model (`"gpt4-o-mini"`):** gpt4-o-mini is an optimized implementation of the GPT-4 model that provides a balance between computational performance and resource efficiency. This model is specifically designed to operate in environments with memory constraints while maintaining superior predictive quality.
 

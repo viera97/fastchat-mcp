@@ -1,2 +1,3 @@
 openai
-fastmcp
+mcp[cli]
+mcp-oauth
