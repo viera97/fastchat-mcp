@@ -1,5 +1,11 @@
 # Version History 🚀
 
+### v1.0.0 📟
+
+- 📟 Se implemento el protocolo de conexion Stdio. Ahora soporta conexiones de tipo stdio.
+- 👾 Se dio acceso a usuar cualquier modelo de lenguaje de OPenAI. Por ahora solo se puede usar OpenAi como proveedor de LLMs.
+
+
 ### v0.1.3 ⌛️
 
 - 🔧 Renamed the package to `fastchat-mcp`.

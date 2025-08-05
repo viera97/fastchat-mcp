@@ -221,9 +221,9 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 [see config.example.json](config.example.json)
 
 > ⚠️ Place this file in the **project root** so the application can detect it automatically.
-
+>
 >💡 If you need an httpstream MCP server to test the code, you can use [simple-mcp-server](https://github.com/rb58853/simple-mcp-server).
-
+>
 > ✍️ If you need help configuring a specific server or using this configuration in your code, feel free to open discussion for help!
 
 ---
@@ -275,7 +275,7 @@ code .
 * 📟 Support for the stdio transport protocol.
 * 💻 Easy console usage via [`open_local_chat()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
 
-[See more in changelog](/CHANGELOG.md)
+[See more in changelog](./doc//CHANGELOG.md)
 
 ## Project Status
 >

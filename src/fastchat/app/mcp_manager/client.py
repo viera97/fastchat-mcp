@@ -1,6 +1,6 @@
 from .servers import Servers
-from .connections import httpstrem
-from .connections.services import Tool, Resource, Prompt
+from .sessions import httpstrem
+from .services import Tool, Resource, Prompt
 from ...config.logger import logger
 
 

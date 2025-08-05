@@ -1,8 +1,7 @@
 from ..services.llm import LLM
 from ..services.llm.models.openai_service.gpt import GPT
 from typing import Generator
-from .step import Step
-from .step import Step, StepMessage, DataStep, ResponseStep, QueryStep
+from .features.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
 from ...config.llm_config import ConfigGPT
 import json
 from mcp.types import PromptMessage
