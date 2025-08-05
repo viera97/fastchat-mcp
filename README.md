@@ -188,7 +188,7 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
     "name": "github",
     "description": "This server specializes in github operations.",
     "headers": {
-        "Authorization": "Bearer {github_access_token}"
+        "Authorization": "Bearer {your-github-access-token}"
     }
 }
 ```

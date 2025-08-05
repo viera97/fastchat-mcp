@@ -30,7 +30,7 @@
                 "post_body": null
             },
             "headers": {
-                "Authorization": "Bearer {access_token}"
+                "Authorization": "Bearer {your-github-access-token}"
             }
         },
         "my-stdio-server": {
