@@ -5,6 +5,37 @@ from ...config.logger import logger
 
 
 class ClientManagerMCP:
+    """
+    ClientManagerMCP is responsible for managing and interacting with tools, resources, and prompts
+    provided by multiple MCP (Multi-Component Platform) servers. It handles the initialization,
+    refreshing, and retrieval of these components, as well as facilitating their invocation.
+    Attributes:
+        app_name (str): The name of the application using the manager.
+        tools (dict[str, Tool]): Dictionary of available tools, keyed by server and tool name.
+        resources (dict[str, Resource]): Dictionary of available resources, keyed by server and resource name.
+        prompts (dict[str, Prompt]): Dictionary of available prompts, keyed by server and prompt name.
+    ## Methods
+        call_tool(name: str, args: dict) -> str | None:
+            Calls a tool by name with the provided arguments.
+        read_resource(name: str, args: dict) -> str | None:
+            Reads a resource by name with the provided arguments.
+        get_prompt(name: str, args: dict) -> dict:
+            Retrieves a prompt by name with the provided arguments.
+        refresh_data():
+            Initializes or refreshes the lists of tools, resources, and prompts from all registered MCP servers.
+        service_type(service_key: str) -> str:
+            Determines whether a given service key corresponds to a tool or a resource.
+        get_services() -> list[dict[str, any]]:
+            Returns a list of dictionaries representing the available services.
+        get_prompts() -> list[dict[str, any]]:
+            Returns a list of dictionaries representing the available prompts.
+    ## Private Methods
+        __get_session(server: dict) -> dict:
+            Establishes a session with a given server and retrieves its available tools, resources, and prompts.
+    ## Usage
+        Instantiate ClientManagerMCP to manage and interact with MCP server components in a unified way.
+    """
+
     def __init__(self, app_name: str = "fastchat-mcp"):
         self.app_name: str = app_name
         self.tools: dict[str:Tool] | None = {}
@@ -12,9 +43,9 @@ class ClientManagerMCP:
         self.prompts: dict[str:Prompt] | None = {}
         self.refresh_data()
         self.__services: list[dict] = []
-        """Lista de servicios en forma de string para pasarse al LLM"""
+        """List of services as strings to be passed to the LLM"""
         self.__prompts_context: list[dict] = []
-        """Lista de prompts en forma de string para pasarse al LLM"""
+        """List of prompts as strings to be passed to the LLM"""
 
     def call_tool(self, name: str, args: dict) -> str | None:
         return self.tools[name](args)
@@ -27,9 +58,14 @@ class ClientManagerMCP:
 
     def refresh_data(self):
         """
-        Inicializa o refresca la lista de herramientas, recursos o promps que sirve cada uno de los servidores, y lo organiza en forma de diccionario
-        donde cada valor posee informacion de cada servicio ademas de la direccion desde la cual se sirve
+        ### Refresh Datas
+        - Initializes or refreshes the lists of tools, resources, and prompts provided by each mcp server,
+        organizing them into dictionaries.
+        - For each registered MCP servers, retrieves their available tools, resources,
+        and prompts via a session, and stores them in the corresponding self dictionaries.
+        - If a session cannot be established with a server, that server is skipped.
         """
+
         self.tools, self.resources, self.prompts = ({}, {}, {})
         mcp_servers: dict[str, dict] = Servers().mcp_servers
 
@@ -77,12 +113,29 @@ class ClientManagerMCP:
             return None
 
     def service_type(self, service_key: str) -> str:
+        """
+        Determine the type of service associated with the given service key.
+        Args:
+            service_key (str): The key identifying the service.
+        Returns:
+            str: "tool" if the service key corresponds to a tool, "resource" if it corresponds to a resource.
+        """
+
         if service_key in self.tools.keys():
             return "tool"
         if service_key in self.resources.keys():
             return "resource"
 
     def get_services(self) -> list[dict[str, any]]:
+        """
+        Returns a list of dictionaries representing the available services. Creates
+        a dictionary for each service with the service name as the key and its string
+        representation as the value.
+        Returns:
+            list[dict]: A list of dictionaries, each containing a service name
+            and its corresponding string representation.
+        """
+
         if len(self.__services) != len(self.tools) + len(self.resources):
             services = self.tools | self.resources
             self.__services = [
@@ -92,6 +145,13 @@ class ClientManagerMCP:
         return self.__services
 
     def get_prompts(self) -> list[dict[str, any]]:
+        """
+        Returns a list of prompt dictionaries, ensuring each prompt is represented as a dictionary
+        with string values.
+        Returns:
+            list[dict]: A list of dictionaries containing the current prompts.
+        """
+
         if len(self.__prompts_context) != len(self.prompts):
             self.__prompts_context = [
                 {key: str(self.prompts[key])} for key in self.prompts.keys()

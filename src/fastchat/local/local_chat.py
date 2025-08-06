@@ -4,6 +4,13 @@ import os
 
 
 def open_local_chat():
+    """
+    ### open_local_chat
+    - Launches an interactive local chat session in the console.
+    - The conversation is also recorded in Markdown format. When the user exits (by typing 'exit' or pressing Enter),
+    the chat history is saved to a Markdown file in the 'chats' directory, using the first query as the filename.
+    """
+    
     clear_console()
     print(logo)
     chat: Chat = Chat()
@@ -50,18 +57,8 @@ def open_local_chat():
 
 logo = """                                                   
          _ __ ___ ______           __        __          __    
-        _ __ ___ / ____/___  _____/ /_ ____ / /    ___  / /_
-       _ __ ___ / /_  / __ `/ ___/ __/ ___// /_  / __ `/___/
+        _ __ ___ / ____/___  _____/ /_ _____/ /    ___  / /_
+       _ __ ___ / /_  / __ `/ ___/ __/ ____/ /_  / __ `/___/
       _ __ ___ / __/ / /_/ (__  ) /_/ (___/ __ \/ /_/ / /_ 
      _ __ ___ /_/    \__,_/____/\__/\____/_/ /_/\__,__\__/ 
-"""
-
-logo_old = """
-  ______               _          _             _   
- |  ____|             | |        | |           | |  
- | |__   __ _   _____ | |_   ___ | |__    __ _ | |_ 
- |  __| / _` | /  ___|| __| / __|| '_ \  / _` || __|
- | |   | (_| | _\  \  | |_ | |__ | | | || (_| || |_ 
- |_|    \__,_||_____\  \__| \___||_| |_| \__,_| \__|
- 
 """
