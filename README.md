@@ -279,7 +279,9 @@ code .
 
 ## Project Status
 >
->⚠️ **Important Notice:** This project is currently in active development phase. As a result, errors or unexpected behaviors may occur during usage
+>⚠️ **Important Notice:** This project is currently in active development phase. As a result, errors or unexpected behaviors may occur during usage.
+>
+> Future versions are expected to include additional features such as voice systems, quick integrations with databases, built-in websocket support for frontend connections, among other useful functionalities. We invite you to **follow this repository (watch)** to stay updated on the latest news and improvements implemented.
 
 ## License
 
