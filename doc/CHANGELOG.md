@@ -6,6 +6,7 @@
 
 - 📟 The Stdio connection protocol has been implemented. The system now supports stdio-type connections.
 - 👾 Access has been granted to utilize any OpenAI language model. Currently, only OpenAI is supported as the LLM provider.
+- ⚙️ Rename config file from `config.json` to `fastchat.config.json`
 
 ### v0.1.3 ⌛️
 
@@ -84,6 +85,6 @@
 - 🚀 Initial implementation of `Chat` client
 - 🔗 Complete integration of `httpstream` protocol ([fasmcp](https://github.com/modelcontextprotocol/python-sdk))
 - 🌍 Connectivity with multiple servers
-- 🔧 Simplified config.json file for connection management
+- 🔧 Simplified fastchat.config.json file for connection management
 - ⚡ Efficient processing of multiple simultaneous requests to tools and resources within a single query
 - 🔓 Simple connection without authorization (compatible only with servers that do not require authentication)

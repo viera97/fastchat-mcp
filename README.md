@@ -99,7 +99,7 @@ Protocols for communication with MCP servers:
     OPENAI_API_KEY=<your-openai-key>
     ```
 
-* **`config.json` file**: The `config.json` file defines the configuration of available MCP servers. It must be created in the project root directory with this [structure](#file-configjson)
+* **`fastchat.config.json` file**: The `fastchat.config.json` file defines the configuration of available MCP servers. It must be created in the project root directory with this [structure](#file-fastchatconfigjson)
 
 ### Dependencies
 
@@ -108,7 +108,7 @@ Protocols for communication with MCP servers:
 * `mcp[cli]`
 * `mcp-oauth`
 
-## File config.json
+## File `fastchat.config.json`
 
 This file defines the **configuration of available MCP servers** (Model Context Protocol) in the project.
 It must be placed in the root directory of the repository. Its main purpose is to inform the application which servers can be used and how to connect to them.

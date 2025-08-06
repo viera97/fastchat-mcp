@@ -13,7 +13,7 @@ class Servers:
         app_name (str): The name of the application.
         mcp_servers (dict[str, dict] | None): Dictionary containing server configurations.
     Methods:
-        __init__(config_file_path: str = "config.json", app_name: str = "fastchat-mcp"):
+        __init__(config_file_path: str = "fastchat.config.json", app_name: str = "fastchat-mcp"):
             Initializes the Servers instance, loads configuration, and sets up servers.
         __load_config_file(config_file_path: str):
             Loads and parses the configuration JSON file.
@@ -24,7 +24,7 @@ class Servers:
     """
 
     def __init__(
-        self, config_file_path: str = "config.json", app_name: str = "fastchat-mcp"
+        self, config_file_path: str = "fastchat.config.json", app_name: str = "fastchat-mcp"
     ):
         """
         Initializes the Servers instance.
