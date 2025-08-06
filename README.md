@@ -15,7 +15,7 @@
 
 </div>
 
-Python client, based on [`"mcp[cli]"`](https://github.com/modelcontextprotocol/python-sdk), for connecting to MCP servers through multiple protocols, specifically designed to work with integrated language models.
+Python chat client, based on [`"mcp[cli]"`](https://github.com/modelcontextprotocol/python-sdk), for connecting to MCP servers through multiple protocols, specifically designed to work with integrated language models.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ Python client, based on [`"mcp[cli]"`](https://github.com/modelcontextprotocol/p
 
 ## Overview
 
-This package provides a Python interface to connect to MCP servers in an easy, intuitive, and configurable way. It offers a modular architecture that allows for easy extension of new transfer protocols and language models. Currently includes support for HTTPStream and GPT-4 mini, with expansion capability for more options in the future.
+This package provides a Python interface to connect to MCP servers in an easy, intuitive, and configurable way. It features a modular architecture that allows for the seamless addition of new transfer protocols and language models (LLM) providers. Currently, it supports the HTTPStream and Stdio transport protocols for any OpenAI language model, with the capability to expand to more options in the future.
 
 ## Installation
 
