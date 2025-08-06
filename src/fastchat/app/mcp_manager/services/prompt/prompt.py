@@ -1,18 +1,25 @@
 from mcp_oauth import OAuthClient
 from mcp.client.auth import OAuthClientProvider
 from mcp.client.streamable_http import streamablehttp_client
-from mcp import ClientSession
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
 import asyncio
+import shutil
+import os
+
 
 from ..service import Service
+from .....utils.stdio_session_params import get_stdio_session_params
 
 
 class Prompt(Service):
     """Represents a prompt that can be called with arguments."""
 
-    def __init__(self, http, data, server):
-        super().__init__(http, data, server)
-        self.args = [{"name": arg.name, "type": "string"} for arg in data.arguments]
+    def __init__(self, data, server):
+        super().__init__(data, server)
+        self.args: list[dict] = [
+            {"name": arg.name, "type": "string"} for arg in data.arguments
+        ]
 
     def __call__(self, args: dict[str, any]):
         return self.get(args)
@@ -20,18 +27,27 @@ class Prompt(Service):
     def get(self, args: dict[str, any]):
         args = {key: str(args[key]) for key in args.keys()}
 
-        return asyncio.run(
-            Prompt.async_get(
-                self.http,
-                self.name,
-                args,
-                self.oauth_client,
-                self.headers,
+        if self.protocol == "httpstream":
+            return asyncio.run(
+                self.__httpstream_get(
+                    self.http,
+                    self.name,
+                    args,
+                    self.oauth_client,
+                    self.headers,
+                )
             )
-        )
+        if self.protocol == "stdio":
+            return asyncio.run(
+                self.__stdio_get(
+                    promptname=self.name,
+                    args=args,
+                    server=self.server,
+                )
+            )
 
-    @staticmethod
-    async def async_get(
+    async def __httpstream_get(
+        self,
         http: str,
         promptname: str,
         args: dict,
@@ -51,6 +67,25 @@ class Prompt(Service):
 
                 # get a prompt
                 prompt_result = await session.get_prompt(
-                    name=promptname, arguments=args
+                    name=promptname,
+                    arguments=args,
+                )
+                return prompt_result.messages
+
+    async def __stdio_get(
+        self,
+        promptname: str,
+        args: dict,
+        server: dict,
+    ):
+        server_params: StdioServerParameters = get_stdio_session_params(server)
+        async with stdio_client(server_params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+
+                # get a prompt
+                prompt_result = await session.get_prompt(
+                    name=promptname,
+                    arguments=args,
                 )
                 return prompt_result.messages

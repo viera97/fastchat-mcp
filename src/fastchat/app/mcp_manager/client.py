@@ -1,5 +1,5 @@
 from .servers import Servers
-from .sessions import httpstrem
+from .sessions import httpstrem, stdio
 from .services import Tool, Resource, Prompt
 from ...config.logger import logger
 
@@ -40,28 +40,36 @@ class ClientManagerMCP:
                 continue
 
             for tool in session["tools"]:
-                self.tools[f"{server_key}_{tool.name}"] = Tool(
-                    http=server["httpstream-url"], data=tool, server=server
-                )
+                self.tools[f"{server_key}_{tool.name}"] = Tool(data=tool, server=server)
             for resource in session["resources"]:
                 self.resources[f"{server_key}_{resource.name}"] = Resource(
-                    http=server["httpstream-url"], data=resource, server=server
+                    data=resource, server=server
                 )
 
             for prompt in session["prompts"]:
                 self.prompts[f"{server_key}_{prompt.name}"] = Prompt(
-                    http=server["httpstream-url"], data=prompt, server=server
+                    data=prompt, server=server
                 )
 
     def __get_session(self, server: dict) -> dict:
         try:
-            session: dict = httpstrem.get_session_data(
-                server["httpstream-url"],
-                server["oauth_client"],
-                headers=server.get("headers", None),
-            )
-            return session
+            session: dict = {}
 
+            if server["protocol"] == "httpstream":
+                session = httpstrem.get_session_data(
+                    server["httpstream-url"],
+                    server["oauth_client"],
+                    headers=server.get("headers", None),
+                )
+            elif server["protocol"] == "stdio":
+                session = stdio.get_session_data(server=server)
+            else:
+                logger.warning(
+                    f"Unsupported protocol type {server['protocol']} for server {server['key']}"
+                )
+                return None
+
+            return session
         except Exception as e:
             logger.warning(
                 f"Failed to establish connection with server {server['key']}. Cause: {e}"

@@ -1,33 +1,36 @@
 import os
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
-from ....config.logger import logging
 import asyncio
 import shutil
+from ....config.logger import logging
+from ....utils.stdio_session_params import get_stdio_session_params
 
 
 def get_session_data(server: dict) -> dict:
-    return asyncio.run(async_get_session(server=server))
+    data = asyncio.run(async_get_session(server=server))
+    return data
 
 
 async def async_get_session(server: dict) -> dict:
     """Initialize the server connection."""
     name: str = server["name"]
-    config: dict = server["config"]
+    server_params: StdioServerParameters = get_stdio_session_params(server=server)
 
-    server_params = StdioServerParameters(
-        command=(
-            shutil.which("npx") if config["command"] == "npx" else config["command"]
-        ),
-        args=config["args"],
-        env={**os.environ, **config["env"]} if config.get("env") else None,
-    )
     try:
-        stdio_context = stdio_client(server_params)
-        read, write = await stdio_context.__aenter__()
-        session = ClientSession(read, write)
-        await session.__aenter__()
-        capabilities = await session.initialize()
+        async with stdio_client(server_params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+                tools = await session.list_tools()
+                resources = await session.list_resource_templates()
+                prompts = await session.list_prompts()
+                data: dict = {
+                    "tools": tools.tools,
+                    "resources": resources.resourceTemplates,
+                    "prompts": prompts.prompts,
+                }
+                return data
+
     except Exception as e:
         logging.error(f"Error initializing server {name}: {e}")
         raise Exception(f"Error initializing server {name}: {e}")

@@ -1,51 +1,63 @@
 from mcp_oauth import OAuthClient
 from mcp.client.auth import OAuthClientProvider
 from mcp.client.streamable_http import streamablehttp_client
-from mcp import ClientSession
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+import asyncio
+from .....utils.stdio_session_params import get_stdio_session_params
+import os
+
 import asyncio
 
 from ..service import Service
+
+"""
+TODO
+- Refactorize code, without repetition
+"""
 
 
 class Tool(Service):
     """Represents a tool that can be called with arguments."""
 
-    def __init__(self, http, data, server):
-        super().__init__(http, data, server)
-        args = data.inputSchema["properties"]
-        self.args = []
-        for key in args.keys():
-            arg_type = args[key].get("type", None)
+    def __init__(self, data, server):
+        super().__init__(data, server)
+        self.args: list[dict] = self.__get_args_schema(data=data)
+
+    def __get_args_schema(self, data):
+        properties = data.inputSchema["properties"]
+        args = []
+        for key in properties.keys():
+            arg_type = properties[key].get("type", None)
             if arg_type is None:
-                if "anyOf" in args[key]:
+                if "anyOf" in properties[key]:
                     arg_type = ""
-                    for type_ in args[key]["anyOf"]:
+                    for type_ in properties[key]["anyOf"]:
                         arg_type += type_["type"] + " | "
                     arg_type = arg_type[:-3]  # Remove the last " | "
+            args.append({"name": key, "type": arg_type})
 
-            self.args.append(
-                {
-                    "name": key,
-                    "type": arg_type,
-                }
-            )
+        return args
 
     def __call__(self, args: dict[str, any]):
         return self.call(args)
 
     def call(self, args: dict[str, any]):
-        return asyncio.run(
-            Tool.async_call(
-                self.http,
-                self.name,
-                args,
-                self.oauth_client,
-                self.headers,
+        if self.protocol == "httpstream":
+            return asyncio.run(
+                self.__httpstream_call(
+                    self.http,
+                    self.name,
+                    args,
+                    self.oauth_client,
+                    self.headers,
+                )
             )
-        )
+        if self.protocol == "stdio":
+            return asyncio.run(self.__stdio_call(self.name, args, self.server))
 
-    @staticmethod
-    async def async_call(
+    async def __httpstream_call(
+        self,
         http: str,
         toolname: str,
         args: dict,
@@ -61,6 +73,16 @@ class Tool(Service):
             _,
         ):
             async with ClientSession(read_stream, write_stream) as session:
+                await session.initialize()
+
+                # Call a tool
+                tool_result = await session.call_tool(toolname, args)
+                return tool_result.content
+
+    async def __stdio_call(self, toolname: str, args: dict, server: dict):
+        server_params: StdioServerParameters = get_stdio_session_params(server)
+        async with stdio_client(server_params) as (read, write):
+            async with ClientSession(read, write) as session:
                 await session.initialize()
 
                 # Call a tool

@@ -29,7 +29,17 @@ class LLM(ABC):
     def select_service(
         self, query: str, extra_messages: list[dict[str, str]] = []
     ) -> str:
-        """Select services based on the query and extra messages."""
+        """
+        Selects the most relevant services for the given query context by leveraging the available services exposed by each server.
+        Args:
+            query (str): The user's query for which relevant services need to be selected.
+            extra_messages (list[dict[str, str]], optional): Additional messages to include in the context. Defaults to an empty list.
+        Returns:
+            str: The result of the completion call, typically a JSON-formatted string indicating the selected services.
+        Description:
+            This function gathers all available services from the client manager, constructs a prompt combining the user's query and the list of services,
+            and then calls the completion endpoint to determine which services are most useful for the given context.
+        """
         pass
 
     @abstractmethod

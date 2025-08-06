@@ -135,7 +135,7 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 
 * **Server key** (e.g., `"example_public_server"`, `"github"`, etc.): internal name identifying this server.
   
-* **`transport`**: Protocol or communication method. It can be:
+* **`protocol`**: Protocol or communication method. It can be:
   * `"httpstream"`: Communication via HTTP streaming.
   * `"stdio"`: Communication based on standard input/output (local command execution).
 
@@ -145,7 +145,7 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 
 ```json
 "example_public_server": {
-    "transport": "httpstream",
+    "protocol": "httpstream",
     "httpstream-url": "http://127.0.0.1:8000/public-example-server/mcp",
     "name": "example-public-server",
     "description": "Example public server."
@@ -160,7 +160,7 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 
 ```json
 "example_private_mcp": {
-    "transport": "httpstream",
+    "protocol": "httpstream",
     "httpstream-url": "http://127.0.0.1:8000/private-example-server/mcp",
     "name": "example-private-server",
     "description": "Example private server with oauth required.",
@@ -183,7 +183,7 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 
 ```json
 "github": {
-    "transport": "httpstream",
+    "protocol": "httpstream",
     "httpstream-url": "https://api.githubcopilot.com/mcp",
     "name": "github",
     "description": "This server specializes in github operations.",
@@ -196,11 +196,11 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 * Uses a custom HTTP header `"Authorization"` for token-based authentication.
 * Perfect for sending API keys or tokens in headers to access the server.
 
-#### 4. Local Server using STDIO Transport
+#### 4. Local Server using STDIO protocol
 
 ```json
 "my-stdio-server": {
-    "transport": "stdio",
+    "protocol": "stdio",
     "name": "my-stdio-server",
     "config": {
         "command": "npx",
@@ -271,8 +271,8 @@ code .
 * ⚙️ Integration with `Tools`, `Resources`, and `Prompts` from MCP servers, achieving a well-integrated client workflow with each of these services. [Check flow](./doc/FLOW.md)
 * 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#2-private-http-stream-server-with-authentication). Also integrate [headers authorization](#3-github-server-with-authentication-headers).
 * 👾 OpenAI GPT as an integrated LLM using any valid OpenAI language model.
-* 📡 Support for the httpstream transport protocol.
-* 📟 Support for the stdio transport protocol.
+* 📡 Support for the httpstream protocol protocol.
+* 📟 Support for the stdio protocol protocol.
 * 💻 Easy console usage via [`open_local_chat()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
 
 [See more in changelog](./doc//CHANGELOG.md)
@@ -286,5 +286,10 @@ code .
 MIT License. See [`license`](LICENSE)
 
 ---
->
-> **If you find this project helpful, please don’t forget to ⭐ star the [repository](https://github.com/rb58853/fastchat-mcp) or [buy me a ☕ coffee](buymeacoffee.com/rb58853).**
+<div align = center>
+
+#### If you find this project helpful, please don’t forget to ⭐ star the [repository](https://github.com/rb58853/fastchat-mcp)
+
+</div>
+
+<!-- or [buy me a ☕ coffee](buymeacoffee.com/rb58853).** -->

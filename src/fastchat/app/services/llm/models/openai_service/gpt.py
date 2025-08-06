@@ -73,7 +73,7 @@ class GPT(LLM):
         self.chat_history.append([])
         self.chat_history[-1].append({})
 
-    def call_stream_completion(
+    def __call_stream_completion(
         self,
         system_message: str,
         query: str,
@@ -102,7 +102,7 @@ class GPT(LLM):
         )
         return stream
 
-    def call_completion(
+    def __call_completion(
         self,
         system_message: str,
         query: str,
@@ -168,7 +168,7 @@ class GPT(LLM):
             }
         ]
 
-        return self.call_completion(
+        return self.__call_completion(
             system_message=system_message,
             query=query,
             json_format=True,
@@ -180,15 +180,11 @@ class GPT(LLM):
         query: str,
         extra_messages: list[dict[str, str]] = [],
     ) -> str:
-        """
-        Funcion encargada de seleccionar los servicios utiles para el contexto de la consulta, usando los servicios expuestos por cada uno
-        de los servidores
-        """
         system_message: str = system_prompts.select_service
         services = self.client_manager_mcp.get_services()
         query: str = user_prompts.query_and_services(query=query, services=services)
 
-        return self.call_completion(
+        return self.__call_completion(
             system_message=system_message,
             query=query,
             json_format=True,
@@ -204,9 +200,9 @@ class GPT(LLM):
         system_message: str = system_prompts.chat_asistant(
             self.client_manager_mcp.get_services() if use_services_contex else None
         ) + system_prompts.language_prompt(self.current_language)
-        # response = self.call_completion(system_message=system_message, query=query)
+        # response = self.__call_completion(system_message=system_message, query=query)
 
-        stream = self.call_stream_completion(
+        stream = self.__call_stream_completion(
             system_message=system_message,
             query=query,
             extra_messages=extra_messages,
@@ -235,7 +231,7 @@ class GPT(LLM):
         )
         user_message = user_prompts.query_and_data(query=query, data=data)
 
-        stream = self.call_stream_completion(
+        stream = self.__call_stream_completion(
             system_message=system_message,
             query=user_message,
             extra_messages=extra_messages,

@@ -9,7 +9,11 @@ def query_and_services(query: str, services: str | list):
 
 
 def exposed_prompts(prompt_services: str | list):
-    return f"All prompt services:{prompt_services}"
+    return (
+        f"All prompt services:{prompt_services}"
+        if len(prompt_services) > 0
+        else "There are not prompts aviables. Your respose should be `[]`."
+    )
 
 
 def query_and_data(query: str, data: str | dict):
