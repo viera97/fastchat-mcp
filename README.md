@@ -1,4 +1,4 @@
-# fastchat-mcp
+# Fastchat MCP
 
 ![alt text](/doc/images/fastchat.png)
 
