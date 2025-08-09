@@ -10,7 +10,7 @@ def open_local_chat():
     - The conversation is also recorded in Markdown format. When the user exits (by typing 'exit' or pressing Enter),
     the chat history is saved to a Markdown file in the 'chats' directory, using the first query as the filename.
     """
-    
+
     clear_console()
     print(logo)
     chat: Chat = Chat()
@@ -55,7 +55,7 @@ def open_local_chat():
         md += "\n"
 
 
-logo = """                                                   
+logo = """\x1b[32;1m
          _ __ ___ ______           __        __          __    
         _ __ ___ / ____/___  _____/ /_ _____/ /    ___  / /_
        _ __ ___ / /_  / __ `/ ___/ __/ ____/ /_  / __ `/___/

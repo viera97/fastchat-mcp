@@ -1,7 +1,7 @@
 from .servers import Servers
 from .sessions import httpstrem, stdio
 from .services import Tool, Resource, Prompt
-from ...config.logger import logger
+from ...config.logger import logger, CustomFormatter
 
 
 class ClientManagerMCP:
@@ -100,15 +100,18 @@ class ClientManagerMCP:
             elif server["protocol"] == "stdio":
                 session = stdio.get_session_data(server=server)
             else:
-                logger.warning(
-                    f"Unsupported protocol type {server['protocol']} for server {server['key']}"
+                logger.error(
+                    f"Unsupported protocol type {CustomFormatter.bold_red}{server['protocol']}{CustomFormatter.reset} for server {server['key']}"
                 )
                 return None
 
+            logger.info(
+                f"Establish connection with server {CustomFormatter.green}{server['key']}{CustomFormatter.reset} successfully."
+            )
             return session
         except Exception as e:
-            logger.warning(
-                f"Failed to establish connection with server {server['key']}. Cause: {e}"
+            logger.error(
+                f"Failed to establish connection with server {CustomFormatter.bold_red}{server['key']}{CustomFormatter.reset}. Cause: {e}"
             )
             return None
 

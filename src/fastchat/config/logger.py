@@ -6,17 +6,19 @@ import sys
 
 class CustomFormatter(logging.Formatter):
     grey = "\x1b[38;21m"
+    green = "\x1b[32;1m"
     yellow = "\x1b[33;21m"
     red = "\x1b[31;21m"
     bold_red = "\x1b[31;1m"
     reset = "\x1b[0m"
+    end_color = "\x1b"
     format = "{color}%(levelname)s\x1b[0m: %(asctime)s  -  %(message)s"
 
     FORMATS = {
         logging.DEBUG: format.replace("{color}", grey),
-        logging.INFO: format.replace("{color}", yellow),
+        logging.INFO: format.replace("{color}", green),
         logging.WARNING: format.replace("{color}", yellow),
-        logging.ERROR: format.replace("{color}", red),
+        logging.ERROR: format.replace("{color}", bold_red),
         logging.CRITICAL: format.replace("{color}", bold_red),
     }
 
