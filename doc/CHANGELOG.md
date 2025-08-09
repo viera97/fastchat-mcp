@@ -2,6 +2,11 @@
 
 ## fastchat-mcp
 
+### v1.0.1 🔧
+
+- 📝 Improved logging and terminal output for local chat.
+- 🎯 Enhanced prompt configuration for selecting prompts from the MCP.
+
 ### v1.0.0 📟
 
 - 📟 The Stdio connection protocol has been implemented. The system now supports stdio-type connections.
