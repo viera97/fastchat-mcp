@@ -11,13 +11,26 @@ def get_session_data(
     oauth_client: OAuthClient,
     headers: dict[str, str] = None,
 ) -> dict:
-    return asyncio.run(
-        async_get_session(
-            http=http,
-            oauth_client=oauth_client,
-            headers=headers,
+    try:
+        loop = asyncio.get_event_loop()
+        future = asyncio.run_coroutine_threadsafe(
+            async_get_session(
+                http=http,
+                oauth_client=oauth_client,
+                headers=headers,
+            ),
+            loop,
         )
-    )
+        result = future.result()  # Espera el resultado
+        return result
+    except RuntimeError:
+        return asyncio.run(
+            async_get_session(
+                http=http,
+                oauth_client=oauth_client,
+                headers=headers,
+            )
+        )
 
 
 async def async_get_session(

@@ -8,10 +8,10 @@ from fastapi import FastAPI
 from .routes.chat import router as chat_router
 from ..app.mcp_manager.client import ClientManagerMCP
 from ..app.environment import Environment
+from ..utils.clear_console import clear_console
 
 
 class FastApp:
-
     def __init__(
         self,
         middleware=None,
@@ -36,4 +36,5 @@ class FastApp:
         return app
 
     def run(self, host: str, port: int):
+        clear_console()
         pass

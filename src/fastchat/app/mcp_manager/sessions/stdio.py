@@ -8,8 +8,11 @@ from ....utils.stdio_session_params import get_stdio_session_params
 
 
 def get_session_data(server: dict) -> dict:
-    data = asyncio.run(async_get_session(server=server))
-    return data
+    try:
+        loop = asyncio.get_running_loop()
+        return loop.create_task(async_get_session(server=server))
+    except RuntimeError:
+        return asyncio.run(async_get_session(server=server))
 
 
 async def async_get_session(server: dict) -> dict:
