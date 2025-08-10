@@ -39,7 +39,7 @@ class Fastchat:
         llm_provider: LLMProvider = ConfigLLM.DEFAULT_PROVIDER,
         len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
         history: list = [],
-        client_manager_mcp: ClientManagerMCP = None,
+        client_manager_mcp: ClientManagerMCP | None = None,
     ):
         """
         Initialize a Chat instance.

@@ -7,14 +7,16 @@ from fastapi.responses import RedirectResponse
 from fastapi import FastAPI
 from .routes.chat import router as chat_router
 from ..app.mcp_manager.client import ClientManagerMCP
+from ..app.environment import Environment
 
 
 class FastApp:
+
     def __init__(
         self,
         middleware=None,
     ):
-        self.client_manager_mcp: ClientManagerMCP = ClientManagerMCP()
+        Environment.CLIENT_MANAGER_MCP = ClientManagerMCP()
 
     @property
     def app(self) -> FastAPI:
@@ -35,7 +37,3 @@ class FastApp:
 
     def run(self, host: str, port: int):
         pass
-
-
-fastapp: FastApp = FastApp()
-app: FastAPI = fastapp.app

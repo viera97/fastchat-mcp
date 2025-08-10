@@ -19,7 +19,7 @@ class GPT(LLM):
 
     def __init__(
         self,
-        client_manager_mcp: ClientManagerMCP = ClientManagerMCP(),
+        client_manager_mcp: ClientManagerMCP | None = None,
         model=ConfigGPT.DEFAULT_MODEL_NAME,
         max_history_len: int = 10,
         chat_history: list = [],
