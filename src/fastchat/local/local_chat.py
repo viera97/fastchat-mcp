@@ -41,8 +41,7 @@ class TerminalChat:
 
             md += f"# {query}"
             index = 1
-
-            async for step in await chat(query):
+            async for step in chat(query):
                 md += str(step)
 
                 if step.type == "response":

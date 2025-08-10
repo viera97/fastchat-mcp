@@ -88,7 +88,7 @@ class Fastchat:
         yield DataStep(data={"querys": querys})
 
         for query in querys:
-            for step in self.proccess_query(query):
+            async for step in self.proccess_query(query):
                 yield step
 
     async def proccess_query(self, query: str) -> AsyncGenerator[Step]:
