@@ -1,7 +1,7 @@
 from .servers import Servers
 from .sessions import httpstrem, stdio
 from .services import Tool, Resource, Prompt
-from ...config.logger import logger, CustomFormatter
+from ...config.logger import logger, CustomFormatter, LoggerFeatures
 
 
 class ClientManagerMCP:
@@ -41,6 +41,7 @@ class ClientManagerMCP:
         self.tools: dict[str:Tool] | None = {}
         self.resources: dict[str:Resource] | None = {}
         self.prompts: dict[str:Prompt] | None = {}
+
         self.refresh_data()
         self.__services: list[dict] = []
         """List of services as strings to be passed to the LLM"""
@@ -65,6 +66,7 @@ class ClientManagerMCP:
         and prompts via a session, and stores them in the corresponding self dictionaries.
         - If a session cannot be established with a server, that server is skipped.
         """
+        print(LoggerFeatures.LOGO)
 
         self.tools, self.resources, self.prompts = ({}, {}, {})
         mcp_servers: dict[str, dict] = Servers().mcp_servers

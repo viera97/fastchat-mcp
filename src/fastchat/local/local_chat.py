@@ -1,7 +1,7 @@
-from fastchat import Fastchat
-from fastchat.utils.clear_console import clear_console
+from ..app.chat.chat import Fastchat
+from ..utils.clear_console import clear_console
+from ..config.logger import LoggerFeatures
 import os
-from ..config.logger import CustomFormatter
 
 
 class TerminalChat:
@@ -14,7 +14,6 @@ class TerminalChat:
         """
 
         clear_console()
-        print(self.logo)
         chat: Fastchat = Fastchat()
         print("\n")
 
@@ -55,13 +54,3 @@ class TerminalChat:
                     print(f"  {index}. {step.step}")
                     index += 1
             md += "\n"
-
-    @property
-    def logo(self):
-        return f"""{CustomFormatter.green}
-                 _ __ ___ ______           __        __          __    
-                _ __ ___ / ____/___  _____/ /_ _____/ /    ___  / /_
-               _ __ ___ / /_  / __ `/ ___/ __/ ____/ /_  / __ `/___/
-              _ __ ___ / __/ / /_/ (__  ) /_/ (___/ __ \/ /_/ / /_ 
-             _ __ ___ /_/    \__,_/____/\__/\____/_/ /_/\__,__\__/ 
-        """

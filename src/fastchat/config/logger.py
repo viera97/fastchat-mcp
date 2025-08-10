@@ -70,4 +70,14 @@ def setup_logger() -> logging.Logger:
     return logger
 
 
+class LoggerFeatures:
+    LOGO: str = f"""{CustomFormatter.green}
+             _ __ ___ ______           __        __          __    
+            _ __ ___ / ____/___  _____/ /_ _____/ /    ___  / /_
+           _ __ ___ / /_  / __ `/ ___/ __/ ____/ /_  / __ `/___/
+          _ __ ___ / __/ / /_/ (__  ) /_/ (___/ __ \/ /_/ / /_ 
+         _ __ ___ /_/    \__,_/____/\__/\____/_/ /_/\__,__\__/ 
+    """
+
+
 logger = setup_logger()

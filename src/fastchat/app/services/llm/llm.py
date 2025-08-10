@@ -45,8 +45,8 @@ class LLM(ABC):
             additional data or context. Returns a generator that yields the response in chunks.
     """
 
-    def __init__(self):
-        self.client_manager_mcp: ClientManagerMCP = ClientManagerMCP()
+    def __init__(self, client_manager_mcp: ClientManagerMCP = ClientManagerMCP()):
+        self.client_manager_mcp: ClientManagerMCP = client_manager_mcp
         self.current_language: str = "English"
 
     @abstractmethod

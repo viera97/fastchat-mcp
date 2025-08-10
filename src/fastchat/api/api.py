@@ -6,6 +6,7 @@ load_dotenv()
 from fastapi.responses import RedirectResponse
 from fastapi import FastAPI
 from .routes.chat import router as chat_router
+from ..app.mcp_manager.client import ClientManagerMCP
 
 
 class FastApp:
@@ -13,7 +14,7 @@ class FastApp:
         self,
         middleware=None,
     ):
-        pass
+        self.client_manager_mcp: ClientManagerMCP = ClientManagerMCP()
 
     @property
     def app(self) -> FastAPI:
@@ -36,4 +37,5 @@ class FastApp:
         pass
 
 
-app: FastAPI = FastApp().app
+fastapp: FastApp = FastApp()
+app: FastAPI = fastapp.app

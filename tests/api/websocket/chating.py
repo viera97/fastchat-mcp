@@ -1,5 +1,25 @@
+"""
+## WIKI
+Crear uri pasando cada uno de los parametros deseados por parametros:
+- chat_id: str
+- model: str
+- llm_provider: str
+- len_context: int
+
+```python
+uri_ws = "ws://localhost:8000/chat/ws?chat_id=<your-chat-id>&model=<your_model-name>&llm_provider=<your-provider>&len_contex=<your-len-contex>"
+```
+
+> Para mas detalles ver documentacion de Fastchat en src/fastchat/app/chat/chat.py
+
+__En caso de no pasar uno de estos valores, entonces se usara el valor por defecto__
+"""
+
 import asyncio
 import websockets
+from fastchat.utils.clear_console import clear_console
+from fastchat.config.logger import LoggerFeatures, CustomFormatter
+import json
 
 
 class WebsocketClient:
@@ -7,23 +27,45 @@ class WebsocketClient:
         pass
 
     def open_chat(self, uri):
-        asyncio.run(self.open_chat(uri))
+        clear_console()
+        print(LoggerFeatures.LOGO + CustomFormatter.reset)
+        asyncio.run(self.__open_chat(uri))
 
     async def __open_chat(self, uri):
         async with websockets.connect(uri) as websocket:
             while True:
-                mensaje = input("Tú: ")  # Leer mensaje a enviar desde consola
+                mensaje = input(">> ")  # Leer mensaje a enviar desde consola
                 await websocket.send(mensaje)  # Enviar mensaje al servidor
 
                 # Esperar y recibir una o varias respuestas JSON en cadena (puedes adaptarlo según tu protocolo)
                 try:
+                    index = 1
                     while True:
-                        respuesta = await websocket.recv()
-                        print("Servidor:", respuesta)  # Mostrar respuesta recibida
+                        step = await websocket.recv()
+                        step = json.loads(step)
+                        index = step2terminal(step, index)
                 except asyncio.TimeoutError:
                     pass
 
 
+def step2terminal(step: dict, index: int) -> int:
+    if step["type"] == "response":
+        if step["first_chunk"]:
+            print(f"<< {step['response']}", end="")
+        else:
+            print(f"{step['response']}", end="")
+    if step["type"] == "query":
+        print(f">> {step['query']}")
+        _index = 1
+    if step["type"] == "data":
+        print(f"   {step['data']}")
+    if step["type"] == "step":
+        print(f"  {index}. {step['step']}")
+        _index = index + 1
+
+    return index
+
+
 if __name__ == "__main__":
-    uri_ws = "ws://localhost:8000/chat/ws?chat_id=tu_id"  # Cambia la URI y parámetros según tu servidor
+    uri_ws = "ws://localhost:8000/chat/ws?chat_id=id"  # Cambia la URI y parámetros según tu servidor
     WebsocketClient().open_chat(uri_ws)

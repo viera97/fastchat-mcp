@@ -1,4 +1,6 @@
 from collections.abc import Generator
+
+from .....mcp_manager.client import ClientManagerMCP
 from ...prompts import system_prompts, user_prompts
 from ......config.llm_config import ConfigGPT
 from ......config.logger import logger
@@ -17,11 +19,12 @@ class GPT(LLM):
 
     def __init__(
         self,
+        client_manager_mcp: ClientManagerMCP = ClientManagerMCP(),
         model=ConfigGPT.DEFAULT_MODEL_NAME,
         max_history_len: int = 10,
         chat_history: list = [],
     ):
-        super().__init__()
+        super().__init__(client_manager_mcp=client_manager_mcp)
         self.client = OpenAI(api_key=ConfigGPT.OPENAI_API_KEY)
         """Cliente secuencial de GPT"""
         self.async_client = AsyncOpenAI(api_key=ConfigGPT.OPENAI_API_KEY)

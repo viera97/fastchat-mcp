@@ -1,3 +1,4 @@
+from ..mcp_manager.client import ClientManagerMCP
 from ..services.llm import LLM
 from ..services.llm.models.openai_service.gpt import GPT
 from typing import Generator
@@ -38,6 +39,7 @@ class Fastchat:
         llm_provider: LLMProvider = ConfigLLM.DEFAULT_PROVIDER,
         len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
         history: list = [],
+        client_manager_mcp: ClientManagerMCP = None,
     ):
         """
         Initialize a Chat instance.
@@ -51,6 +53,7 @@ class Fastchat:
 
         self.id = id
         self.llm: LLM = GPT(
+            client_manager_mcp=client_manager_mcp,
             max_history_len=len_context,
             model=model,
             chat_history=history,

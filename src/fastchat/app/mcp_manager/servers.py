@@ -24,7 +24,9 @@ class Servers:
     """
 
     def __init__(
-        self, config_file_path: str = "fastchat.config.json", app_name: str = "fastchat-mcp"
+        self,
+        config_file_path: str = "fastchat.config.json",
+        app_name: str = "fastchat-mcp",
     ):
         """
         Initializes the Servers instance.
@@ -61,6 +63,7 @@ class Servers:
         Loads server credentials from the configuration.
         Initializes OAuth clients for each server defined in the configuration file.
         """
+
         self.mcp_servers = self.json_config["mcp_servers"]
 
         for server in self.mcp_servers.values():
