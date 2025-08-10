@@ -3,7 +3,7 @@ from ..services.llm.models.openai_service.gpt import GPT
 from typing import Generator
 from .features.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
 from .features.llm_provider import LLMProvider
-from ...config.llm_config import ConfigGPT
+from ...config.llm_config import ConfigGPT, ConfigLLM
 import json
 from mcp.types import PromptMessage
 
@@ -33,11 +33,11 @@ class Chat:
 
     def __init__(
         self,
-        llm_provider: LLMProvider = LLMProvider.OPENAI,
-        model=ConfigGPT.DEFAULT_MODEL_NAME,
-        len_context: int = 10,
-        history: list = [],
         id: str | None = None,
+        model=ConfigGPT.DEFAULT_MODEL_NAME,
+        llm_provider: LLMProvider = ConfigLLM.DEFAULT_PROVIDER,
+        len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
+        history: list = [],
     ):
         """
         Initialize a Chat instance.
