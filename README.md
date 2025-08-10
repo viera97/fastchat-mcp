@@ -65,8 +65,8 @@ This project can use any valid OpenAI language model, providing flexibility to c
 To select a model, you should create a chat instance like this:
 
 ```python
-from fastchat import Chat
-chat = Chat(model="my-openai-model-name", ...)
+from fastchat import Fastchat
+chat = Fastchat(model="my-openai-model-name", ...)
 ```
 
 **Default Model (`"gpt4-o-mini"`):** gpt4-o-mini is an optimized implementation of the GPT-4 model that provides a balance between computational performance and resource efficiency. This model is specifically designed to operate in environments with memory constraints while maintaining superior predictive quality.
@@ -232,16 +232,17 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 
 ```python
 #example1.py
-from fastchat import open_local_chat
-open_local_chat()
+from fastchat import TerminalChat
+chat = TerminalChat()
+chat.open()
 ```
 
 <https://github.com/user-attachments/assets/1fcb0db8-5798-4745-8711-4b93198e36cc>
 
 ```python
 #example2.py
-from fastchat import Chat
-chat: Chat = Chat()
+from fastchat import Fastchat
+chat: Fastchat = Fastchat()
 while True:
     query = input("> ")
     if query == "":
@@ -267,7 +268,7 @@ code .
 
 ### Last Version Features
 
-* 💬 Fully functional streaming chat by passing a query; see [`Chat`](./src/fastchat/services/llm/chat/chat.py).
+* 💬 Fully functional streaming chat by passing a query; see [`Fastchat`](./src/fastchat/services/llm/chat/chat.py).
 * ⚙️ Integration with `Tools`, `Resources`, and `Prompts` from MCP servers, achieving a well-integrated client workflow with each of these services. [Check flow](./doc/FLOW.md)
 * 🔐 Simple authentication system using [mcp-oauth](https://github.com/rb58853/mcp-oauth) and [this environmental configuration](#2-private-http-stream-server-with-authentication). Also integrate [headers authorization](#3-github-server-with-authentication-headers).
 * 👾 OpenAI GPT as an integrated LLM using any valid OpenAI language model.

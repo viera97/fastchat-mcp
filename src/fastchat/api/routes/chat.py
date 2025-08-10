@@ -2,7 +2,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from ...app.chat.features.llm_provider import LLMProvider
 
 # from ...app.chat.features.step import Step
-from ...app.chat.chat import Chat
+from ...app.chat.chat import Fastchat
 from ...config.llm_config import ConfigGPT, ConfigLLM
 
 router = APIRouter(prefix="/chat", tags=["chating"])
@@ -18,7 +18,7 @@ async def websocket_chat(
 ):
     await websocket.accept()
     history = []
-    chat = Chat(
+    chat = Fastchat(
         id=chat_id,
         model=model,
         llm_provider=llm_provider,
@@ -31,12 +31,11 @@ async def websocket_chat(
             # Espera mensaje del usuario, típicamente texto (puedes cambiarlo si envías JSON)
             query = await websocket.receive_text()
             response = chat(query)
+            
             # Enviar respuesta al cliente (puede ser texto o JSON)
             for step in response:
                 await websocket.send_json(step.json)
-            # Puedes agregar respuesta a history si tu lógica lo requiere
-            history.append({"role": "user", "content": query})
-            history.append({"role": "assistant", "content": str(response)})
+                
     except WebSocketDisconnect:
         # Cierra conexión limpia si el cliente se desconecta
         pass

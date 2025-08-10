@@ -87,7 +87,7 @@
 
 ### v0.0.1 🛠️
 
-- 🚀 Initial implementation of `Chat` client
+- 🚀 Initial implementation of `Fastchat` client
 - 🔗 Complete integration of `httpstream` protocol ([fasmcp](https://github.com/modelcontextprotocol/python-sdk))
 - 🌍 Connectivity with multiple servers
 - 🔧 Simplified fastchat.config.json file for connection management

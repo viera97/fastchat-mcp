@@ -1,3 +1,4 @@
-from fastchat import open_local_chat
+from fastchat import TerminalChat
 
-open_local_chat()
+chat = TerminalChat()
+chat.open()

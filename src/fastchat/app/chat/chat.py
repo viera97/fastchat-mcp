@@ -8,7 +8,7 @@ import json
 from mcp.types import PromptMessage
 
 
-class Chat:
+class Fastchat:
     """
     Chat class for managing conversational interactions with an LLM (Large Language Model).
     This class orchestrates the process of handling user queries, selecting prompts and services,
