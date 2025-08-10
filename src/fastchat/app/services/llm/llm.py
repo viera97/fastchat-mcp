@@ -45,11 +45,12 @@ class LLM(ABC):
             additional data or context. Returns a generator that yields the response in chunks.
     """
 
-    def __init__(self, client_manager_mcp: ClientManagerMCP | None = None):
-        self.client_manager_mcp: ClientManagerMCP = (
-            client_manager_mcp if client_manager_mcp is not None else ClientManagerMCP()
-        )
+    def __init__(self):
+        self.client_manager_mcp: ClientManagerMCP | None = None
         self.current_language: str = "English"
+
+    def set_client_manager_mcp(self, client_manager_mcp: ClientManagerMCP | None):
+        self.client_manager_mcp: ClientManagerMCP = client_manager_mcp
 
     @abstractmethod
     def preprocess_query(self, query: str) -> dict:

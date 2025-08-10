@@ -1,7 +1,9 @@
+import asyncio
 from .servers import Servers
 from .sessions import httpstrem, stdio
 from .services import Tool, Resource, Prompt
 from ...config.logger import logger, CustomFormatter, LoggerFeatures
+
 
 class ClientManagerMCP:
     """
@@ -35,28 +37,31 @@ class ClientManagerMCP:
         Instantiate ClientManagerMCP to manage and interact with MCP server components in a unified way.
     """
 
-    def __init__(self, app_name: str = "fastchat-mcp"):
-        self.app_name: str = app_name
+    def __init__(self):
+        # def __init__(self, app_name: str = "fastchat-mcp"):
+        # self.app_name: str = app_name
         self.tools: dict[str:Tool] | None = {}
         self.resources: dict[str:Resource] | None = {}
         self.prompts: dict[str:Prompt] | None = {}
 
-        self.refresh_data()
         self.__services: list[dict] = []
         """List of services as strings to be passed to the LLM"""
         self.__prompts_context: list[dict] = []
         """List of prompts as strings to be passed to the LLM"""
 
-    def call_tool(self, name: str, args: dict) -> str | None:
-        return self.tools[name](args)
+    async def initialize(self) -> None:
+        await self.__refresh_data()
 
-    def read_resource(self, name: str, args: dict) -> str | None:
-        return self.resources[name](args)
+    async def call_tool(self, name: str, args: dict) -> str | None:
+        return await self.tools[name](args)
 
-    def get_prompt(self, name: str, args: dict) -> dict:
-        self.prompts[name](args)
+    async def read_resource(self, name: str, args: dict) -> str | None:
+        return await self.resources[name](args)
 
-    def refresh_data(self):
+    async def get_prompt(self, name: str, args: dict) -> dict:
+        return await self.prompts[name](args)
+
+    async def __refresh_data(self):
         """
         ### Refresh Datas
         - Initializes or refreshes the lists of tools, resources, and prompts provided by each mcp server,
@@ -72,7 +77,7 @@ class ClientManagerMCP:
 
         for server_key in mcp_servers.keys():
             server = {"key": server_key} | mcp_servers[server_key]
-            session = self.__get_session(server)
+            session = await self.__get_session(server)
             if session is None:
                 continue
 
@@ -88,18 +93,18 @@ class ClientManagerMCP:
                     data=prompt, server=server
                 )
 
-    def __get_session(self, server: dict) -> dict:
+    async def __get_session(self, server: dict) -> dict:
         try:
             session: dict = {}
 
             if server["protocol"] == "httpstream":
-                session = httpstrem.get_session_data(
+                session = await httpstrem.async_get_session(
                     server["httpstream-url"],
                     server["oauth_client"],
                     headers=server.get("headers", None),
                 )
             elif server["protocol"] == "stdio":
-                session = stdio.get_session_data(server=server)
+                session = await stdio.async_get_session(server=server)
             else:
                 logger.error(
                     f"Unsupported protocol type {CustomFormatter.bold_red}{server['protocol']}{CustomFormatter.reset} for server {server['key']}"

@@ -19,12 +19,11 @@ class GPT(LLM):
 
     def __init__(
         self,
-        client_manager_mcp: ClientManagerMCP | None = None,
         model=ConfigGPT.DEFAULT_MODEL_NAME,
         max_history_len: int = 10,
         chat_history: list = [],
     ):
-        super().__init__(client_manager_mcp=client_manager_mcp)
+        super().__init__()
         self.client = OpenAI(api_key=ConfigGPT.OPENAI_API_KEY)
         """Cliente secuencial de GPT"""
         self.async_client = AsyncOpenAI(api_key=ConfigGPT.OPENAI_API_KEY)

@@ -1,7 +1,7 @@
 from ..mcp_manager.client import ClientManagerMCP
 from ..services.llm import LLM
 from ..services.llm.models.openai_service.gpt import GPT
-from typing import Generator
+from typing import Generator, AsyncGenerator
 from .features.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
 from .features.llm_provider import LLMProvider
 from ...config.llm_config import ConfigGPT, ConfigLLM
@@ -39,7 +39,6 @@ class Fastchat:
         llm_provider: LLMProvider = ConfigLLM.DEFAULT_PROVIDER,
         len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
         history: list = [],
-        client_manager_mcp: ClientManagerMCP | None = None,
     ):
         """
         Initialize a Chat instance.
@@ -53,13 +52,22 @@ class Fastchat:
 
         self.id = id
         self.llm: LLM = GPT(
-            client_manager_mcp=client_manager_mcp,
             max_history_len=len_context,
             model=model,
             chat_history=history,
         )
+        self.client_manager_mcp: ClientManagerMCP | None = None
 
-    def __call__(self, query: str) -> Generator[Step]:
+    async def initialize(self) -> None:
+        await self.set_client_manager_mcp()
+
+    async def set_client_manager_mcp(self) -> None:
+        if self.client_manager_mcp is None:
+            self.client_manager_mcp = ClientManagerMCP()
+            await self.client_manager_mcp.initialize()
+            self.llm.set_client_manager_mcp(self.client_manager_mcp)
+
+    async def __call__(self, query: str) -> AsyncGenerator[Step]:
         """
         Processes a user query through the chat pipeline.
         This method analyzes the query, preprocesses it, selects relevant prompts and services,
@@ -70,6 +78,7 @@ class Fastchat:
         Yields:
             Step: An object representing each stage of the query processing pipeline.
         """
+
         yield Step(step_type=StepMessage.ANALYZE_QUERY)
 
         processed_query: dict = self.llm.preprocess_query(query=query)
@@ -82,7 +91,7 @@ class Fastchat:
             for step in self.proccess_query(query):
                 yield step
 
-    def proccess_query(self, query: str) -> Generator[Step]:
+    async def proccess_query(self, query: str) -> AsyncGenerator[Step]:
         """
         Handles the detailed processing of a single query.
         This method updates the chat history, selects prompts and services based on the query,
@@ -94,6 +103,7 @@ class Fastchat:
             Step: An object representing each sub-step of the query processing, including prompt selection,
                   service selection, and response generation.
         """
+        client_manager_mcp: ClientManagerMCP = self.client_manager_mcp
         self.llm.append_chat_history()
         yield QueryStep(query)
 
@@ -108,9 +118,7 @@ class Fastchat:
             yield DataStep(data={f"prompt {index+1}": prompt["prompt_service"]})
 
         extra_messages = [
-            self.llm.client_manager_mcp.prompts[prompt["prompt_service"]](
-                prompt["args"]
-            )
+            client_manager_mcp.prompts[prompt["prompt_service"]](prompt["args"])
             for prompt in prompts
         ]
         extra_messages = [
@@ -143,16 +151,17 @@ class Fastchat:
             yield DataStep(data={"service": service})
             yield DataStep(data={"args": args})
             service = (
-                self.llm.client_manager_mcp.resources[service]
-                if (self.llm.client_manager_mcp.service_type(service) == "resource")
+                client_manager_mcp.resources[service]
+                if (client_manager_mcp.service_type(service) == "resource")
                 else (
-                    self.llm.client_manager_mcp.tools[service]
-                    if (self.llm.client_manager_mcp.service_type(service) == "tool")
+                    client_manager_mcp.tools[service]
+                    if (client_manager_mcp.service_type(service) == "tool")
                     else None
                 )
             )
 
-            data = service(args)[0].text
+            data = await service(args)
+            data = data[0].text
             first_chunk = True
             for chunk in self.llm.final_response(query, data):
                 yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)

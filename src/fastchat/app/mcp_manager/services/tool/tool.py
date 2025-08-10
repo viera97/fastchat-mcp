@@ -39,22 +39,20 @@ class Tool(Service):
 
         return args
 
-    def __call__(self, args: dict[str, any]):
-        return self.call(args)
+    async def __call__(self, args: dict[str, any]):
+        return await self.call(args)
 
-    def call(self, args: dict[str, any]):
+    async def call(self, args: dict[str, any]):
         if self.protocol == "httpstream":
-            return asyncio.run(
-                self.__httpstream_call(
-                    self.http,
-                    self.name,
-                    args,
-                    self.oauth_client,
-                    self.headers,
-                )
+            return await self.__httpstream_call(
+                self.http,
+                self.name,
+                args,
+                self.oauth_client,
+                self.headers,
             )
         if self.protocol == "stdio":
-            return asyncio.run(self.__stdio_call(self.name, args, self.server))
+            return await self.__stdio_call(self.name, args, self.server)
 
     async def __httpstream_call(
         self,

@@ -1,3 +1,4 @@
+import asyncio
 from ..app.chat.chat import Fastchat
 from ..utils.clear_console import clear_console
 from ..config.logger import LoggerFeatures
@@ -6,6 +7,9 @@ import os
 
 class TerminalChat:
     def open(self):
+        return asyncio.run(self.__open())
+
+    async def __open(self):
         """
         ### open_local_chat
         - Launches an interactive local chat session in the console.
@@ -15,6 +19,7 @@ class TerminalChat:
 
         clear_console()
         chat: Fastchat = Fastchat()
+        await chat.initialize()
         print("\n")
 
         md: str = ""
@@ -36,7 +41,8 @@ class TerminalChat:
 
             md += f"# {query}"
             index = 1
-            for step in chat(query):
+
+            async for step in await chat(query):
                 md += str(step)
 
                 if step.type == "response":
