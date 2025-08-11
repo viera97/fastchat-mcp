@@ -39,9 +39,7 @@ class ClientManagerMCP:
 
     INSTANCE = None
 
-    def __init__(self):
-        # def __init__(self, app_name: str = "fastchat-mcp"):
-        # self.app_name: str = app_name
+    def __init__(self, print_logo: bool = True):
         self.tools: dict[str:Tool] | None = {}
         self.resources: dict[str:Resource] | None = {}
         self.prompts: dict[str:Prompt] | None = {}
@@ -50,15 +48,22 @@ class ClientManagerMCP:
         """List of services as strings to be passed to the LLM"""
         self.__prompts_context: list[dict] = []
         """List of prompts as strings to be passed to the LLM"""
+        self.__print_logo: bool = print_logo
 
     async def initialize(self) -> None:
-        if ClientManagerMCP.INSTANCE is None:
-            await self.refresh_data()
-            ClientManagerMCP.INSTANCE = self
-        else:
-            self.tools = ClientManagerMCP.INSTANCE.tools
-            self.resources = ClientManagerMCP.INSTANCE.resources
-            self.prompts = ClientManagerMCP.INSTANCE.prompts
+        await self.refresh_data()
+        ClientManagerMCP.INSTANCE = self
+
+    # region SINGLETON
+    # async def initialize(self) -> None:
+    #     if ClientManagerMCP.INSTANCE is None:
+    #         await self.refresh_data()
+    #         ClientManagerMCP.INSTANCE = self
+    #     else:
+    #         self.tools = ClientManagerMCP.INSTANCE.tools
+    #         self.resources = ClientManagerMCP.INSTANCE.resources
+    #         self.prompts = ClientManagerMCP.INSTANCE.prompts
+    # endregion
 
     async def call_tool(self, name: str, args: dict) -> str | None:
         return await self.tools[name](args)
@@ -78,7 +83,8 @@ class ClientManagerMCP:
         and prompts via a session, and stores them in the corresponding self dictionaries.
         - If a session cannot be established with a server, that server is skipped.
         """
-        print(LoggerFeatures.LOGO)
+        if self.__print_logo:
+            print(LoggerFeatures.LOGO)
 
         self.tools, self.resources, self.prompts = ({}, {}, {})
         mcp_servers: dict[str, dict] = Servers().mcp_servers

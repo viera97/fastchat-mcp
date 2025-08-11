@@ -58,17 +58,16 @@ class Fastchat:
         )
         self.client_manager_mcp: ClientManagerMCP | None = None
 
-
-    async def initialize(self) -> None:
-        await self.__set_client_manager_mcp()
+    async def initialize(self, print_logo: bool = True) -> None:
+        await self.__set_client_manager_mcp(print_logo=print_logo)
 
     def set_client_manager_mcp(self, client_manager_mcp: ClientManagerMCP) -> None:
         self.client_manager_mcp = client_manager_mcp
         self.llm.set_client_manager_mcp(self.client_manager_mcp)
-        
-    async def __set_client_manager_mcp(self) -> None:
+
+    async def __set_client_manager_mcp(self, print_logo: bool) -> None:
         if self.client_manager_mcp is None:
-            self.client_manager_mcp = ClientManagerMCP()
+            self.client_manager_mcp = ClientManagerMCP(print_logo=print_logo)
             await self.client_manager_mcp.initialize()
             self.llm.set_client_manager_mcp(self.client_manager_mcp)
 

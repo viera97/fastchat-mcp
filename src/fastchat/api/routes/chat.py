@@ -27,7 +27,7 @@ async def websocket_chat(
         len_context=len_context,
     )
     # chat.set_client_manager_mcp(Environment.CLIENT_MANAGER_MCP)
-    await chat.initialize()
+    await chat.initialize(print_logo=False)
 
     try:
         while True:
@@ -36,8 +36,9 @@ async def websocket_chat(
             response = chat(query)
 
             # Enviar respuesta al cliente (puede ser texto o JSON)
-            for step in response:
+            async for step in response:
                 await websocket.send_json(step.json)
+            await websocket.send_text("--next")
 
     except WebSocketDisconnect:
         # Cierra conexión limpia si el cliente se desconecta

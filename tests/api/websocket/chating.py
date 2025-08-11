@@ -42,6 +42,8 @@ class WebsocketClient:
                     index = 1
                     while True:
                         step = await websocket.recv()
+                        if step == "--next":
+                            break
                         step = json.loads(step)
                         index = step2terminal(step, index)
                 except asyncio.TimeoutError:

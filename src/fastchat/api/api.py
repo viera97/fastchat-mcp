@@ -17,7 +17,7 @@ class FastApp:
         middleware=None,
     ):
         # Environment.CLIENT_MANAGER_MCP = ClientManagerMCP()
-        # Environment.CLIENT_MANAGER_MCP.initialize()
+        # await Environment.CLIENT_MANAGER_MCP.initialize()
         pass
 
     @property
