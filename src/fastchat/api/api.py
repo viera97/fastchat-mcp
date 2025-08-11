@@ -16,7 +16,9 @@ class FastApp:
         self,
         middleware=None,
     ):
-        Environment.CLIENT_MANAGER_MCP = ClientManagerMCP()
+        # Environment.CLIENT_MANAGER_MCP = ClientManagerMCP()
+        # Environment.CLIENT_MANAGER_MCP.initialize()
+        pass
 
     @property
     def app(self) -> FastAPI:

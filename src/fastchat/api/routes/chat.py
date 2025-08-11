@@ -21,12 +21,13 @@ async def websocket_chat(
     await websocket.accept()
     llm_provider = LLMProvider(llm_provider)
     chat = Fastchat(
-        client_manager_mcp=Environment.CLIENT_MANAGER_MCP,
         id=chat_id,
         model=model,
         llm_provider=llm_provider,
         len_context=len_context,
     )
+    # chat.set_client_manager_mcp(Environment.CLIENT_MANAGER_MCP)
+    await chat.initialize()
 
     try:
         while True:

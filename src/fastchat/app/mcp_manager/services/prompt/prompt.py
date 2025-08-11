@@ -21,29 +21,26 @@ class Prompt(Service):
             {"name": arg.name, "type": "string"} for arg in data.arguments
         ]
 
-    def __call__(self, args: dict[str, any]):
-        return self.get(args)
+    async def __call__(self, args: dict[str, any]):
+        return await self.get(args)
 
-    def get(self, args: dict[str, any]):
+    async def get(self, args: dict[str, any]):
         args = {key: str(args[key]) for key in args.keys()}
 
         if self.protocol == "httpstream":
-            return asyncio.run(
-                self.__httpstream_get(
-                    self.http,
-                    self.name,
-                    args,
-                    self.oauth_client,
-                    self.headers,
-                )
+            return await self.__httpstream_get(
+                self.http,
+                self.name,
+                args,
+                self.oauth_client,
+                self.headers,
             )
+
         if self.protocol == "stdio":
-            return asyncio.run(
-                self.__stdio_get(
-                    promptname=self.name,
-                    args=args,
-                    server=self.server,
-                )
+            return await self.__stdio_get(
+                promptname=self.name,
+                args=args,
+                server=self.server,
             )
 
     async def __httpstream_get(

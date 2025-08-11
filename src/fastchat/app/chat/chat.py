@@ -58,10 +58,15 @@ class Fastchat:
         )
         self.client_manager_mcp: ClientManagerMCP | None = None
 
-    async def initialize(self) -> None:
-        await self.set_client_manager_mcp()
 
-    async def set_client_manager_mcp(self) -> None:
+    async def initialize(self) -> None:
+        await self.__set_client_manager_mcp()
+
+    def set_client_manager_mcp(self, client_manager_mcp: ClientManagerMCP) -> None:
+        self.client_manager_mcp = client_manager_mcp
+        self.llm.set_client_manager_mcp(self.client_manager_mcp)
+        
+    async def __set_client_manager_mcp(self) -> None:
         if self.client_manager_mcp is None:
             self.client_manager_mcp = ClientManagerMCP()
             await self.client_manager_mcp.initialize()
@@ -118,7 +123,7 @@ class Fastchat:
             yield DataStep(data={f"prompt {index+1}": prompt["prompt_service"]})
 
         extra_messages = [
-            client_manager_mcp.prompts[prompt["prompt_service"]](prompt["args"])
+            await client_manager_mcp.prompts[prompt["prompt_service"]](prompt["args"])
             for prompt in prompts
         ]
         extra_messages = [

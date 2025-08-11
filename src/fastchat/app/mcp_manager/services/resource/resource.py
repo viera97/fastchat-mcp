@@ -21,25 +21,24 @@ class Resource(Service):
         self.args = utils.get_args_from_uri(data.uriTemplate)
         self.args = [{"name": arg, "type": "string"} for arg in self.args]
 
-    def __call__(self, args: dict[str, any]):
+    async def __call__(self, args: dict[str, any]):
         return self.read(args)
 
-    def read(self, args: dict[str, str]):
+    async def read(self, args: dict[str, str]):
         uri = self.data.uriTemplate
         for key in args:
             uri = uri.replace("{" + key + "}", str(args[key]))
 
         if self.protocol == "httpstream":
-            return asyncio.run(
-                self.__httpstream_read(
-                    self.http,
-                    uri,
-                    self.oauth_client,
-                    self.headers,
-                )
+            return await self.__httpstream_read(
+                self.http,
+                uri,
+                self.oauth_client,
+                self.headers,
             )
+
         if self.protocol == "stdio":
-            return asyncio.run(self.__stdio_read(uri=uri, server=self.server))
+            return await self.__stdio_read(uri=uri, server=self.server)
 
     async def __httpstream_read(
         self,
