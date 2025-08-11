@@ -242,13 +242,19 @@ chat.open()
 ```python
 #example2.py
 from fastchat import Fastchat
-chat: Fastchat = Fastchat()
-while True:
-    query = input("> ")
-    if query == "":
-        break
-    for step in chat(query):
-        print(f"<< {step.json}")
+import asyncio
+
+async def chating():
+    chat: Fastchat = Fastchat()
+    await chat.initialize()
+    while True:
+        query = input("> ")
+        if query == "":
+            break
+        async for step in chat(query):
+            print(f"<< {step.json}")
+            
+asyncio.run(chating())  
 ```
 
 Alternatively, you may test this service using the following [template available on GitHub](https://github.com/rb58853/template-fastchat-mcp):
