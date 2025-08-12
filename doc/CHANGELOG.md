@@ -2,6 +2,14 @@
 
 ## fastchat-mcp
 
+### v1.1.0 📡
+
+- 🔄 **Shift from Sequential to Asynchronous Code**: Chat initialization must now be performed asynchronously using: `await chat.initialize();`.
+
+- 🌐 **New WebSocket API**: Added a basic API that provides a WebSocket endpoint at: `"https://127.0.0.1:8000/chat/ws"`. Currently in **beta** stage, without an authentication system.
+
+- 🚀 **Default Language Model**: The default model is now **`gpt-5-nano`** — faster, cheaper, and more accurate in completions.
+
 ### v1.0.1 🔧
 
 - 📝 Improved logging and terminal output for local chat.

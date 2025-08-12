@@ -69,7 +69,7 @@ from fastchat import Fastchat
 chat = Fastchat(model="my-openai-model-name", ...)
 ```
 
-**Default Model (`"gpt4-o-mini"`):** gpt4-o-mini is an optimized implementation of the GPT-4 model that provides a balance between computational performance and resource efficiency. This model is specifically designed to operate in environments with memory constraints while maintaining superior predictive quality.
+**Default Model (`"gpt-5-nano"`):** GPT-5 Nano is the smallest and fastest version of the GPT-5 family, designed to deliver quick and accurate responses with ultra-low latency. It is optimized for simple tasks and processing large volumes of queries. Its focus is on speed and low cost, making it ideal for personal assistants, rapid translation, and lightweight applications, while maintaining basic reasoning capabilities and reliable text generation.
 
 ## Implemented Transfer Protocols
 
