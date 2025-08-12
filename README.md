@@ -257,7 +257,7 @@ async def chating():
 asyncio.run(chating())  
 ```
 
-Alternatively, you may test this service using the following [template available on GitHub](https://github.com/rb58853/template-fastchat-mcp):
+<!-- Alternatively, you may test this service using the following [template available on GitHub](https://github.com/rb58853/template-fastchat-mcp):
 
 ```shell
 # clone repo
@@ -268,7 +268,7 @@ cd template-fastchat-mcp
 pip install -r requirements.txt
 # open in vscode
 code .
-```
+``` -->
 
 ## Version History
 
@@ -280,7 +280,9 @@ code .
 * 👾 OpenAI GPT as an integrated LLM using any valid OpenAI language model.
 * 📡 Support for the httpstream transport protocol.
 * 📟 Support for the stdio transport protocol.
-* 💻 Easy console usage via [`open_local_chat()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
+* 💻 Easy console usage via [`TerminalChat().open()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
+
+* 💡 Response management and MCP service selection control through system prompts that can be passed to the chat. [see example](./doc/USAGE.md#customizing-system-prompts-🎨)
 
 [See more in changelog](./doc//CHANGELOG.md)
 
