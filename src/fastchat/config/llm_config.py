@@ -4,7 +4,7 @@ from ..app.chat.features.llm_provider import LLMProvider
 
 class ConfigLLM:
     DEFAULT_PROVIDER: LLMProvider = LLMProvider.OPENAI
-    DEFAULT_HISTORY_LEN: int = 10
+    DEFAULT_HISTORY_LEN: int = 20
 
 
 class ConfigGPT:

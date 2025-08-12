@@ -90,12 +90,13 @@ class GPT(LLM):
                 messages.append(message)
         messages += [
             message
-            for messages in self.chat_history[-self.max_len_history :]
+            for messages in self.chat_history[-self.max_len_history : -1]
             for message in messages
         ]
         for message in extra_messages:
             if message["role"] == "user" or message["role"] == "assistant":
                 messages.append(message)
+        messages.append(self.chat_history[-1][0])
 
         stream = self.client.chat.completions.create(
             model=self.model,
@@ -120,12 +121,13 @@ class GPT(LLM):
                 messages.append(message)
         messages += [
             message
-            for messages in self.chat_history[-self.max_len_history :]
+            for messages in self.chat_history[-self.max_len_history : -1]
             for message in messages
         ]
         for message in extra_messages:
             if message["role"] == "user" or message["role"] == "assistant":
                 messages.append(message)
+        messages.append(self.chat_history[-1][0])
 
         if json_format:
             completion = self.client.chat.completions.create(
@@ -159,11 +161,11 @@ class GPT(LLM):
         response = completion.choices[0].message.content
         return json.loads(response)
 
-    def select_prompts(self, query: str) -> str:
+    def select_prompts(self, query: str, extra_messages: list[dict[str, str]]) -> str:
         system_message: str = system_prompts.select_prompts
         prompts = self.client_manager_mcp.get_prompts()
 
-        extra_messages: list[dict[str, str]] = [
+        extra_messages: list[dict[str, str]] = extra_messages + [
             {
                 "role": "user",
                 "content": user_prompts.exposed_prompts(prompts),

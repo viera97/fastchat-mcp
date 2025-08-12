@@ -37,17 +37,21 @@ class Fastchat:
         id: str | None = None,
         model=ConfigGPT.DEFAULT_MODEL_NAME,
         llm_provider: LLMProvider = ConfigLLM.DEFAULT_PROVIDER,
+        extra_reponse_system_prompts: list[str] = [],
+        extra_selection_system_prompts: list[str] = [],
         len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
         history: list = [],
     ):
         """
         Initialize a Chat instance.
         Args:
-            llm_provider (LLMProvider, optional): The language model provider. Defaults to LLMProvider.OPENAI.
+            id (str | None, optional): Optional chat session identifier.
             model (str, optional): The model name to use. Defaults to ConfigGPT.DEFAULT_MODEL_NAME.
+            llm_provider (LLMProvider, optional): The language model provider. Defaults to LLMProvider.OPENAI.
+            extra_reponse_system_prompts (list[str]): Additional system prompts for responses. Defaults to an empty list.
+            extra_selection_system_prompts (list[str]): Additional system prompts for MCP services selection. Defaults to an empty list.
             len_context (int, optional): Maximum number of messages to keep in context. Defaults to 10.
             history (list, optional): Initial chat history. Defaults to empty list.
-            id (str | None, optional): Optional chat session identifier.
         """
 
         self.id = id
@@ -57,6 +61,20 @@ class Fastchat:
             chat_history=history,
         )
         self.client_manager_mcp: ClientManagerMCP | None = None
+        self.extra_reponse_system_prompts: list[dict[str, str]] = [
+            {
+                "role": "system",
+                "content": message,
+            }
+            for message in extra_reponse_system_prompts
+        ]
+        self.extra_selection_system_prompts: list[dict[str, str]] = [
+            {
+                "role": "system",
+                "content": message,
+            }
+            for message in extra_selection_system_prompts
+        ]
 
     async def initialize(self, print_logo: bool = True) -> None:
         await self.__set_client_manager_mcp(print_logo=print_logo)
@@ -113,7 +131,9 @@ class Fastchat:
 
         # region ########### GET PROMTPS ###########
         yield Step(step_type=StepMessage.SELECT_PROMPTS)
-        prompts = json.loads(self.llm.select_prompts(query))["prompt_services"]
+        prompts = json.loads(
+            self.llm.select_prompts(query, self.extra_selection_system_prompts)
+        )["prompt_services"]
 
         if len(prompts) == 0:
             yield DataStep(data={"prompts": None})
@@ -136,7 +156,10 @@ class Fastchat:
         yield Step(step_type=StepMessage.SELECT_SERVICE)
         # Cargar los servicios utiles
         service = json.loads(
-            self.llm.select_service(query, extra_messages=extra_messages)
+            self.llm.select_service(
+                query,
+                extra_messages=extra_messages + self.extra_selection_system_prompts,
+            )
         )
         args = service["args"]
         service = service["service"]
@@ -146,7 +169,11 @@ class Fastchat:
         if len(service) == 0:
             yield DataStep(data={"service": None})
             first_chunk = True
-            for chunk in self.llm.simple_query(query, use_services_contex=True):
+            for chunk in self.llm.simple_query(
+                query,
+                use_services_contex=True,
+                extra_messages=extra_messages + self.extra_reponse_system_prompts,
+            ):
                 yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
                 first_chunk = False
             yield ResponseStep(response="\n\n", data=None)
@@ -167,7 +194,11 @@ class Fastchat:
             data = await service(args)
             data = data[0].text
             first_chunk = True
-            for chunk in self.llm.final_response(query, data):
+            for chunk in self.llm.final_response(
+                query,
+                data,
+                extra_messages=self.extra_reponse_system_prompts,
+            ):
                 yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
                 first_chunk = False
             yield ResponseStep(response="\n\n", data=data)

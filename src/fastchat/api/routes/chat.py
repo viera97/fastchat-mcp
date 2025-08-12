@@ -5,7 +5,7 @@ from ...app.chat.features.llm_provider import LLMProvider
 from ...app.chat.chat import Fastchat
 from ...config.llm_config import ConfigGPT, ConfigLLM
 from ...app.environment import Environment
-
+from ..settings import FastappSettings
 
 router = APIRouter(prefix="/chat", tags=["chating"])
 
@@ -16,17 +16,22 @@ async def websocket_chat(
     chat_id: str = None,
     model: str = ConfigGPT.DEFAULT_MODEL_NAME,
     llm_provider: str = ConfigLLM.DEFAULT_PROVIDER.value,
-    len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
 ):
     await websocket.accept()
     llm_provider = LLMProvider(llm_provider)
+
+    history: list = get_history(chat_id)
+
     chat = Fastchat(
         id=chat_id,
         model=model,
         llm_provider=llm_provider,
-        len_context=len_context,
+        extra_reponse_system_prompts=FastappSettings.extra_reponse_system_prompts,
+        extra_selection_system_prompts=FastappSettings.extra_selection_system_prompts,
+        len_context=FastappSettings.len_context,
+        history=history,
     )
-    # chat.set_client_manager_mcp(Environment.CLIENT_MANAGER_MCP)
+
     await chat.initialize(print_logo=False)
 
     try:
@@ -43,3 +48,8 @@ async def websocket_chat(
     except WebSocketDisconnect:
         # Cierra conexión limpia si el cliente se desconecta
         pass
+
+
+def get_history(chat_id: str) -> list:
+    """Select history from database using chat_id"""
+    return []

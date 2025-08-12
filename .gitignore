@@ -13,10 +13,6 @@ dist/*
 #Text Editor
 .vscode/*
 
-#Dev Test
-_old_prompts/*
-test.py
-xbuild.md
 
 #Chats
 chats
@@ -24,3 +20,7 @@ chats
 #token storage
 data
 
+#Development Files
+src/api_dev.py
+src/terminal_dev.py
+xbuild.md

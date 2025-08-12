@@ -1,11 +1,33 @@
 import asyncio
+
 from ..app.chat.chat import Fastchat
 from ..utils.clear_console import clear_console
-from ..config.logger import LoggerFeatures
+from ..config.llm_config import ConfigGPT, ConfigLLM
 import os
 
 
 class TerminalChat:
+    def __init__(
+        self,
+        model: str = ConfigGPT.DEFAULT_MODEL_NAME,
+        extra_reponse_system_prompts: list[str] = [],
+        extra_selection_system_prompts: list[str] = [],
+        len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
+    ):
+        """
+        Initialize the class with model configuration and system prompts.
+        Args:
+            model (str): The name of the model to use. Defaults to ConfigGPT.DEFAULT_MODEL_NAME.
+            extra_reponse_system_prompts (list[str]): Additional system prompts for responses. Defaults to an empty list.
+            extra_selection_system_prompts (list[str]): Additional system prompts for MCP services selection. Defaults to an empty list.
+            len_context (int): The maximum length of the context history. Defaults to ConfigLLM.DEFAULT_HISTORY_LEN.
+        """
+
+        self.model: str = model
+        self.extra_reponse_system_prompts: list[str] = extra_reponse_system_prompts
+        self.extra_selection_system_prompts: list[str] = extra_selection_system_prompts
+        self.len_context: int = len_context
+
     def open(self):
         return asyncio.run(self.__open())
 
@@ -18,7 +40,12 @@ class TerminalChat:
         """
 
         clear_console()
-        chat: Fastchat = Fastchat()
+        chat: Fastchat = Fastchat(
+            model=self.model,
+            extra_reponse_system_prompts=self.extra_reponse_system_prompts,
+            extra_selection_system_prompts=self.extra_reponse_system_prompts,
+            len_context=self.len_context,
+        )
         await chat.initialize()
         print("\n")
 

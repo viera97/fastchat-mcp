@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -9,16 +10,25 @@ from .routes.chat import router as chat_router
 from ..app.mcp_manager.client import ClientManagerMCP
 from ..app.environment import Environment
 from ..utils.clear_console import clear_console
+from ..config.llm_config import ConfigGPT, ConfigLLM
+from .settings import FastappSettings
+from ..utils.clear_console import clear_console
 
 
 class FastApp:
     def __init__(
         self,
+        extra_reponse_system_prompts: list[str] = [],
+        extra_selection_system_prompts: list[str] = [],
+        len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
         middleware=None,
     ):
-        # Environment.CLIENT_MANAGER_MCP = ClientManagerMCP()
-        # await Environment.CLIENT_MANAGER_MCP.initialize()
-        pass
+        # clear_console()
+        FastappSettings.update(
+            extra_reponse_system_prompts,
+            extra_selection_system_prompts,
+            len_context,
+        )
 
     @property
     def app(self) -> FastAPI:

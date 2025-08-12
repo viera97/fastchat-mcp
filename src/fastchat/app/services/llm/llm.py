@@ -76,7 +76,7 @@ class LLM(ABC):
         pass
 
     @abstractmethod
-    def select_prompts(self, query: str) -> str:
+    def select_prompts(self, query: str, extra_messages: list[dict[str, str]]) -> str:
         """
         Selects and returns appropriate prompts, from mcp servers, based on the provided query.
         Args:
