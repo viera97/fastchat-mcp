@@ -26,13 +26,17 @@ class WebsocketClient:
     def __init__(self):
         pass
 
-    def open_chat(self, uri):
+    def open_chat(self, uri, aditional_servers=None):
         clear_console()
         print(LoggerFeatures.LOGO + CustomFormatter.reset)
-        asyncio.run(self.__open_chat(uri))
+        asyncio.run(self.__open_chat(uri, aditional_servers))
 
-    async def __open_chat(self, uri):
-        async with websockets.connect(uri) as websocket:
+    async def __open_chat(self, uri, aditional_servers):
+        headers = {"aditional_servers": aditional_servers}
+
+        async with websockets.connect(
+            uri, additional_headers=headers, ping_interval=0
+        ) as websocket:
             while True:
                 mensaje = input(">> ")  # Leer mensaje a enviar desde consola
                 await websocket.send(mensaje)  # Enviar mensaje al servidor
@@ -70,4 +74,6 @@ def step2terminal(step: dict, index: int) -> int:
 
 if __name__ == "__main__":
     uri_ws = "ws://localhost:8000/chat/ws?chat_id=id"  # Cambia la URI y parámetros según tu servidor
-    WebsocketClient().open_chat(uri_ws)
+    WebsocketClient().open_chat(
+        uri_ws
+    )

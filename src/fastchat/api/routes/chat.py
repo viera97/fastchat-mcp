@@ -4,8 +4,9 @@ from ...app.chat.features.llm_provider import LLMProvider
 # from ...app.chat.features.step import Step
 from ...app.chat.chat import Fastchat
 from ...config.llm_config import ConfigGPT, ConfigLLM
-from ...app.environment import Environment
 from ..settings import FastappSettings
+from ...config.logger import logger
+import json
 
 router = APIRouter(prefix="/chat", tags=["chating"])
 
@@ -18,8 +19,21 @@ async def websocket_chat(
     llm_provider: str = ConfigLLM.DEFAULT_PROVIDER.value,
 ):
     await websocket.accept()
-    llm_provider = LLMProvider(llm_provider)
+    aditional_servers: dict = websocket.headers.get("aditional_servers")
+    if (
+        aditional_servers is None
+        or aditional_servers == ""
+        or aditional_servers == "None"
+    ):
+        aditional_servers = {}
+    else:
+        try:
+            aditional_servers = aditional_servers.replace("'", '"')
+            aditional_servers = json.loads(aditional_servers)
+        except:
+            aditional_servers = {}
 
+    llm_provider = LLMProvider(llm_provider)
     history: list = get_history(chat_id)
 
     chat = Fastchat(
@@ -28,10 +42,12 @@ async def websocket_chat(
         llm_provider=llm_provider,
         extra_reponse_system_prompts=FastappSettings.extra_reponse_system_prompts,
         extra_selection_system_prompts=FastappSettings.extra_selection_system_prompts,
+        aditional_servers=aditional_servers,
         len_context=FastappSettings.len_context,
         history=history,
     )
 
+    logger.info(f"Initilaized chat with id = {chat_id}")
     await chat.initialize(print_logo=False)
 
     try:

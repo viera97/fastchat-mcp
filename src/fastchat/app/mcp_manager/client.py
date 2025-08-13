@@ -39,7 +39,11 @@ class ClientManagerMCP:
 
     INSTANCE = None
 
-    def __init__(self, print_logo: bool = True):
+    def __init__(
+        self,
+        aditional_servers: dict = {},
+        print_logo: bool = True,
+    ):
         self.tools: dict[str:Tool] | None = {}
         self.resources: dict[str:Resource] | None = {}
         self.prompts: dict[str:Prompt] | None = {}
@@ -49,6 +53,8 @@ class ClientManagerMCP:
         self.__prompts_context: list[dict] = []
         """List of prompts as strings to be passed to the LLM"""
         self.__print_logo: bool = print_logo
+
+        self.aditional_servers: dict = aditional_servers
 
     async def initialize(self) -> None:
         await self.refresh_data()
@@ -87,7 +93,7 @@ class ClientManagerMCP:
             print(LoggerFeatures.LOGO)
 
         self.tools, self.resources, self.prompts = ({}, {}, {})
-        mcp_servers: dict[str, dict] = Servers().mcp_servers
+        mcp_servers: dict[str, dict] = Servers(aditional_servers=self.aditional_servers).mcp_servers
 
         for server_key in mcp_servers.keys():
             server = {"key": server_key} | mcp_servers[server_key]

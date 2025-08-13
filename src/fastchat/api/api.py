@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from pydantic import BaseModel
 
 load_dotenv()
 
@@ -7,8 +6,6 @@ load_dotenv()
 from fastapi.responses import RedirectResponse
 from fastapi import FastAPI
 from .routes.chat import router as chat_router
-from ..app.mcp_manager.client import ClientManagerMCP
-from ..app.environment import Environment
 from ..utils.clear_console import clear_console
 from ..config.llm_config import ConfigGPT, ConfigLLM
 from .settings import FastappSettings

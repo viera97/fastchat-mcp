@@ -1,6 +1,7 @@
 import os
 import json
 from mcp_oauth import OAuthClient
+from ...config.logger import logger
 
 
 class Servers:
@@ -27,6 +28,7 @@ class Servers:
         self,
         config_file_path: str = "fastchat.config.json",
         app_name: str = "fastchat-mcp",
+        aditional_servers: dict = {},
     ):
         """
         Initializes the Servers instance.
@@ -44,7 +46,7 @@ class Servers:
             self.json_config["app_name"] if "app_name" in self.json_config else app_name
         )
         self.mcp_servers: dict[str, dict] | None = {}
-        self.__load_servers()
+        self.__load_servers(aditional_servers)
 
     def __load_config_file(self, config_file_path: str):
         """
@@ -54,17 +56,23 @@ class Servers:
         Returns:
             dict: Parsed configuration data.
         """
-        with open(f"{os.getcwd()}{os.path.sep}{config_file_path}", "r") as file:
+
+        path = f"{os.getcwd()}{os.path.sep}{config_file_path}"
+        if not os.path.exists(path=path):
+            logger.warning("config file does not exist")
+            return {}
+
+        with open(path, "r") as file:
             json_config: dict = json.loads(file.read())
         return json_config
 
-    def __load_servers(self):
+    def __load_servers(self, aditional_servers: dict = {}):
         """
         Loads server credentials from the configuration.
         Initializes OAuth clients for each server defined in the configuration file.
         """
 
-        self.mcp_servers = self.json_config["mcp_servers"]
+        self.mcp_servers = self.json_config["mcp_servers"] | aditional_servers
 
         for server in self.mcp_servers.values():
             self.__create_oauth_client(server=server)

@@ -1,8 +1,8 @@
-# Fastchat Usage Examples 🚀
+# Fastchat Usage Examples 🧩
 
 This document presents detailed use cases for the Fastchat project, designed to facilitate its integration and utilization in various scenarios. The main features are explained and practical examples are provided for each case, allowing users to understand the potential and flexibility of the tool.
 
-## Simple Terminal Chat 💻
+## Simple Terminal Chat
 
 The easiest way to interact with Fastchat is through the terminal. This method is ideal for quick tests, demos, or users who prefer the command line.
 
@@ -15,7 +15,7 @@ chat.open()
 
 Running this code starts an interactive chat session in the terminal. Users can send messages and receive real-time responses, with no additional configuration required.
 
-## Using the Fastchat Module 🧩
+## Using the Fastchat Module
 
 For more advanced integration, it is recommended to use the `Fastchat` class. This approach allows you to incorporate Fastchat directly into Python applications, offering greater control over the conversation flow and asynchronous event management.
 
@@ -38,7 +38,7 @@ asyncio.run(chating())
 
 In this example, a `Fastchat` instance is initialized and a conversation loop is maintained. Using `asyncio` enables efficient handling of multiple messages and leverages the module's asynchronous capabilities.
 
-## Customizing System Prompts 🎨
+## Customizing System Prompts
 
 Fastchat allows you to customize system prompts to tailor model responses to specific needs. This feature is useful when you require the assistant to follow particular instructions or maintain a certain context.
 
@@ -65,7 +65,7 @@ asyncio.run(chating())
 
 The `extra_reponse_system_prompts` list lets you define multiple instructions that will be considered by the model in each interaction. This feature is available in the [`Fastchat`](../src/fastchat/app/chat/chat.py), [`TerminalChat`](../src/fastchat/local/local_chat.py), and [`Fastapp`](../src/fastchat/api/api.py) modules, making personalized configuration easy in any environment.
 
-## Fastapp: REST API & WebSocket Exposure (Beta) 🌐
+## Fastapp: REST API & WebSocket Exposure (Beta)
 
 For applications requiring real-time communication or frontend integration, Fastchat offers the `Fastapp` module. This module enables you to create a REST API and a WebSocket, providing a robust interface to interact with the model from other systems.
 

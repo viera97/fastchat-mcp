@@ -26,6 +26,8 @@ Python chat client, based on [`"mcp[cli]"`](https://github.com/modelcontextproto
   * [LLM Models](#llm-models)
 * [Implemented Transfer Protocols](#implemented-transfer-protocols)
 * [System Requirements](#system-requirements)
+* [Configuration](#file-fastchatconfigjson)
+* [Aditional Configuration](#aditional-configuration)
 * [Usage Example](#usage-example)
 * [Version History](#version-history)
 * [Project Status](#project-status)
@@ -228,6 +230,57 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 
 ---
 
+## Aditional Configuration
+
+### System Prompts
+
+Como configuracion adicional se pueden pasar systems prompts a este paquete para que cambiar el comportamiento de respuestas. Se debe pasar en formato de listas, se puede pasar mas de un system_prompt.
+
+#### Args
+
+* `extra_reponse_system_prompts`: Lista de prompts en formato de string que seran usados como system prompt adicional en la respuesta final.
+
+* `extra_selection_system_prompts`: Lista de prompts en formato de string que seran usados como system prompt adicional para el paso de seleccion de recursos o servicios expuestos en los servidores MCP conectados.
+
+Ejemplo:
+
+```python
+chat =Fastchat(
+    extra_reponse_system_prompts=[
+        "Eres un NPC de un vendedor ambulante para un juego RPG. Debes comportarte como tal y dar tus respuestas acorde a tu personaje. Te dedicas a la venta de armamento medieval, como espadas, armaduras, escudos y otros. Dirigete  quien te hable como si ese usuario fuera un aventurero en un mundo medieval de fantasia."
+    ]
+)
+```
+
+[ver ejemplo aqui](./doc/USAGE.md#customizing-system-prompts)
+
+### Servidores MCP adicionales
+
+Para pasar MCP a este paquete o modulo, no solo se usa el archivo de confguracion. Adicionalmente puedes pasarle otros servidores por parametros. Pasados en forma de diccionario, con igual formato que el archivo de configuracion, dentro de la llave `"mcp-servers"`.
+
+#### Args
+
+* `aditional_servers`: Servidores adicionales que se pasan al componente `Fastchat`, siguiendo el siguiente formato, ejemplo:
+
+    ```python
+    my_servers = {
+            "github": {
+                "protocol": "httpstream",
+                "httpstream-url": "https://api.githubcopilot.com/mcp",
+                "name": "github",
+                "description": "This server specializes in github operations.",
+                "headers": {
+                    "Authorization": "Bearer {your-github-token}"
+                },
+            }
+            "other_server": {"...":"..."}
+        }
+    chat  = Fastchat(aditional_servers=my_servers)
+    ```
+
+    > **Nota:** Los servidores del archivo `.config` se concatenan con los servidores pasados por parametros, es compatible usar ambas vias para agregar servidores MCP.
+    > **API:** El websocket expuesto en la API soporta servidores adicionales pasados por los `aditional_headers` de `Websocket`.
+
 ## Usage Example
 
 ```python
@@ -257,6 +310,8 @@ async def chating():
 asyncio.run(chating())  
 ```
 
+[see more usage examples](./doc/USAGE.md)
+
 <!-- Alternatively, you may test this service using the following [template available on GitHub](https://github.com/rb58853/template-fastchat-mcp):
 
 ```shell
@@ -282,7 +337,7 @@ code .
 * 📟 Support for the stdio transport protocol.
 * 💻 Easy console usage via [`TerminalChat().open()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
 
-* 💡 Response management and MCP service selection control through system prompts that can be passed to the chat. [see example](./doc/USAGE.md#customizing-system-prompts-🎨)
+* 💡 Response management and MCP service selection control through system prompts that can be passed to the chat. [see example](./doc/USAGE.md#customizing-system-prompts)
 
 [See more in changelog](./doc//CHANGELOG.md)
 

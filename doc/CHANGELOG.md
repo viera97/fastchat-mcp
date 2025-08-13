@@ -2,6 +2,9 @@
 
 ## fastchat-mcp
 
+### v1.1.1 🎨
+- Ahora se puede agregar otros prompts de sistema al modulo `Fastchat`, de modo que se modifique la forma de responder y de procesar las consultas. [ver ejemplo](./USAGE.md#customizing-system-prompts-🎨)
+
 ### v1.1.0 📡
 
 - 🔄 **Shift from Sequential to Asynchronous Code**: Chat initialization must now be performed asynchronously using: `await chat.initialize();`.

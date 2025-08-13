@@ -39,6 +39,7 @@ class Fastchat:
         llm_provider: LLMProvider = ConfigLLM.DEFAULT_PROVIDER,
         extra_reponse_system_prompts: list[str] = [],
         extra_selection_system_prompts: list[str] = [],
+        aditional_servers: dict = {},
         len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
         history: list = [],
     ):
@@ -50,6 +51,7 @@ class Fastchat:
             llm_provider (LLMProvider, optional): The language model provider. Defaults to LLMProvider.OPENAI.
             extra_reponse_system_prompts (list[str]): Additional system prompts for responses. Defaults to an empty list.
             extra_selection_system_prompts (list[str]): Additional system prompts for MCP services selection. Defaults to an empty list.
+            aditional_servers (dic, optional): dictionary of servers with the format: `{server_1:{...server config...}, "server_2":{...}}`
             len_context (int, optional): Maximum number of messages to keep in context. Defaults to 10.
             history (list, optional): Initial chat history. Defaults to empty list.
         """
@@ -75,17 +77,21 @@ class Fastchat:
             }
             for message in extra_selection_system_prompts
         ]
+        self.aditional_servers: dict = aditional_servers
 
     async def initialize(self, print_logo: bool = True) -> None:
         await self.__set_client_manager_mcp(print_logo=print_logo)
 
-    def set_client_manager_mcp(self, client_manager_mcp: ClientManagerMCP) -> None:
-        self.client_manager_mcp = client_manager_mcp
-        self.llm.set_client_manager_mcp(self.client_manager_mcp)
+    # def set_client_manager_mcp(self, client_manager_mcp: ClientManagerMCP) -> None:
+    #     self.client_manager_mcp = client_manager_mcp
+    #     self.llm.set_client_manager_mcp(self.client_manager_mcp)
 
     async def __set_client_manager_mcp(self, print_logo: bool) -> None:
         if self.client_manager_mcp is None:
-            self.client_manager_mcp = ClientManagerMCP(print_logo=print_logo)
+            self.client_manager_mcp = ClientManagerMCP(
+                aditional_servers=self.aditional_servers,
+                print_logo=print_logo,
+            )
             await self.client_manager_mcp.initialize()
             self.llm.set_client_manager_mcp(self.client_manager_mcp)
 

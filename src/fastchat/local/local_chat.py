@@ -12,6 +12,7 @@ class TerminalChat:
         model: str = ConfigGPT.DEFAULT_MODEL_NAME,
         extra_reponse_system_prompts: list[str] = [],
         extra_selection_system_prompts: list[str] = [],
+        aditional_servers: dict = {},
         len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
     ):
         """
@@ -26,6 +27,7 @@ class TerminalChat:
         self.model: str = model
         self.extra_reponse_system_prompts: list[str] = extra_reponse_system_prompts
         self.extra_selection_system_prompts: list[str] = extra_selection_system_prompts
+        self.aditional_servers: dict = aditional_servers
         self.len_context: int = len_context
 
     def open(self):
@@ -44,6 +46,7 @@ class TerminalChat:
             model=self.model,
             extra_reponse_system_prompts=self.extra_reponse_system_prompts,
             extra_selection_system_prompts=self.extra_reponse_system_prompts,
+            aditional_servers=self.aditional_servers,
             len_context=self.len_context,
         )
         await chat.initialize()
