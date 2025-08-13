@@ -2,8 +2,11 @@
 
 ## fastchat-mcp
 
-### v1.1.1 🎨
-- Ahora se puede agregar otros prompts de sistema al modulo `Fastchat`, de modo que se modifique la forma de responder y de procesar las consultas. [ver ejemplo](./USAGE.md#customizing-system-prompts-🎨)
+### v1.1.1 🧩
+
+- ✨ It is now possible to add additional system prompts to the `Fastchat` module, enabling customization of response style and query processing. *[See example](./USAGE.md#customizing-system-prompts)*  
+
+- 🧩 You can now connect additional servers to the `Fastchat` class with a straightforward configuration process. *[See example](../README.md#additional-mcp-servers)*  
 
 ### v1.1.0 📡
 

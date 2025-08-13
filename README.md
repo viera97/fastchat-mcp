@@ -27,7 +27,7 @@ Python chat client, based on [`"mcp[cli]"`](https://github.com/modelcontextproto
 * [Implemented Transfer Protocols](#implemented-transfer-protocols)
 * [System Requirements](#system-requirements)
 * [Configuration](#file-fastchatconfigjson)
-* [Aditional Configuration](#aditional-configuration)
+* [Aditional Configuration](#additional-configuration)
 * [Usage Example](#usage-example)
 * [Version History](#version-history)
 * [Project Status](#project-status)
@@ -230,56 +230,56 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 
 ---
 
-## Aditional Configuration
+## Additional Configuration
 
 ### System Prompts
 
-Como configuracion adicional se pueden pasar systems prompts a este paquete para que cambiar el comportamiento de respuestas. Se debe pasar en formato de listas, se puede pasar mas de un system_prompt.
+As an advanced configuration, system prompts can be supplied to modify the behavior of responses. Prompts should be provided as lists; multiple system prompts can be supplied.
 
 #### Args
 
-* `extra_reponse_system_prompts`: Lista de prompts en formato de string que seran usados como system prompt adicional en la respuesta final.
+* `extra_reponse_system_prompts`: List of string prompts used as additional system prompts in the final responses.
+* `extra_selection_system_prompts`: List of string prompts used as additional system prompts for the resource/service selection step exposed by connected MCP servers.
 
-* `extra_selection_system_prompts`: Lista de prompts en formato de string que seran usados como system prompt adicional para el paso de seleccion de recursos o servicios expuestos en los servidores MCP conectados.
-
-Ejemplo:
+Example:
 
 ```python
-chat =Fastchat(
+chat = Fastchat(
     extra_reponse_system_prompts=[
-        "Eres un NPC de un vendedor ambulante para un juego RPG. Debes comportarte como tal y dar tus respuestas acorde a tu personaje. Te dedicas a la venta de armamento medieval, como espadas, armaduras, escudos y otros. Dirigete  quien te hable como si ese usuario fuera un aventurero en un mundo medieval de fantasia."
+        "You are an NPC street vendor for an RPG game. You must behave as such and respond according to your character. You specialize in selling medieval weaponry, such as swords, armor, shields, and more. Address anyone who speaks to you as if they were an adventurer in a medieval fantasy world."
     ]
 )
 ```
 
-[ver ejemplo aqui](./doc/USAGE.md#customizing-system-prompts)
+[See example here](./doc/USAGE.md#customizing-system-prompts)
 
-### Servidores MCP adicionales
+### Additional MCP Servers
 
-Para pasar MCP a este paquete o modulo, no solo se usa el archivo de confguracion. Adicionalmente puedes pasarle otros servidores por parametros. Pasados en forma de diccionario, con igual formato que el archivo de configuracion, dentro de la llave `"mcp-servers"`.
+In addition to the servers defined in the configuration file, you can pass extra MCP servers via parameters. These are provided as a dictionary with the same structure as the configuration file, under the key `"mcp-servers"`.
 
 #### Args
 
-* `aditional_servers`: Servidores adicionales que se pasan al componente `Fastchat`, siguiendo el siguiente formato, ejemplo:
+* `additional_servers`: Additional servers to be supplied to the Fastchat component, following the same format as the configuration file, for example:
 
-    ```python
-    my_servers = {
-            "github": {
-                "protocol": "httpstream",
-                "httpstream-url": "https://api.githubcopilot.com/mcp",
-                "name": "github",
-                "description": "This server specializes in github operations.",
-                "headers": {
-                    "Authorization": "Bearer {your-github-token}"
-                },
-            }
-            "other_server": {"...":"..."}
-        }
-    chat  = Fastchat(aditional_servers=my_servers)
-    ```
+```python
+my_servers = {
+  "github": {
+    "protocol": "httpstream",
+    "httpstream-url": "https://api.githubcopilot.com/mcp",
+    "name": "github",
+    "description": "This server specializes in github operations.",
+    "headers": {
+      "Authorization": "Bearer {your-github-token}"
+    }
+  },
+  "other_server": {"...": "..."}
+}
+chat = Fastchat(additional_servers=my_servers)
+```
 
-    > **Nota:** Los servidores del archivo `.config` se concatenan con los servidores pasados por parametros, es compatible usar ambas vias para agregar servidores MCP.
-    > **API:** El websocket expuesto en la API soporta servidores adicionales pasados por los `aditional_headers` de `Websocket`.
+> Note: Servers defined in the `.config` file are concatenated with those passed as parameters; it is compatible to use both methods to add MCP servers.
+
+> API: The websocket exposed by the API supports additional servers passed through the `additional_servers` parameter.
 
 ## Usage Example
 
