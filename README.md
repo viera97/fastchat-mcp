@@ -12,7 +12,6 @@
 [![Forks](https://img.shields.io/github/forks/rb58853/fastchat-mcp?style=flat&logo=github)](https://github.com/rb58853/fastchat-mcp/network/members)
 [![Watchers](https://img.shields.io/github/watchers/rb58853/fastchat-mcp?style=flat&logo=github)](https://github.com/rb58853/fastchat-mcp)
 [![Contributors](https://img.shields.io/github/contributors/rb58853/fastchat-mcp)](https://github.com/rb58853/fastchat-mcp/graphs/contributors)
-[![Downloads]( https://img.shields.io/pypi/v/fastchat-mcp.svg)](https://pypi.org/project/fastchat-mcp/)]
 </div>
 
 Python chat client, based on [`"mcp[cli]"`](https://github.com/modelcontextprotocol/python-sdk), for connecting to MCP servers through multiple protocols, specifically designed to work with integrated language models.
