@@ -1,5 +1,3 @@
-[![MSeeP.ai Security Assessment Badge](https://mseep.net/pr/rb58853-fastchat-mcp-badge.png)](https://mseep.ai/app/rb58853-fastchat-mcp)
-
 # Fastchat MCP
 
 ![alt text](/doc/images/fastchat.png)
@@ -359,5 +357,5 @@ MIT License. See [`license`](LICENSE)
 #### If you find this project helpful, please don’t forget to ⭐ star the [repository](https://github.com/rb58853/fastchat-mcp)
 
 </div>
-
+[![MSeeP.ai Security Assessment Badge](https://mseep.net/pr/rb58853-fastchat-mcp-badge.png)](https://mseep.ai/app/rb58853-fastchat-mcp)
 <!-- or [buy me a ☕ coffee](buymeacoffee.com/rb58853).** -->
