@@ -1,3 +1,5 @@
+[![MSeeP.ai Security Assessment Badge](https://mseep.net/pr/rb58853-fastchat-mcp-badge.png)](https://mseep.ai/app/rb58853-fastchat-mcp)
+
 # Fastchat MCP
 
 ![alt text](/doc/images/fastchat.png)
