@@ -6,15 +6,19 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/pypi/v/fastchat-mcp?color=%2334D058&label=Version)](https://pypi.org/project/fastchat-mcp)
-[![Last commit](https://img.shields.io/github/last-commit/rb58853/fastchat-mcp.svg?style=flat)](https://github.com/rb58853/fastchat-mcp/commits)
-[![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/fastchat-mcp)](https://github.com/rb58853/fastchat-mcp/commits)
+[![PyPI Downloads](https://static.pepy.tech/badge/fastchat-mcp)](https://pepy.tech/projects/fastchat-mcp)
 [![Stars](https://img.shields.io/github/stars/rb58853/fastchat-mcp?style=flat&logo=github)](https://github.com/rb58853/fastchat-mcp/stargazers)
 [![Forks](https://img.shields.io/github/forks/rb58853/fastchat-mcp?style=flat&logo=github)](https://github.com/rb58853/fastchat-mcp/network/members)
 [![Watchers](https://img.shields.io/github/watchers/rb58853/fastchat-mcp?style=flat&logo=github)](https://github.com/rb58853/fastchat-mcp)
 [![Contributors](https://img.shields.io/github/contributors/rb58853/fastchat-mcp)](https://github.com/rb58853/fastchat-mcp/graphs/contributors)
+[![MSeeP](https://img.shields.io/badge/MSeep-4.3-lima)](https://mseep.ai/app/rb58853-fastchat-mcp)
+[![MCP](https://img.shields.io/badge/MCP-Client-orange)](https://modelcontextprotocol.io/quickstart/client)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/fastchat-mcp)](https://github.com/rb58853/fastchat-mcp/commits)
+[![Last commit](https://img.shields.io/github/last-commit/rb58853/fastchat-mcp.svg?style=flat)](https://github.com/rb58853/fastchat-mcp/commits)
+
 </div>
 
-Python chat client, based on [`"mcp[cli]"`](https://github.com/modelcontextprotocol/python-sdk), for connecting to MCP servers through multiple protocols, specifically designed to work with integrated language models.
+Python chat client, based on [`mcp[cli]`](https://github.com/modelcontextprotocol/python-sdk), for connecting to MCP servers through multiple protocols, specifically designed to work with integrated language models. **Fastchat-mcp** is a very simple way to interact with MCP servers using custom chats through natural language.
 
 ## Table of Contents
 
@@ -350,14 +354,11 @@ code .
 
 MIT License. See [`license`](LICENSE)
 
-[![MSeeP.ai Security Assessment Badge](https://mseep.net/pr/rb58853-fastchat-mcp-badge.png)](https://mseep.ai/app/rb58853-fastchat-mcp)
-
 ---
 <div align = center>
 
 #### If you find this project helpful, please don’t forget to ⭐ star the [repository](https://github.com/rb58853/fastchat-mcp)
 
 </div>
-
 
 <!-- or [buy me a ☕ coffee](buymeacoffee.com/rb58853).** -->
