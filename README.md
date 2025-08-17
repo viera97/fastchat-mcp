@@ -131,7 +131,7 @@ The file is JSON formatted and follows this main structure:
 }
 ```
 
-* **`app_name`**: The identifiable name of the appslication or project using these MCP servers.
+* **`app_name`**: The identifiable name of the application or project using these MCP servers.
 * **`mcp_servers`**: An object listing one or more configured MCP servers, each with its unique key.
 
 ### Server Definition
