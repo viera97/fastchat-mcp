@@ -50,15 +50,15 @@
         "endpoints": {
             "save_history": {
                 "path": "",
-                "post_body": {}
+                "body": {}
             },
             "save_message": {
                 "path": "",
-                "post_body": {}
+                "body": {}
             },
             "load_history": {
                 "path": "",
-                "query_args": {}
+                "query": {}
             }
         }
     }
