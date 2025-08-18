@@ -1,5 +1,7 @@
 import os
 import json
+import aiohttp
+from ..chat.message import MessagesSet
 
 ROOT_PATH = "http://127.0.0.1/fastchatdb"
 
@@ -26,8 +28,8 @@ class ClientDB:
         save_message: str = SAVE_MESSAGE
 
         if os.path.exists(config_file):
-            with open(config_file, "r"):
-                config: dict = json.load(config_file)
+            with open(config_file, "r") as file:
+                config: dict = json.load(file)
 
             db_connection: dict = config.get("db_conection")
             if db_connection is not None:
@@ -70,15 +72,56 @@ class ClientDB:
         self.load_history_path: str = os.path.join(root_path, load_history)
         self.save_messsage_path: str = os.path.join(root_path, save_message)
 
+    async def _post(self, url: str, json_data: dict) -> dict:
+        """
+        Asynchronously send a POST request to the given URL with the provided JSON data.
+        Returns the response as a dictionary.
+        """
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=json_data) as resp:
+                return await resp.json()
+
+    async def _get(self, url: str, params: dict) -> dict:
+        """
+        Asynchronously send a GET request to the given URL with the provided query parameters.
+        Returns the response as a dictionary.
+        """
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, params=params) as resp:
+                return await resp.json()
+
     async def save_history(self, chat_id: str, history: list[dict]) -> bool:
-        # Peticion post a la base de datos que guarda
-        response: dict = {}
-        return response["status"] == "success"
+        """
+        Asynchronously save the chat history to the database via the configured endpoint.
+        Returns True if the operation was successful.
+        """
+        data = self.save_history_body.copy()
+        data.update({"chat_id": chat_id, "history": history})
+        response = await self._post(self.save_history_path, data)
+        return response.get("status") == "success"
 
-    async def load_history(self, chat_id: str) -> bool:
-        response: dict = {}
-        return response["status"] == "success"
+    async def load_history(self, chat_id: str) -> dict:
+        """
+        Asynchronously load the chat history from the database via the configured endpoint.
+        Returns the history as a dictionary if successful, otherwise an empty dict.
+        """
+        params = self.load_history_query.copy()
+        params.update({"chat_id": chat_id})
+        response = await self._get(self.load_history_path, params)
+        if response.get("status") == "success":
+            return response.get("history", {})
+        return {}
 
-    async def save_message(self, chat_id: str, message_id: str, message: dict) -> bool:
-        response: dict = {}
-        return response["status"] == "success"
+    async def save_message(
+        self, chat_id: str, message_id: str, message: MessagesSet
+    ) -> bool:
+        """
+        Asynchronously save a single message to the database via the configured endpoint.
+        Returns True if the operation was successful.
+        """
+        data = self.save_message_body.copy()
+        data.update(
+            {"chat_id": chat_id, "message_id": message_id, "message": message.info}
+        )
+        response = await self._post(self.save_messsage_path, data)
+        return response.get("status") == "success"

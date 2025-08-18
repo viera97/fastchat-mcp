@@ -1,12 +1,14 @@
+from typing import Generator, AsyncGenerator
+from mcp.types import PromptMessage
+import json
+from .message import MessagesSet
+from .features.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
+from .features.llm_provider import LLMProvider
+from ..client_db.client_db import ClientDB
 from ..mcp_manager.client import ClientManagerMCP
 from ..services.llm import LLM
 from ..services.llm.models.openai_service.gpt import GPT
-from typing import Generator, AsyncGenerator
-from .features.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
-from .features.llm_provider import LLMProvider
 from ...config.llm_config import ConfigGPT, ConfigLLM
-import json
-from mcp.types import PromptMessage
 
 
 class Fastchat:
@@ -79,12 +81,11 @@ class Fastchat:
         ]
         self.aditional_servers: dict = aditional_servers
 
+        self.clientdb: ClientDB = ClientDB()
+        self.current_messages_set: MessagesSet | None = None
+
     async def initialize(self, print_logo: bool = True) -> None:
         await self.__set_client_manager_mcp(print_logo=print_logo)
-
-    # def set_client_manager_mcp(self, client_manager_mcp: ClientManagerMCP) -> None:
-    #     self.client_manager_mcp = client_manager_mcp
-    #     self.llm.set_client_manager_mcp(self.client_manager_mcp)
 
     async def __set_client_manager_mcp(self, print_logo: bool) -> None:
         if self.client_manager_mcp is None:
@@ -95,6 +96,7 @@ class Fastchat:
             await self.client_manager_mcp.initialize()
             self.llm.set_client_manager_mcp(self.client_manager_mcp)
 
+    ####  FLOW   FLOW   FLOW ####
     async def __call__(self, query: str) -> AsyncGenerator[Step]:
         """
         Processes a user query through the chat pipeline.
@@ -108,6 +110,7 @@ class Fastchat:
         """
 
         yield Step(step_type=StepMessage.ANALYZE_QUERY)
+        self.current_messages_set = MessagesSet(query=query)
 
         processed_query: dict = self.llm.preprocess_query(query=query)
         querys: list[str] = processed_query["querys"]
@@ -118,6 +121,14 @@ class Fastchat:
         for query in querys:
             async for step in self.proccess_query(query):
                 yield step
+
+        # Save To Database Here
+
+        # messsages2save =
+        # ..............
+        ###########################
+
+        # self.current_messages_set = None
 
     async def proccess_query(self, query: str) -> AsyncGenerator[Step]:
         """
@@ -175,13 +186,18 @@ class Fastchat:
         if len(service) == 0:
             yield DataStep(data={"service": None})
             first_chunk = True
-            for chunk in self.llm.simple_query(
+            response = self.llm.simple_query(
                 query,
                 use_services_contex=True,
                 extra_messages=extra_messages + self.extra_reponse_system_prompts,
-            ):
+            )
+            for chunk in response:
                 yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
                 first_chunk = False
+
+            self.current_messages_set.append_message(
+                {"role": "assistant", "content": response}
+            )
             yield ResponseStep(response="\n\n", data=None)
 
         else:
