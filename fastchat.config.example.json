@@ -44,5 +44,22 @@
                 ]
             }
         }
+    },
+    "db_conection": {
+        "root_path": "http://127.0.0.1/fastchatdb",
+        "endpoints": {
+            "save_history": {
+                "path": "",
+                "post_body": {}
+            },
+            "save_message": {
+                "path": "",
+                "post_body": {}
+            },
+            "load_history": {
+                "path": "",
+                "query_args": {}
+            }
+        }
     }
 }
