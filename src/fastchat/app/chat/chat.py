@@ -1,5 +1,6 @@
-from typing import Generator, AsyncGenerator
+from typing import AsyncGenerator
 from mcp.types import PromptMessage
+import uuid
 import json
 from .message import MessagesSet
 from .features.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
@@ -58,7 +59,7 @@ class Fastchat:
             history (list, optional): Initial chat history. Defaults to empty list.
         """
 
-        self.id = id
+        self.id = id if id is not None else str(uuid.uuid4())
         self.llm: LLM = GPT(
             max_history_len=len_context,
             model=model,
@@ -116,6 +117,8 @@ class Fastchat:
         querys: list[str] = processed_query["querys"]
         self.llm.current_language = processed_query["language"]
 
+        self.current_messages_set.selected_querys(querys=querys)
+
         yield DataStep(data={"querys": querys})
 
         for query in querys:
@@ -123,9 +126,10 @@ class Fastchat:
                 yield step
 
         # Save To Database Here
-
-        # messsages2save =
-        # ..............
+        messsages2save: MessagesSet = self.current_messages_set
+        await self.clientdb.save_message(
+            chat_id=self.id, message_id=messsages2save.id, message=messsages2save
+        )
         ###########################
 
         # self.current_messages_set = None
@@ -146,11 +150,14 @@ class Fastchat:
         self.llm.append_chat_history()
         yield QueryStep(query)
 
+        self.current_messages_set.append_message({"role": "user", "content": query})
+
         # region ########### GET PROMTPS ###########
         yield Step(step_type=StepMessage.SELECT_PROMPTS)
         prompts = json.loads(
             self.llm.select_prompts(query, self.extra_selection_system_prompts)
         )["prompt_services"]
+        self.current_messages_set.selected_prompts(prompts=prompts)
 
         if len(prompts) == 0:
             yield DataStep(data={"prompts": None})
@@ -180,19 +187,24 @@ class Fastchat:
         )
         args = service["args"]
         service = service["service"]
+        self.current_messages_set.selected_service(
+            service={"service": service, "args": args}
+        )
         # endregion ###################################################
 
         # region ########### RESPONSE ############
         if len(service) == 0:
             yield DataStep(data={"service": None})
             first_chunk = True
-            response = self.llm.simple_query(
+            stream = self.llm.simple_query(
                 query,
                 use_services_contex=True,
                 extra_messages=extra_messages + self.extra_reponse_system_prompts,
             )
-            for chunk in response:
+            response = ""
+            for chunk in stream:
                 yield ResponseStep(response=chunk, data=None, first_chunk=first_chunk)
+                response += chunk if chunk is not None else ""
                 first_chunk = False
 
             self.current_messages_set.append_message(

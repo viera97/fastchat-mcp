@@ -4,7 +4,7 @@ import uuid
 class MessagesSet:
     def __init__(self, query: str):
         self.root_query: str = query
-        self.id: str = uuid.uuid4()
+        self.id: str = str(uuid.uuid4())
 
         self.history_messages: list[dict] = []
         self.flow_messages: list[dict] = [{"query": query}]
@@ -20,7 +20,7 @@ class MessagesSet:
         self.flow_messages.append({"selected_service": service})
 
     def selected_querys(self, querys: list[str]):
-        self.flow_messages.append[{"selected_querys": querys}]
+        self.flow_messages.append({"selected_querys": querys})
 
     @property
     def info(self) -> dict:

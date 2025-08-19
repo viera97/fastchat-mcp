@@ -3,6 +3,7 @@ import asyncio
 from ..app.chat.chat import Fastchat
 from ..utils.clear_console import clear_console
 from ..config.llm_config import ConfigGPT, ConfigLLM
+from ..config.logger import logger
 import os
 
 
@@ -14,6 +15,7 @@ class TerminalChat:
         extra_selection_system_prompts: list[str] = [],
         aditional_servers: dict = {},
         len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
+        logger_lv: str = "ERROR",
     ):
         """
         Initialize the class with model configuration and system prompts.
@@ -29,6 +31,7 @@ class TerminalChat:
         self.extra_selection_system_prompts: list[str] = extra_selection_system_prompts
         self.aditional_servers: dict = aditional_servers
         self.len_context: int = len_context
+        logger.setLevel(logger_lv)
 
     def open(self):
         return asyncio.run(self.__open())

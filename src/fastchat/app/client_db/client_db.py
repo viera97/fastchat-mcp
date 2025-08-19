@@ -2,6 +2,7 @@ import os
 import json
 import aiohttp
 from ..chat.message import MessagesSet
+from ...config.logger import logger
 
 ROOT_PATH = "http://127.0.0.1/fastchatdb"
 
@@ -123,5 +124,18 @@ class ClientDB:
         data.update(
             {"chat_id": chat_id, "message_id": message_id, "message": message.info}
         )
-        response = await self._post(self.save_messsage_path, data)
-        return response.get("status") == "success"
+        try:
+            response = await self._post(self.save_messsage_path, data)
+            if response.get("status") == "success":
+                logger.info(f"Message {message_id} store to database successfuly")
+            else:
+                logger.warning(
+                    f"Error to store `message = {message_id}` to database. Message: {response.get('message')}"
+                )
+
+            return response.get("status") == "success"
+        except Exception as e:
+            logger.warning(
+                f"Error to store `message = {message_id}` to database. Message: {e}"
+            )
+            return False  # Error
