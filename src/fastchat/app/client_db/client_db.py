@@ -21,6 +21,7 @@ class ClientDB:
         self.save_message_body: dict = {}
         self.load_history_query: dict = {}
 
+        self.is_none: bool = True
         self.__load_config(config_file=config_file)
 
     def __load_config(self, config_file: str):
@@ -34,6 +35,7 @@ class ClientDB:
 
             db_connection: dict = config.get("db_conection")
             if db_connection is not None:
+                self.is_none = False
                 root_path = db_connection.get("root_path") or ROOT_PATH
                 endpoints: dict = db_connection.get("endpoints")
                 if endpoints is not None:
@@ -96,6 +98,9 @@ class ClientDB:
         Asynchronously save the chat history to the database via the configured endpoint.
         Returns True if the operation was successful.
         """
+        if self.is_none:
+            return False
+        
         data = self.save_history_body.copy()
         data.update({"chat_id": chat_id, "history": history})
         response = await self._post(self.save_history_path, data)
@@ -106,6 +111,9 @@ class ClientDB:
         Asynchronously load the chat history from the database via the configured endpoint.
         Returns the history as a dictionary if successful, otherwise an empty dict.
         """
+        if self.is_none:
+            return False
+      
         params = self.load_history_query.copy()
         params.update({"chat_id": chat_id})
         response = await self._get(self.load_history_path, params)
@@ -120,6 +128,9 @@ class ClientDB:
         Asynchronously save a single message to the database via the configured endpoint.
         Returns True if the operation was successful.
         """
+        if self.is_none:
+            return False
+        
         data = self.save_message_body.copy()
         data.update(
             {"chat_id": chat_id, "message_id": message_id, "message": message.info}
