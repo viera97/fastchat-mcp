@@ -381,8 +381,7 @@ code .
 * 📟 Support for the stdio transport protocol.
 * 💻 Easy console usage via [`TerminalChat().open()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
 * 💡 Response management and MCP service selection control through system prompts that can be passed to the chat. [see example](./doc/USAGE.md#customizing-system-prompts)
-
-* **Data persistence integrated into the workflow:** database connections established through APIs defined in the `fastchat.config.json`. [see more](#database-configuration)
+* 🗃 **Data persistence integrated into the workflow:** database connections established through APIs defined in the `fastchat.config.json`. [see more](#database-configuration)
 
 [See more in changelog](./doc//CHANGELOG.md)
 
