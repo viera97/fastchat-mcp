@@ -46,20 +46,33 @@
         }
     },
     "db_conection": {
-        "root_path": "http://127.0.0.1/fastchatdb",
-        "headers": {},
+        "root_path": "http://127.0.0.1:6543/fastchatdb",
+        "headers": {
+            "example_autorization_token": "<your_token_here>",
+            "other_header": "value",
+            "...": "..."
+        },
+        "base_body": {
+            "company_id": "<your_company_id>",
+            "example_body_param": "<your_value_here>",
+            "other_body_param": "value",
+            "...": "..."
+        },
+        "base_query": {
+            "company_id": "<your_company_id>",
+            "example_query_param": "<your_value_here>",
+            "other_query_param": "value",
+            "...": "..."
+        },
         "endpoints": {
             "save_history": {
-                "path": "",
-                "post_body": {}
+                "path": "/history/save"
             },
             "save_message": {
-                "path": "",
-                "post_body": {}
+                "path": "/message/save"
             },
             "load_history": {
-                "path": "",
-                "query_args": {}
+                "path": "/history/load"
             }
         }
     }

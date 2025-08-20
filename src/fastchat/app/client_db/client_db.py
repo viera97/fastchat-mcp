@@ -7,11 +7,9 @@ from ..chat.message import MessagesSet
 from ...config.logger import logger
 
 ROOT_PATH = "http://127.0.0.1:6543/fastchatdb/"
-
-SAVE_HISTORY = "/history/save"
-SAVE_MESSAGE = "/message/save"
-
-LOAD_HISTORY = "/history/load"
+SAVE_HISTORY = "history/save"
+SAVE_MESSAGE = "message/save"
+LOAD_HISTORY = "history/load"
 
 
 class ClientDB:
@@ -19,11 +17,11 @@ class ClientDB:
         self,
         config_file: str = "fastchat.config.json",
     ):
-        self.save_history_body: dict = {}
-        self.save_message_body: dict = {}
-        self.load_history_query: dict = {}
+        self.base_body: dict = {}
+        self.base_query: dict = {}
 
         self.is_none: bool = True
+        self.headers: dict | None = None
         self.__load_config(config_file=config_file)
 
     def __load_config(self, config_file: str):
@@ -43,26 +41,27 @@ class ClientDB:
             db_connection: dict = config.get("db_conection")
             if db_connection is not None:
                 self.is_none = False
+
+                self.headers = db_connection.get("headers", {})
+                self.base_body = db_connection.get("base_body", {})
+                self.base_query = db_connection.get("base_query", {})
+
                 root_path = db_connection.get("root_path") or ROOT_PATH
+
                 endpoints: dict = db_connection.get("endpoints")
                 if endpoints is not None:
 
                     save_history_endpoint: dict = endpoints.get("save_history")
                     if save_history_endpoint is not None:
                         save_history = save_history_endpoint.get("path") or save_history
-                        self.save_history_body = save_history_endpoint.get("body") or {}
 
                     load_history_endpoint: dict = endpoints.get("load_history")
                     if load_history_endpoint is not None:
                         load_history = load_history_endpoint.get("path") or load_history
-                        self.load_history_query = (
-                            load_history_endpoint.get("query") or {}
-                        )
 
                     save_message_endpoint: dict = endpoints.get("save_message")
                     if save_message_endpoint is not None:
                         save_message = save_message_endpoint.get("path") or save_message
-                        self.save_message_body = save_message_endpoint.get("body") or {}
 
         self.set_database_endpoints_path(
             root_path=root_path,
@@ -101,7 +100,7 @@ class ClientDB:
         Returns the response as a dictionary.
         """
         async with aiohttp.ClientSession() as session:
-            async with session.post(url, json=json_data) as resp:
+            async with session.post(url, json=json_data, headers=self.headers) as resp:
                 return await resp.json()
 
     async def _get(self, url: str, params: dict) -> dict:
@@ -110,26 +109,8 @@ class ClientDB:
         Returns the response as a dictionary.
         """
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=params) as resp:
+            async with session.get(url, params=params, headers=self.headers) as resp:
                 return await resp.json()
-
-    async def save_history(self, chat_id: str, history: list[dict]) -> bool:
-        """
-        Asynchronously save the chat history to the database via the configured endpoint.
-        Returns True if the operation was successful.
-        """
-        if self.is_none:
-            return False
-
-        data = self.save_history_body.copy()
-        data.update({"chat_id": chat_id, "history": history})
-        try:
-            response = await self._post(self.save_history_path, data)
-            logger.info(f"History for chat_id {chat_id} saved successfully")
-            return response.get("status") == "success"
-        except Exception as e:
-            logger.warning(f"Error saving history for chat_id {chat_id}: {e}")
-            return False
 
     def load_history(self, chat_id: str) -> list:
         """
@@ -139,10 +120,12 @@ class ClientDB:
         if self.is_none:
             return []
 
-        params = self.load_history_query.copy()
+        params = self.base_query.copy()
         params.update({"chat_id": chat_id})
         try:
-            response = requests.get(self.load_history_path, params)
+            response = requests.get(
+                self.load_history_path, params, headers=self.headers
+            )
             if response.get("status") == "success":
                 logger.info(f"History for chat_id {chat_id} loaded successfully")
                 return response.get("history", [])
@@ -151,6 +134,24 @@ class ClientDB:
             return []
 
         return []
+
+    async def save_history(self, chat_id: str, history: list[dict]) -> bool:
+        """
+        Asynchronously save the chat history to the database via the configured endpoint.
+        Returns True if the operation was successful.
+        """
+        if self.is_none:
+            return False
+
+        data = self.base_body.copy()
+        data.update({"chat_id": chat_id, "history": history})
+        try:
+            response = await self._post(self.save_history_path, data)
+            logger.info(f"History for chat_id {chat_id} saved successfully")
+            return response.get("status") == "success"
+        except Exception as e:
+            logger.warning(f"Error saving history for chat_id {chat_id}: {e}")
+            return False
 
     async def save_message(
         self, chat_id: str, message_id: str, message: MessagesSet
@@ -162,7 +163,7 @@ class ClientDB:
         if self.is_none:
             return False
 
-        data = self.save_message_body.copy()
+        data = self.base_body.copy()
         data.update(
             {"chat_id": chat_id, "message_id": message_id, "message": message.info}
         )

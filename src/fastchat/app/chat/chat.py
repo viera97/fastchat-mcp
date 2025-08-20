@@ -62,7 +62,6 @@ class Fastchat:
         self.clientdb: ClientDB = ClientDB()
 
         self.id = id if id is not None else str(uuid.uuid4())
-        id = "asdsa"
         loaded_history = (
             self.clientdb.load_history(chat_id=self.id) if id is not None else []
         )
