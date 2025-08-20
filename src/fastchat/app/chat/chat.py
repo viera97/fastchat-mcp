@@ -59,11 +59,20 @@ class Fastchat:
             history (list, optional): Initial chat history. Defaults to empty list.
         """
 
+        self.clientdb: ClientDB = ClientDB()
+
         self.id = id if id is not None else str(uuid.uuid4())
+
+        __history = (
+            (history | self.clientdb.load_history(chat_id=self.id))
+            if id is not None
+            else history
+        )
+
         self.llm: LLM = GPT(
             max_history_len=len_context,
             model=model,
-            chat_history=history,
+            chat_history=__history,
         )
         self.client_manager_mcp: ClientManagerMCP | None = None
         self.extra_reponse_system_prompts: list[dict[str, str]] = [
@@ -82,7 +91,6 @@ class Fastchat:
         ]
         self.aditional_servers: dict = aditional_servers
 
-        self.clientdb: ClientDB = ClientDB()
         self.current_messages_set: MessagesSet | None = None
 
     async def initialize(self, print_logo: bool = True) -> None:

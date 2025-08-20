@@ -25,6 +25,10 @@ class ClientDB:
         self.__load_config(config_file=config_file)
 
     def __load_config(self, config_file: str):
+        """
+        Load the configuration from the specified JSON file.
+        If the file does not exist, use default values.
+        """
         save_history: str = SAVE_HISTORY
         load_history: str = LOAD_HISTORY
         save_message: str = SAVE_MESSAGE
@@ -100,26 +104,36 @@ class ClientDB:
         """
         if self.is_none:
             return False
-        
+
         data = self.save_history_body.copy()
         data.update({"chat_id": chat_id, "history": history})
-        response = await self._post(self.save_history_path, data)
-        return response.get("status") == "success"
+        try:
+            response = await self._post(self.save_history_path, data)
+            logger.info(f"History for chat_id {chat_id} saved successfully")
+            return response.get("status") == "success"
+        except Exception as e:
+            logger.warning(f"Error saving history for chat_id {chat_id}: {e}")
+            return False
 
-    async def load_history(self, chat_id: str) -> dict:
+    async def load_history(self, chat_id: str) -> list:
         """
         Asynchronously load the chat history from the database via the configured endpoint.
-        Returns the history as a dictionary if successful, otherwise an empty dict.
+        Returns the history as a list if successful, otherwise an empty list.
         """
         if self.is_none:
             return False
-      
+
         params = self.load_history_query.copy()
         params.update({"chat_id": chat_id})
-        response = await self._get(self.load_history_path, params)
-        if response.get("status") == "success":
-            return response.get("history", {})
-        return {}
+        try:
+            response = await self._get(self.load_history_path, params)
+            if response.get("status") == "success":
+                logger.info(f"History for chat_id {chat_id} loaded successfully")
+                return response.get("history", [])
+        except Exception as e:
+            logger.warning(f"Error loading history for chat_id {chat_id}: {e}")
+
+        return []
 
     async def save_message(
         self, chat_id: str, message_id: str, message: MessagesSet
@@ -130,7 +144,7 @@ class ClientDB:
         """
         if self.is_none:
             return False
-        
+
         data = self.save_message_body.copy()
         data.update(
             {"chat_id": chat_id, "message_id": message_id, "message": message.info}
@@ -138,15 +152,14 @@ class ClientDB:
         try:
             response = await self._post(self.save_messsage_path, data)
             if response.get("status") == "success":
-                logger.info(f"Message {message_id} store to database successfuly")
+                logger.info(f"Message {message_id} saved to database successfully")
             else:
                 logger.warning(
-                    f"Error to store `message = {message_id}` to database. Message: {response.get('message')}"
+                    f"Error saving message {message_id}: {response.get('message')}"
                 )
 
             return response.get("status") == "success"
         except Exception as e:
-            logger.warning(
-                f"Error to store `message = {message_id}` to database. Message: {e}"
-            )
+            logger.warning(f"Error saving message {message_id}: {e}")
+
             return False  # Error
