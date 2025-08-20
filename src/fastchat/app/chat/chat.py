@@ -62,17 +62,15 @@ class Fastchat:
         self.clientdb: ClientDB = ClientDB()
 
         self.id = id if id is not None else str(uuid.uuid4())
-
-        __history = (
-            (history | self.clientdb.load_history(chat_id=self.id))
-            if id is not None
-            else history
+        id = "asdsa"
+        loaded_history = (
+            self.clientdb.load_history(chat_id=self.id) if id is not None else []
         )
 
         self.llm: LLM = GPT(
             max_history_len=len_context,
             model=model,
-            chat_history=__history,
+            chat_history=history + loaded_history,
         )
         self.client_manager_mcp: ClientManagerMCP | None = None
         self.extra_reponse_system_prompts: list[dict[str, str]] = [

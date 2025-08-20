@@ -1,10 +1,12 @@
 import os
 import json
 import aiohttp
+import requests
+from urllib.parse import urljoin
 from ..chat.message import MessagesSet
 from ...config.logger import logger
 
-ROOT_PATH = "http://127.0.0.1/fastchatdb"
+ROOT_PATH = "http://127.0.0.1:6543/fastchatdb/"
 
 SAVE_HISTORY = "/history/save"
 SAVE_MESSAGE = "/message/save"
@@ -29,6 +31,7 @@ class ClientDB:
         Load the configuration from the specified JSON file.
         If the file does not exist, use default values.
         """
+        root_path: str = ROOT_PATH
         save_history: str = SAVE_HISTORY
         load_history: str = LOAD_HISTORY
         save_message: str = SAVE_MESSAGE
@@ -75,9 +78,22 @@ class ClientDB:
         load_history: str = LOAD_HISTORY,
         save_message: str = SAVE_MESSAGE,
     ):
-        self.save_history_path: str = os.path.join(root_path, save_history)
-        self.load_history_path: str = os.path.join(root_path, load_history)
-        self.save_messsage_path: str = os.path.join(root_path, save_message)
+        if not root_path.endswith("/"):
+            root_path += "/"
+
+        save_history = (
+            save_history[1:] if save_history.startswith("/") else save_history
+        )
+        load_history = (
+            load_history[1:] if load_history.startswith("/") else load_history
+        )
+        save_message = (
+            save_message[1:] if save_message.startswith("/") else save_message
+        )
+
+        self.save_history_path: str = urljoin(root_path, save_history)
+        self.load_history_path: str = urljoin(root_path, load_history)
+        self.save_messsage_path: str = urljoin(root_path, save_message)
 
     async def _post(self, url: str, json_data: dict) -> dict:
         """
@@ -115,23 +131,24 @@ class ClientDB:
             logger.warning(f"Error saving history for chat_id {chat_id}: {e}")
             return False
 
-    async def load_history(self, chat_id: str) -> list:
+    def load_history(self, chat_id: str) -> list:
         """
-        Asynchronously load the chat history from the database via the configured endpoint.
+        Load the chat history from the database via the configured endpoint.
         Returns the history as a list if successful, otherwise an empty list.
         """
         if self.is_none:
-            return False
+            return []
 
         params = self.load_history_query.copy()
         params.update({"chat_id": chat_id})
         try:
-            response = await self._get(self.load_history_path, params)
+            response = requests.get(self.load_history_path, params)
             if response.get("status") == "success":
                 logger.info(f"History for chat_id {chat_id} loaded successfully")
                 return response.get("history", [])
         except Exception as e:
             logger.warning(f"Error loading history for chat_id {chat_id}: {e}")
+            return []
 
         return []
 
