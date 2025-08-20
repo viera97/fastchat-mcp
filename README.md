@@ -391,8 +391,12 @@ code .
 >
 > Future versions are expected to include additional features such as voice systems, quick integrations with databases, built-in websocket support for frontend connections, among other useful functionalities. We invite you to **follow this repository (watch)** to stay updated on the latest news and improvements implemented.
 
-## License
+- ✅ Quick integrations with databases
+- ⏳ Built-in websocket support for frontend connections
+- ❌ Voice systems
+- 💡 And more
 
+## License
 MIT License. See [`license`](LICENSE)
 
 ---
