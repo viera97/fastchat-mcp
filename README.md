@@ -221,6 +221,47 @@ Each MCP server inside `"mcp_servers"` has a custom configuration with these com
 * `"config"` specifies the command and arguments to run the MCP server. This key value(or body) has the same Claude Desktop sintaxis.
 * Useful for local integrations or development testing without networking.
 
+### Database Configuration
+
+Database connection settings are defined in the `fastchat.config.file`. If the connection is established successfully, the conversation flow will automatically handle sending and retrieving data from the specified endpoints.
+
+```json
+{
+    "...": "...",
+
+    "db_conection": {
+        "root_path": "http://127.0.0.1:6543/fastchatdb",
+        "headers": {
+            "example_autorization_token": "<your_token_here>",
+            "other_header": "value",
+            "...": "..."
+        },
+        "base_body": {
+            "company_id": "<your_company_id>",
+            "example_body_param": "<your_value_here>",
+            "other_body_param": "value",
+            "...": "..."
+        },
+        "base_query": {
+            "company_id": "<your_company_id>",
+            "example_query_param": "<your_value_here>",
+            "other_query_param": "value",
+            "...": "..."
+        },
+        "endpoints": {
+            "save_message": {
+                "path": "/message/save"
+            },
+            "load_history": {
+                "path": "/history/load"
+            }
+        }
+    }
+}
+```
+
+[See more about database](./doc/DATABASE.md)
+
 ### Notes
 
 [see config.example.json](config.example.json)
@@ -339,8 +380,9 @@ code .
 * 📡 Support for the httpstream transport protocol.
 * 📟 Support for the stdio transport protocol.
 * 💻 Easy console usage via [`TerminalChat().open()`](./src/fastchat/dev.py); see [example1](#usage-example) for the use case.
-
 * 💡 Response management and MCP service selection control through system prompts that can be passed to the chat. [see example](./doc/USAGE.md#customizing-system-prompts)
+
+* **Data persistence integrated into the workflow:** database connections established through APIs defined in the `fastchat.config.json`. [see more](#database-configuration)
 
 [See more in changelog](./doc//CHANGELOG.md)
 

@@ -2,6 +2,11 @@
 
 ## fastchat-mcp
 
+### v1.1.2 🗃
+
+- 💬 The chat flow now handles connections to endpoints that interact with databases.  
+- ⚙️ Database usage is **optional**, fully **configurable**, and designed to be **easy to understand and manage**. [Learn more](DATABASE.md)
+
 ### v1.1.1 🧩
 
 - ✨ It is now possible to add additional system prompts to the `Fastchat` module, enabling customization of response style and query processing. *[See example](./USAGE.md#customizing-system-prompts)*  

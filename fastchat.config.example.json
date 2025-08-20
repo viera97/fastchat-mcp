@@ -65,9 +65,6 @@
             "...": "..."
         },
         "endpoints": {
-            "save_history": {
-                "path": "/history/save"
-            },
             "save_message": {
                 "path": "/message/save"
             },

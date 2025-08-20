@@ -154,7 +154,10 @@ class ClientDB:
             return False
 
     async def save_message(
-        self, chat_id: str, message_id: str, message: MessagesSet
+        self,
+        chat_id: str,
+        message_id: str,
+        message: MessagesSet,
     ) -> bool:
         """
         Asynchronously save a single message to the database via the configured endpoint.
