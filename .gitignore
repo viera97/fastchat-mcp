@@ -1,7 +1,6 @@
 # Environment
 .env
-fastchat.config.json
-fastauth.config.json
+/fastchat.config.json
 
 # Cache
 *.cpython-313.pyc
