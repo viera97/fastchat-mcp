@@ -1,17 +1,47 @@
+import json
+from fastauth import websocket_middleware, TokenType
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from ...app.chat.features.llm_provider import LLMProvider
-
-# from ...app.chat.features.step import Step
-from ...app.chat.chat import Fastchat
-from ...config.llm_config import ConfigGPT, ConfigLLM
 from ..settings import FastappSettings
 from ...config.logger import logger
-import json
+from ...app.chat.chat import Fastchat
+from ...config.llm_config import ConfigGPT, ConfigLLM
+from ...app.chat.features.llm_provider import LLMProvider
 
 router = APIRouter(prefix="/chat", tags=["chating"])
 
 
-@router.websocket("/ws")
+@router.websocket("/user")
+@websocket_middleware(token_type=TokenType.ACCESS)
+async def access_websocket(
+    websocket: WebSocket,
+    chat_id: str = None,
+    model: str = ConfigGPT.DEFAULT_MODEL_NAME,
+    llm_provider: str = ConfigLLM.DEFAULT_PROVIDER.value,
+):
+    await websocket_chat(
+        websocket=websocket,
+        chat_id=chat_id,
+        model=model,
+        llm_provider=llm_provider,
+    )
+
+
+@router.websocket("/admin")
+@websocket_middleware(token_type=TokenType.MASTER)
+async def master_websocket(
+    websocket: WebSocket,
+    chat_id: str = None,
+    model: str = ConfigGPT.DEFAULT_MODEL_NAME,
+    llm_provider: str = ConfigLLM.DEFAULT_PROVIDER.value,
+):
+    await websocket_chat(
+        websocket=websocket,
+        chat_id=chat_id,
+        model=model,
+        llm_provider=llm_provider,
+    )
+
+
 async def websocket_chat(
     websocket: WebSocket,
     chat_id: str = None,
@@ -19,6 +49,12 @@ async def websocket_chat(
     llm_provider: str = ConfigLLM.DEFAULT_PROVIDER.value,
 ):
     await websocket.accept()
+    await websocket.send_json(
+        {
+            "status": "success",
+            "detail": "Connected: Connection Accepted",
+        }
+    )
     aditional_servers: dict = websocket.headers.get("aditional_servers")
     if (
         aditional_servers is None

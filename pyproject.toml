@@ -21,7 +21,8 @@ dependencies = [
   "mcp-oauth>=0.0.5",
   "fastapi",
   "websockets",
-  "requests"
+  "requests",
+  "fastauth-api",
 ]
 
 [project.urls]
