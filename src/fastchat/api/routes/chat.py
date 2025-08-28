@@ -8,6 +8,7 @@ from ...config.llm_config import ConfigGPT, ConfigLLM
 from ...app.chat.features.llm_provider import LLMProvider
 
 router = APIRouter(prefix="/chat", tags=["chating"])
+STREAM_END_MARKER: str = "--next"
 
 
 @router.websocket("/user")
@@ -95,7 +96,7 @@ async def websocket_chat(
             # Enviar respuesta al cliente (puede ser texto o JSON)
             async for step in response:
                 await websocket.send_json(step.json)
-            await websocket.send_text("--next")
+            await websocket.send_text(STREAM_END_MARKER)
 
     except WebSocketDisconnect:
         # Cierra conexión limpia si el cliente se desconecta

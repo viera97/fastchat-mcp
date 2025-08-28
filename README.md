@@ -15,6 +15,7 @@
 [![MCP](https://img.shields.io/badge/MCP-Client-orange)](https://modelcontextprotocol.io/quickstart/client)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/fastchat-mcp)](https://github.com/rb58853/fastchat-mcp/commits)
 [![Last commit](https://img.shields.io/github/last-commit/rb58853/fastchat-mcp.svg?style=flat)](https://github.com/rb58853/fastchat-mcp/commits)
+[![Version](https://img.shields.io/pypi/v/fastauth-api?color=%234D58&label=fastauth-api)](https://pypi.org/project/fastauth-api)
 
 </div>
 
@@ -31,6 +32,7 @@ Python chat client, based on [`mcp[cli]`](https://github.com/modelcontextprotoco
 * [System Requirements](#system-requirements)
 * [Configuration](#file-fastchatconfigjson)
 * [Aditional Configuration](#additional-configuration)
+* [API & Websocket Integration](#api--websocket-integration)
 * [Usage Example](#usage-example)
 * [Version History](#version-history)
 * [Project Status](#project-status)
@@ -264,13 +266,13 @@ Database connection settings are defined in the `fastchat.config.file`. If the c
 
 ### Notes
 
-[see config.example.json](config.example.json)
-
 > ⚠️ Place this file in the **project root** so the application can detect it automatically.
 >
 >💡 If you need an httpstream MCP server to test the code, you can use [simple-mcp-server](https://github.com/rb58853/simple-mcp-server).
 >
 > ✍️ If you need help configuring a specific server or using this configuration in your code, feel free to open discussion for help!
+
+[see config.example.json](config.example.json)
 
 ---
 
@@ -324,6 +326,33 @@ chat = Fastchat(additional_servers=my_servers)
 > Note: Servers defined in the `.config` file are concatenated with those passed as parameters; it is compatible to use both methods to add MCP servers.
 
 > API: The websocket exposed by the API supports additional servers passed through the `additional_servers` parameter.
+
+## API & WebSocket Integration
+
+Fastchat MCP provides an API extension with support for WebSocket connections secured via JWT token-based authentication. It offers two primary real-time messaging endpoints: one for users authenticated by an `ACCESS TOKEN`, and another for administrators requiring a `MASTER TOKEN`.
+
+This system ensures continuous token validation on every connection, enabling a message flow that combines plain text with segmented JSON streams to efficiently and securely handle fragmented responses.
+
+Configuration centralizes sensitive keys and external service endpoints through JSON configuration files or environment variables, seamlessly integrating with the FastAPI architecture and facilitating token persistence via a configurable REST backend.
+
+### fastchat.config.json
+
+```json
+{
+    "...": "...",
+    
+    "auth_middleware": {
+        "database_api_path": "http://127.0.0.1:6789/mydb/data",
+        "headers": {
+            "header_key": "header_value",
+            "other_header": "header_value",
+            "...": "..."
+        }
+    }
+}
+```
+
+[Learn more about the API](./doc/API_WEBSOCKET)
 
 ## Usage Example
 
@@ -391,12 +420,13 @@ code .
 >
 > Future versions are expected to include additional features such as voice systems, quick integrations with databases, built-in websocket support for frontend connections, among other useful functionalities. We invite you to **follow this repository (watch)** to stay updated on the latest news and improvements implemented.
 
-- ✅ Quick integrations with databases
-- ⏳ Built-in websocket support for frontend connections
-- ❌ Voice systems
-- 💡 And more
+* ✅ Quick integrations with databases
+* ✅ Built-in websocket support for frontend connections
+* ⏳ Voice systems
+* 💡 And more
 
 ## License
+
 MIT License. See [`license`](LICENSE)
 
 ---
