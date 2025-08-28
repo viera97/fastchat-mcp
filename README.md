@@ -352,7 +352,7 @@ Configuration centralizes sensitive keys and external service endpoints through 
 }
 ```
 
-[Learn more about the API](./doc/API_WEBSOCKET)
+[Learn more about the API](./doc/API_WEBSOCKET.md)
 
 ## Usage Example
 
