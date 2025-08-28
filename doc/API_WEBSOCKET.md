@@ -96,6 +96,21 @@ on_text_received(text):
 
 *Purpose:* Supply the external auth service used by the API to validate tokens for protected chat routes (`/chat/user`, `/chat/admin`).
 
+```json
+{
+    "...": "...",
+    
+    "auth_middleware": {
+        "database_api_path": "http://127.0.0.1:6789/mydb/data",
+        "headers": {
+            "header_key": "header_value",
+            "other_header": "header_value",
+            "...": "..."
+        }
+    }
+}
+```
+
 ### *Required fields*
 
 - `database_api_path` (string): full URL to the authentication/validation endpoint (prefer HTTPS). This is where Fastauth will query/validate tokens.
