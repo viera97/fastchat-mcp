@@ -1,13 +1,13 @@
+import json
+import uuid
 from typing import AsyncGenerator
 from mcp.types import PromptMessage
-import uuid
-import json
 from .message import MessagesSet
-from .features.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
-from .features.llm_provider import LLMProvider
 from ..client_db.client_db import ClientDB
-from ..mcp_manager.client import ClientManagerMCP
+from .features.llm_provider import LLMProvider
+from .features.step import Step, StepMessage, DataStep, ResponseStep, QueryStep
 from ..services.llm import LLM
+from ..mcp_manager.client import ClientManagerMCP
 from ..services.llm.models.openai_service.gpt import GPT
 from ...config.llm_config import ConfigGPT, ConfigLLM
 
@@ -24,7 +24,9 @@ class Fastchat:
         len_context (int): Maximum length of the conversation history to maintain. Defaults to 10.
         history (list): Initial chat history. Defaults to an empty list.
         id (str | None): Optional identifier for the chat session.
-    Methods:
+        user_id (str): Optional identifier for the chat session.
+    
+    ## Methods
         __call__(query: str) -> Generator[Step]:
             Processes a user query through multiple steps, including query analysis,
             prompt selection, service selection, and response generation. Yields Step objects
@@ -45,6 +47,7 @@ class Fastchat:
         aditional_servers: dict = {},
         len_context: int = ConfigLLM.DEFAULT_HISTORY_LEN,
         history: list = [],
+        user_id: str = "public",
     ):
         """
         Initialize a Chat instance.
@@ -60,6 +63,7 @@ class Fastchat:
         """
 
         self.clientdb: ClientDB = ClientDB()
+        self.user_id: str = user_id
 
         self.id = id if id is not None else str(uuid.uuid4())
         loaded_history = (
@@ -133,7 +137,10 @@ class Fastchat:
         # Save To Database Here
         messsages2save: MessagesSet = self.current_messages_set
         await self.clientdb.save_message(
-            chat_id=self.id, message_id=messsages2save.id, message=messsages2save
+            chat_id=self.id,
+            message_id=messsages2save.id,
+            user_id=self.user_id,
+            message=messsages2save,
         )
         ###########################
 

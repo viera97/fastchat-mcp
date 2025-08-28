@@ -158,6 +158,7 @@ class ClientDB:
         chat_id: str,
         message_id: str,
         message: MessagesSet,
+        user_id: str = "public",
     ) -> bool:
         """
         Asynchronously save a single message to the database via the configured endpoint.
@@ -168,7 +169,12 @@ class ClientDB:
 
         data = self.base_body.copy()
         data.update(
-            {"chat_id": chat_id, "message_id": message_id, "message": message.info}
+            {
+                "chat_id": chat_id,
+                "message_id": message_id,
+                "user_id": user_id,
+                "message": message.info,
+            }
         )
         try:
             response = await self._post(self.save_messsage_path, data)
