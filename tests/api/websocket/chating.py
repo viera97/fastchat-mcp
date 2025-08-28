@@ -32,12 +32,21 @@ class WebsocketClient:
         asyncio.run(self.__open_chat(uri, aditional_servers))
 
     async def __open_chat(self, uri, aditional_servers):
-        headers = {"aditional_servers": aditional_servers}
+        headers = {
+            "aditional_servers": aditional_servers,
+            "ACCESS-TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiI3NzAxODUyYi0xYmEzLTQ2NjQtYTJiYS1iYzBkMDBmMWExNGQiLCJ0eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4OTg4NDUyLCJpYXQiOjE3NTYzOTY0NTJ9.VLZVTK0SfM01pdg7XSy3dfAnO7-udarwDbCr8ImtdN4",
+            "MASTER-TOKEN": "oBd-k41TmMqib1QYalke7HRCbk_HOtE0nw1YcdkibPc=",
+        }
 
         async with websockets.connect(
             uri, additional_headers=headers, ping_interval=0
         ) as websocket:
-            while True:
+            connection = await websocket.recv()
+            connection = json.loads(connection)
+            accepted: bool = connection["status"] == "success"
+            print(("✅" if accepted else "❌") + f" {connection['detail']}\n")
+
+            while accepted:
                 mensaje = input(">> ")  # Leer mensaje a enviar desde consola
                 await websocket.send(mensaje)  # Enviar mensaje al servidor
 
@@ -73,7 +82,6 @@ def step2terminal(step: dict, index: int) -> int:
 
 
 if __name__ == "__main__":
-    uri_ws = "ws://localhost:8000/chat/ws?chat_id=id"  # Cambia la URI y parámetros según tu servidor
-    WebsocketClient().open_chat(
-        uri_ws
-    )
+    uri_ws = "ws://localhost:8000/chat/user?chat_id=id" 
+    uri_ws = "ws://localhost:8000/chat/admin?chat_id=id" 
+    WebsocketClient().open_chat(uri_ws)

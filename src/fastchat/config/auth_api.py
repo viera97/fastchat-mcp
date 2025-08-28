@@ -4,7 +4,7 @@ from fastauth import FastauthSettings
 
 
 class AuthApiConfig:
-    def __init__(self, config_file: str = "fastchat.auth.json"):
+    def __init__(self, config_file: str = "fastchat.config.json"):
         self.auth_settings: FastauthSettings = FastauthSettings()
 
         if os.path.exists(config_file):

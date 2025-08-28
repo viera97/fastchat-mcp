@@ -27,6 +27,7 @@ class FastApp:
             len_context,
         )
 
+        
         auth_settings.access_token_paths += ["/chat/user"]
         auth_settings.master_token_paths += ["/chat/admin"]
 
