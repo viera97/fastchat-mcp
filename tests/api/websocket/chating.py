@@ -55,7 +55,7 @@ class WebsocketClient:
                     index = 1
                     while True:
                         step = await websocket.recv()
-                        if step == "--next":
+                        if step == "--eof":
                             break
                         step = json.loads(step)
                         index = step2terminal(step, index)

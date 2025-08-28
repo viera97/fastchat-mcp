@@ -2,6 +2,14 @@
 
 ## fastchat-mcp
 
+### v1.1.3 📡 
+
+- ✅ Full **WebSocket integration** with authentication, middleware, and security.  
+- 🔑 Integration with an **external API** to generate, store, and load tokens connected to a database.  
+- ⚙️ **Simple, fast, and flexible configuration** of the middleware system directly from the configuration file.  
+- 🧩 **Basic tokenization** implemented — future updates will extend this to support more advanced payloads.  
+  - For customizing tokenization settings, please check the [example implementation](../examples/custom_api/api.py).  
+
 ### v1.1.2 🗃
 
 - 💬 The chat flow now handles connections to endpoints that interact with databases.  

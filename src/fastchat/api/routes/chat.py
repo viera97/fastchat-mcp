@@ -8,7 +8,7 @@ from ...config.llm_config import ConfigGPT, ConfigLLM
 from ...app.chat.features.llm_provider import LLMProvider
 
 router = APIRouter(prefix="/chat", tags=["chating"])
-STREAM_END_MARKER: str = "--next"
+STREAM_END_MARKER: str = "--eof"
 
 
 @router.websocket("/user")
