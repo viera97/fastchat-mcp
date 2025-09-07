@@ -15,7 +15,7 @@
 [![MCP](https://img.shields.io/badge/MCP-Client-orange)](https://modelcontextprotocol.io/quickstart/client)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/rb58853/fastchat-mcp)](https://github.com/rb58853/fastchat-mcp/commits)
 [![Last commit](https://img.shields.io/github/last-commit/rb58853/fastchat-mcp.svg?style=flat)](https://github.com/rb58853/fastchat-mcp/commits)
-[![Version](https://img.shields.io/pypi/v/fastauth-api?color=%234D58&label=fastauth-api)](https://pypi.org/project/fastauth-api)
+[![Version](https://img.shields.io/pypi/v/fastauth-api?color=%234D58&label=fastauth-api)](https://github.com/rb58853/fastauth-api)
 
 </div>
 
