@@ -113,10 +113,9 @@ class Fastchat:
             await self.client_manager_mcp.close()  # Closes all MCP server connections
             self.client_manager_mcp = None  # Prevent further usage
 
-        #TODO revisar esta parte, para ver si se puede cerrar el llm tambien
         # Close LLM client (if tiene método close)
-        #if hasattr(self.llm, 'close') and callable(getattr(self.llm, 'close')):
-            #await self.llm.close()
+        if hasattr(self.llm, 'close') and callable(getattr(self.llm, 'close')):
+            await self.llm.close()
         
         # Clear references to help garbage collection
         # These collections might hold references to large objects
